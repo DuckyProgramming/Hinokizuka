@@ -1,0 +1,9 @@
+stage={scene:'main',scale:0}
+game={level:0,zone:0,time:0,player:{size:5}}
+physics={gravity:0.5,friction:{x:0.96,y:0.995},resistance:{x:0.84,y:0.99}}
+view={scroll:{x:0,y:0},zoom:1,goal:{scroll:{x:0,y:0}}}
+entities={walls:[],players:[],uis:[]}
+run={fore:[],over:[]}
+graphics={main:0}
+inputs={keys:[false,false,false,false,false,false,false]}
+dev={hitbox:true}
