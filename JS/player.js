@@ -15,9 +15,9 @@ class player extends partisan{
         this.climb=false
         this.offset={position:{x:0,y:0}}
         this.dash={active:0,timer:0,available:true,direction:0}
-        this.physics={moveSpeed:0.6,moveCap:4,jumpPower:-8,wallJumpPower:{x:8,y:-6},dashPower:{x:14,y:12},weaken:{dash:18,wallJump:12}}
+        this.physics={moveSpeed:0.6,moveCap:4,jumpPower:-8,wallJumpPower:{x:8,y:-6},dashPower:{x:12,y:10},weaken:{dash:18,wallJump:12}}
         this.goal={direction:{main:54,speed:18}}
-        this.base={jumpTime:5,stamina:240,physics:{moveCap:4},dash:{active:12,timer:15}}
+        this.base={jumpTime:5,stamina:240,physics:{moveCap:4},dash:{active:9,timer:12}}
         this.setupGraphics()
     }
     setupGraphics(){
@@ -540,92 +540,48 @@ class player extends partisan{
         for(let a=0,la=2;a<la;a++){
             if(sin(this.anim.move*2+a*180)>=0){
                 this.skin.legs[a].top.theta=map(this.anim.climb,0,1,
-                    map(sin(this.anim.jump*2),0,1,9+sin(this.anim.move*2+a*180)*(27-12*this.anim.crouch),24)+15*this.anim.crouch,
-                    0
+                    map(sin(this.anim.jump*2),0,1,9+sin(this.anim.move*2+a*180)*(27-12*this.anim.crouch),24)+15*this.anim.crouch,48+sin(this.anim.move*2+a*180)*12
                 )
                 this.skin.legs[a].bottom.theta=map(this.anim.climb,0,1,
-                    map(sin(this.anim.jump*2),0,1,sin(this.anim.move*2+a*180)*21,-15)-24*this.anim.crouch,
-                    0
+                    map(sin(this.anim.jump*2),0,1,sin(this.anim.move*2+a*180)*21,-15)-24*this.anim.crouch,30+sin(this.anim.move*2+a*180)*15
                 )
-
                 this.skin.legs[a].top.phi=map(this.anim.climb,0,1,
-                    map(sin(this.anim.jump*2),0,1,(60+sin(this.anim.move*2+a*180)*-30*(1-this.anim.crouch*0.5)),30),
-                    0
-                )
-                *(a*2-1)
+                    map(sin(this.anim.jump*2),0,1,(60+sin(this.anim.move*2+a*180)*-30*(1-this.anim.crouch*0.5)),30),36+sin(this.anim.move*2+a*180))*(a*2-1)
                 this.skin.legs[a].bottom.phi=map(this.anim.climb,0,1,
-                    map(sin(this.anim.jump*2),0,1,(120+sin(this.anim.move*2+a*180)*-90*(1-this.anim.crouch*0.5)),105),
-                    0
-                )
-                *(a*2-1)
-
+                    map(sin(this.anim.jump*2),0,1,(120+sin(this.anim.move*2+a*180)*-90*(1-this.anim.crouch*0.5)),105),24+sin(this.anim.move*2+a*180))*(a*2-1)
                 this.skin.legs[a].bottom.length=map(sin(this.anim.jump*2),0,1,15,9)-this.anim.crouch*4
                 this.skin.legs[a].sandal.length.back=map(sin(this.anim.jump*2),0,1,14.5,10.5)-this.anim.crouch*4
                 this.skin.legs[a].sandal.length.front=map(sin(this.anim.jump*2),0,1,13.5,9.5)-this.anim.crouch*4
-
                 this.skin.arms[a].top.theta=map(this.anim.climb,0,1,
-                    24+sin(this.anim.move*2+a*180)*6,
-                    0
-                )
+                    24+sin(this.anim.move*2+a*180)*6,36+sin(this.anim.move*2+a*180)*6)
                 this.skin.arms[a].bottom.theta=map(this.anim.climb,0,1,
-                    9+sin(this.anim.move*2+a*180)*9,
-                    0
-                )
-
+                    9+sin(this.anim.move*2+a*180)*9,60+sin(this.anim.move*2+a*180)*18)
                 this.skin.arms[a].top.phi=map(this.anim.climb,0,1,
-                    (93+sin(this.anim.move*2+a*180)*24),
-                    0
-                )
-                *(a*2-1)
+                    (93+sin(this.anim.move*2+a*180)*24),72)*(a*2-1)
                 this.skin.arms[a].bottom.phi=map(this.anim.climb,0,1,
-                    (75+sin(this.anim.move*2+a*180)*36),
-                    0
-                )
-                *(a*2-1)
+                    (75+sin(this.anim.move*2+a*180)*36),30)*(a*2-1)
             }else{
                 this.skin.legs[a].top.theta=map(this.anim.climb,0,1,
-                    map(sin(this.anim.jump*2),0,1,9+sin(this.anim.move*2+a*180)*-9,24)+15*this.anim.crouch,
-                    0
-                )
+                    map(sin(this.anim.jump*2),0,1,9+sin(this.anim.move*2+a*180)*-9,24)+15*this.anim.crouch,48+sin(this.anim.move*2+a*180)*12)
                 this.skin.legs[a].bottom.theta=map(this.anim.climb,0,1,
-                    map(sin(this.anim.jump*2),0,1,sin(this.anim.move*2+a*180)*-30,-15)-24*this.anim.crouch,
-                    0
-                )
-
+                    map(sin(this.anim.jump*2),0,1,sin(this.anim.move*2+a*180)*-30,-15)-24*this.anim.crouch,30+sin(this.anim.move*2+a*180)*15)
                 this.skin.legs[a].top.phi=map(this.anim.climb,0,1,
-                    map(sin(this.anim.jump*2),0,1,(60+sin(this.anim.move*2+a*180)*-60*(1-this.anim.crouch*0.5)),30),
-                    0
-                )
-                *(a*2-1)
+                    map(sin(this.anim.jump*2),0,1,(60+sin(this.anim.move*2+a*180)*-60*(1-this.anim.crouch*0.5)),30),36+sin(this.anim.move*2+a*180))*(a*2-1)
                 this.skin.legs[a].bottom.phi=map(this.anim.climb,0,1,
-                    map(sin(this.anim.jump*2),0,1,(120+sin(this.anim.move*2+a*180)*-30*(1-this.anim.crouch*0.5)),105),
-                    0
-                )
-                *(a*2-1)
-
+                    map(sin(this.anim.jump*2),0,1,(120+sin(this.anim.move*2+a*180)*-30*(1-this.anim.crouch*0.5)),105),24+sin(this.anim.move*2+a*180))*(a*2-1)
                 this.skin.legs[a].bottom.length=map(sin(this.anim.jump*2),0,1,15,9)-this.anim.crouch*4
                 this.skin.legs[a].sandal.length.back=map(sin(this.anim.jump*2),0,1,14.5,10.5)-this.anim.crouch*4
                 this.skin.legs[a].sandal.length.front=map(sin(this.anim.jump*2),0,1,13.5,9.5)-this.anim.crouch*4
-
                 this.skin.arms[a].top.theta=map(this.anim.climb,0,1,
-                    24-sin(this.anim.move*2+a*180)*3,
-                    0
+                    24+sin(this.anim.move*2+a*180)*-3,36+sin(this.anim.move*2+a*180)*6
                 )
                 this.skin.arms[a].bottom.theta=map(this.anim.climb,0,1,
-                    9-sin(this.anim.move*2+a*180)*18,
-                    0
+                    9+sin(this.anim.move*2+a*180)*-18,60+sin(this.anim.move*2+a*180)*18
                 )
-
                 this.skin.arms[a].top.phi=map(this.anim.climb,0,1,
-                    (93-sin(this.anim.move*2+a*180)*-24),
-                    0
-                )
-                *(a*2-1)
+                    (93+sin(this.anim.move*2+a*180)*24),72)*(a*2-1)
                 this.skin.arms[a].bottom.phi=map(this.anim.climb,0,1,
-                    (75-sin(this.anim.move*2+a*180)*-18),
-                    0
-                )
-                *(a*2-1)
+                    (75+sin(this.anim.move*2+a*180)*18),30)*(a*2-1)
             }
         }
     }
@@ -1126,8 +1082,8 @@ class player extends partisan{
             this.physics.moveCap-=0.1
         }
         if((this.anim.move>0&&this.anim.move<90||this.anim.move>90)&&!inputs.keys[2]&&!inputs.keys[3]&&!(this.climb>0&&(inputs.keys[0]||inputs.keys[1]))){
-            this.anim.move+=6
-            if(this.anim.move>90&&this.anim.move<96){
+            this.anim.move+=6*(this.climb?2:1)
+            if(this.anim.move>90&&this.anim.move<90+6*(this.climb?2:1)){
                 this.anim.move=90
             }
             if(this.anim.move>=180){
@@ -1153,12 +1109,16 @@ class player extends partisan{
                     case 2:
                         this.velocity.x=max(this.velocity.x-this.physics.moveSpeed*(this.weakTime>0?0.5:1),min(this.velocity.x,-this.physics.moveCap))
                         this.goal.direction.main=-54
-                        this.anim.move+=6
+                        if(this.climb==0){
+                            this.anim.move+=6
+                        }
                     break
                     case 3:
                         this.velocity.x=min(this.velocity.x+this.physics.moveSpeed*(this.weakTime>0?0.5:1),max(this.velocity.x,this.physics.moveCap))
                         this.goal.direction.main=54
-                        this.anim.move+=6
+                        if(this.climb==0){
+                            this.anim.move+=6
+                        }
                     break
                     case 4:
                         if(this.climb>0){
@@ -1232,11 +1192,11 @@ class player extends partisan{
                             if(inputs.keys[0]){
                                 this.velocity.y=-2.5
                                 this.stamina-=2
-                                this.anim.move+=6
+                                this.anim.move+=12
                             }
                             if(inputs.keys[1]){
                                 this.velocity.y=2.5
-                                this.anim.move+=6
+                                this.anim.move+=12
                             }
                         }
                     break

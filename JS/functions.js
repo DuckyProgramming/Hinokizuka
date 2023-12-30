@@ -300,13 +300,19 @@ function generateLevel(level,layer,context,dev){
     if(context==0){
         clearWorld()
     }
+    game.edge.x=level.edge.x
+    game.edge.y=level.edge.y
     for(let a=0,la=entities.players.length;a<la;a++){
         if(context==0){
             entities.players[a].position.x=level.spawn.x
             entities.players[a].position.y=level.spawn.y
             entities.players[a].reset(0)
+            view.goal.scroll.x=game.edge.x<layer.width?game.edge.x/2:constrain(entities.players[a].position.x,layer.width/2,game.edge.x-layer.width/2)
+            view.goal.scroll.y=game.edge.y<layer.height?game.edge.y/2:constrain(entities.players[a].position.y,layer.height/2,game.edge.y-layer.height/2)
         }
     }
+    view.scroll.x=view.goal.scroll.x
+    view.scroll.y=view.goal.scroll.y
     for(let a=0,la=level.walls.length;a<la;a++){
         entities.walls.push(new wall(layer,level.walls[a].x,level.walls[a].y,level.walls[a].width,level.walls[a].height,level.walls[a].type))
     }
@@ -315,12 +321,29 @@ function generateLevel(level,layer,context,dev){
     }
     run.fore=[entities.players,entities.walls]
     run.over=[entities.uis]
-    if(context==0){
-        view.scroll.x=0
-        view.scroll.y=0
-    }
 }
 function updateView(){
     view.scroll.x=view.scroll.x*0.9+view.goal.scroll.x*0.1
     view.scroll.y=view.scroll.y*0.9+view.goal.scroll.y*0.1
+}
+function operateInner(layer){
+    if(dev.edge){
+        displayComponent(layer,0)
+    }
+}
+function operateOuter(layer){
+    for(let a=0,la=entities.players.length;a<la;a++){
+        view.goal.scroll.x=game.edge.x<layer.width?game.edge.x/2:constrain(entities.players[a].position.x,layer.width/2,game.edge.x-layer.width/2)
+        view.goal.scroll.y=game.edge.y<layer.height?game.edge.y/2:constrain(entities.players[a].position.y,layer.height/2,game.edge.y-layer.height/2)
+    }
+}
+function displayComponent(layer,type){
+    switch(type){
+        case 0:
+            layer.noFill()
+            layer.stroke(0,255,100)
+            layer.strokeWeight(2)
+            layer.rect(game.edge.x/2,game.edge.y/2,game.edge.x,game.edge.y)
+        break
+    }
 }

@@ -32,6 +32,9 @@ class wall extends physical{
                 let d=collideBoxBox(this,c)
                 if(inBoxBox({position:this.position,width:this.width+2,height:this.height+2},c)){
                     c.contact[d]=true
+                    if(d==1){
+                        c.stamina=c.base.stamina
+                    }
                 }
                 if(inBoxBox(this,c)){
                     c.crush[d]=true
@@ -48,7 +51,6 @@ class wall extends physical{
                                 c.position.y=this.position.y-this.height/2-c.height/2
                                 c.velocity.y=0
                                 c.jumpTime=c.base.jumpTime
-                                c.stamina=c.base.stamina
                                 if(c.dash.active==0){
                                     c.velocity.x*=physics.friction.x
                                 }

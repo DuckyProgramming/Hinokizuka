@@ -19,6 +19,7 @@ function mainloop(layer){
                     }
                 }
             }
+            operateInner(layer)
             layer.pop()
             for(let a=0,la=run.over.length;a<la;a++){
                 for(let b=0,lb=run.over[a].length;b<lb;b++){
@@ -31,6 +32,7 @@ function mainloop(layer){
                     }
                 }
             }
+            operateOuter(layer)
         break
     }
     displayMain(graphics.main)

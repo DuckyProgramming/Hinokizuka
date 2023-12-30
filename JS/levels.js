@@ -1,13 +1,14 @@
 levels=[
     [
         {
-            spawn:{x:0,y:0},
+            spawn:{x:100,y:100},
+            edge:{x:1200,y:600},
             connections:[
                 {id:0,x:[],y:[]},
             ],walls:[
-                {x:0,y:100,width:200,height:20,type:1},
-                {x:90,y:50,width:20,height:80,type:1},
-                {x:180,y:0,width:200,height:20,type:1},
+                {x:100,y:200,width:200,height:20,type:1},
+                {x:190,y:150,width:20,height:80,type:1},
+                {x:280,y:100,width:200,height:20,type:1},
             ],
         },
     ],
