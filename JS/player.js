@@ -13,10 +13,11 @@ class player extends partisan{
         this.dead=false
         this.crouch=false
         this.climb=false
+        this.dashPhase=false
         this.offset={position:{x:0,y:0}}
         this.dash={active:0,timer:0,available:true,direction:0}
         this.physics={moveSpeed:0.6,moveCap:4,jumpPower:-8,wallJumpPower:{x:8,y:-6},dashPower:{x:12,y:10},weaken:{dash:18,wallJump:12}}
-        this.goal={direction:{main:54,speed:18}}
+        this.goal={direction:{main:54,speed:18},dead:false}
         this.base={jumpTime:5,stamina:240,physics:{moveCap:4},dash:{active:9,timer:12}}
         this.setupGraphics()
     }
@@ -161,6 +162,17 @@ class player extends partisan{
         switch(type){
             case 0:
                 this.resetPhysics()
+                this.fade=1
+                this.dead=false
+                this.goal.dead=false
+                this.dash.available=true
+                this.dash.timer=0
+            break
+            case 1:
+                this.dash.available=true
+                this.dash.timer=0
+                this.setSpawn=true
+                inputs.keys[5]=false
             break
         }
     }
@@ -1153,6 +1165,10 @@ class player extends partisan{
                                 this.velocity.y=this.physics.jumpPower
                             }
                             if(this.dash.active>0){
+                                this.dashPhase=true
+                                if(this.dash.active<6){
+                                    this.dash.available=true
+                                }
                                 this.dash.active=0
                                 if(this.crouch){
                                     this.velocity.x*=1.5
@@ -1181,6 +1197,7 @@ class player extends partisan{
                                 this.dash.direction=atan2(b.y,b.x)
                                 this.dash.available=false
                                 this.weakTime=this.physics.weaken.dash
+                                this.dashPhase=true
                             }
                         }
                     break
@@ -1209,6 +1226,7 @@ class player extends partisan{
             this.velocity.y=(abs(cos(this.dash.direction))>0.1?this.physics.dashPower.x:this.physics.dashPower.y)*sin(this.dash.direction)
             if(this.dash.active==0){
                 vectorMultScalar(this.velocity,0.5)
+                this.dashPhase=false
             }
         }
         for(let a=0,la=this.crush.length;a<la;a++){
@@ -1227,6 +1245,76 @@ class player extends partisan{
             this.anim.stamina-=0.2
         }else if(this.anim.stamina<this.stamina/this.base.stamina*20-0.2){
             this.anim.stamina+=0.2
+        }
+        if(this.position.y<0&&view.scroll.anim>=1){
+            for(let a=0,la=game.connections.length;a<la;a++){
+                if(game.connections[a].side==0&&this.position.x>=game.connections[a].region[0]&&this.position.x<=game.connections[a].region[1]){
+                    if(game.connections[a].id==-1){
+                        this.position.y=0
+                    }else{
+                        game.zone=game.connections[a].id
+                        generateLevel(levels[game.level][game.zone],this.layer,2)
+                    }
+                }
+            }
+        }
+        if(this.position.x>game.edge.x&&view.scroll.anim>=1){
+            for(let a=0,la=game.connections.length;a<la;a++){
+                if(game.connections[a].side==1&&this.position.y>=game.connections[a].region[0]&&this.position.y<=game.connections[a].region[1]){
+                    if(game.connections[a].id==-1){
+                        this.position.x=game.edge.x
+                    }else{
+                        game.zone=game.connections[a].id
+                        generateLevel(levels[game.level][game.zone],this.layer,3)
+                    }
+                }
+            }
+        }
+        if(this.position.y>game.edge.y){
+            let trigger=false
+            for(let a=0,la=game.connections.length;a<la;a++){
+                if(game.connections[a].side==2&&this.position.x>=game.connections[a].region[0]&&this.position.x<=game.connections[a].region[1]){
+                    if(game.connections[a].id==-1){
+                        this.position.y=game.edge.y
+                    }else{
+                        game.zone=game.connections[a].id
+                        generateLevel(levels[game.level][game.zone],this.layer,4)
+                    }
+                    trigger=true
+                }
+            }
+            if(!this.goal.dead&&!trigger&&view.scroll.anim>=1){
+                this.goal.dead=true
+            }
+        }
+        if(this.position.x<0&&view.scroll.anim>=1){
+            for(let a=0,la=game.connections.length;a<la;a++){
+                if(game.connections[a].side==3&&this.position.y>=game.connections[a].region[0]&&this.position.y<=game.connections[a].region[1]){
+                    if(game.connections[a].id==-1){
+                        this.position.x=0
+                    }else{
+                        game.zone=game.connections[a].id
+                        generateLevel(levels[game.level][game.zone],this.layer,5)
+                    }
+                }
+            }
+        }
+        if(this.dashPhase&&game.time%2==0){
+            entities.particles.push(new particle(this.layer,this.position.x,this.position.y,1,0,1.5,[this.kimono.color.main.end]))
+        }
+        if(this.goal.dead){
+            if(!this.dead){
+                this.dead=true
+                for(let a=0,la=8;a<la;a++){
+                    entities.particles.push(new particle(this.layer,this.position.x,this.position.y,0,360*a/la,2,[this.hair.color[0].front]))
+                }
+            }
+            if(this.fade>0){
+                this.fade-=0.2
+            }else if(!transition.trigger){
+                transition.trigger=true
+                transition.scene='main'
+            }
         }
     }
 }

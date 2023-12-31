@@ -1,15 +1,28 @@
 levels=[
     [
         {
-            spawn:{x:100,y:100},
+            spawn:{x:100,y:480},
             edge:{x:1200,y:600},
             connections:[
-                {id:0,x:[],y:[]},
+                {id:1,side:1,region:[0,600]},
+                {id:-1,side:3,region:[0,600]},
             ],walls:[
-                {x:100,y:200,width:200,height:20,type:1},
-                {x:190,y:150,width:20,height:80,type:1},
-                {x:280,y:100,width:200,height:20,type:1},
+                {x:100,y:550,width:200,height:100,type:1},
+                {x:300,y:500,width:200,height:200,type:1},
+                {x:500,y:450,width:200,height:300,type:1},
+                {x:700,y:525,width:200,height:150,type:1},
+                {x:900,y:575,width:200,height:50,type:1},
+                {x:1100,y:490,width:200,height:220,type:1},
+                {x:420,y:298,width:40,height:4,type:2},
+            ],
+        },{
+            spawn:{x:0,y:0},
+            edge:{x:1200,y:600},
+            connections:[
+                {id:0,side:3,region:[0,600]},
+            ],walls:[
+                {x:100,y:490,width:200,height:220,type:1},
             ],
         },
-    ],
+    ]
 ]

@@ -35,6 +35,7 @@ function mainloop(layer){
             operateOuter(layer)
         break
     }
+    runTransition(layer)
     displayMain(graphics.main)
     updateView()
     game.time++

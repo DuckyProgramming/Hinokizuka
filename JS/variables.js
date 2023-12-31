@@ -1,9 +1,10 @@
 stage={scene:'main',scale:0}
-game={level:0,zone:0,time:0,player:{size:1},edge:{x:0,y:0}}
+game={level:0,zone:0,time:0,player:{size:1},edge:{x:0,y:0},spawn:{x:0,y:0},connections:[],previous:{zone:0}}
 physics={gravity:0.5,friction:{x:0.96,y:0.995},resistance:{x:0.84,y:0.99}}
-view={scroll:{x:0,y:0},zoom:1,goal:{scroll:{x:0,y:0}}}
+view={scroll:{x:0,y:0,anim:0},zoom:1,goal:{scroll:{x:0,y:0}},previous:{scroll:{x:0,y:0}}}
 entities={walls:[],players:[],uis:[]}
 run={fore:[],over:[]}
+transition={trigger:false,anim:0,scene:stage.scene}
 graphics={main:0}
 inputs={keys:[false,false,false,false,false,false,false]}
-dev={hitbox:false,edge:true}
+dev={hitbox:false,edge:true,connection:true,editor:true}
