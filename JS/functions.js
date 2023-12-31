@@ -1,7 +1,4 @@
 //basic
-function toggle(key){
-    return key?false:true
-}
 function vectorAdd(v1,v2){
     v1.x+=v2.x
     v1.y+=v2.y
@@ -332,6 +329,12 @@ function displayTrianglesFrontMerge(layer,parts,direction,base,width,weight,slan
     }
 }
 //key
+function updateMouse(layer){
+	inputs.mouse.x=mouseX
+	inputs.mouse.y=mouseY
+	inputs.rel.x=(inputs.mouse.x-width/2)/stage.scale+layer.width/2
+	inputs.rel.y=(inputs.mouse.y-height/2)/stage.scale+layer.height/2
+}
 function displayMain(layer){
     stage.scale=min(width/layer.width,height/layer.height)
     image(layer,width/2,height/2,layer.width*stage.scale,layer.height*stage.scale)
@@ -431,17 +434,46 @@ function generateLevel(level,layer,context){
             view.scroll.y=view.goal.scroll.y
         break
     }
+    if(dev.freecam){
+        for(let a=0,la=entities.players.length;a<la;a++){
+            view.scroll.x=entities.players[a].position.x
+            view.scroll.y=entities.players[a].position.y
+        }
+        view.scroll.anim=1
+    }
     for(let a=0,la=level.walls.length;a<la;a++){
         entities.walls.push(new wall(layer,level.walls[a].x,level.walls[a].y,level.walls[a].width,level.walls[a].height,level.walls[a].type))
     }
+    if(context==2||context==3||context==4||context==5){
+        for(let a=0,la=entities.walls.length;a<la;a++){
+            entities.walls[a].expel()
+        }
+    }
     if(dev.editor){
-        //entities.uis.push()
+        if(entities.uis.length==0){
+            entities.uis.push(new ui(layer))
+            entities.uis[entities.uis.length-1].set()
+        }else{
+            for(let a=0,la=entities.uis.length;a<la;a++){
+                entities.uis[a].set()
+            }
+        }
     }
     run.fore=[entities.particles,entities.players,entities.walls]
-    run.over=[entities.uis]
+    run.over=dev.editor?[entities.uis]:[]
 }
 function updateView(){
-    if(view.scroll.anim<10){
+    if(dev.freecam){
+        for(let a=0,la=entities.players.length;a<la;a++){
+            view.scroll.x=entities.players[a].position.x
+            view.scroll.y=entities.players[a].position.y
+        }
+        for(let a=0,la=entities.walls.length;a<la;a++){
+            if(entities.walls[a].deprecate){
+                entities.walls[a].remove=true
+            }
+        }
+    }else if(view.scroll.anim<10){
         view.scroll.anim++
         view.scroll.x=map(view.scroll.anim,0,10,view.previous.scroll.x,view.goal.scroll.x)
         view.scroll.y=map(view.scroll.anim,0,10,view.previous.scroll.y,view.goal.scroll.y)
@@ -451,7 +483,6 @@ function updateView(){
                     entities.walls[a].remove=true
                 }
             }
-            //move player along as it happens
         }
     }else{
         view.scroll.x=view.scroll.x*0.9+view.goal.scroll.x*0.1

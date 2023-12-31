@@ -1072,7 +1072,10 @@ class player extends partisan{
             this.velocity.x*=physics.resistance.x
         }
         this.velocity.y*=physics.resistance.y
-        if(!this.climb){
+        if(dev.nograv){
+            this.velocity.y*=0.96
+            this.jumpTime=5
+        }else if(!this.climb){
             this.velocity.y+=physics.gravity
         }
         if(this.crush[0]&&this.crush[1]||this.crush[2]&&this.crush[3]){
@@ -1193,9 +1196,11 @@ class player extends partisan{
                             }
                             if(b.x!=0||b.y!=0){
                                 this.dash.active=this.base.dash.active
-                                this.dash.timer=this.base.dash.timer
                                 this.dash.direction=atan2(b.y,b.x)
-                                this.dash.available=false
+                                if(!dev.infinitedash){
+                                    this.dash.timer=this.base.dash.timer
+                                    this.dash.available=false
+                                }
                                 this.weakTime=this.physics.weaken.dash
                                 this.dashPhase=true
                             }
@@ -1235,6 +1240,9 @@ class player extends partisan{
         for(let a=0,la=this.contact.length;a<la;a++){
             this.contact[a]=false
         }
+        if(this.anim.crouch<1&&this.crouch){
+            this.position.y-=0.2
+        }
         this.anim.dash=smoothAnim(this.anim.dash,!this.dash.available,0,5,1)
         this.anim.staminaActive=smoothAnim(this.anim.staminaActive,this.stamina<this.base.stamina||this.climb>0,0,1,5)
         this.anim.crouch=smoothAnim(this.anim.crouch,this.crouch,0,1,5)
@@ -1254,6 +1262,7 @@ class player extends partisan{
                     }else{
                         game.zone=game.connections[a].id
                         generateLevel(levels[game.level][game.zone],this.layer,2)
+                        break
                     }
                 }
             }
@@ -1266,6 +1275,7 @@ class player extends partisan{
                     }else{
                         game.zone=game.connections[a].id
                         generateLevel(levels[game.level][game.zone],this.layer,3)
+                        break
                     }
                 }
             }
@@ -1279,6 +1289,7 @@ class player extends partisan{
                     }else{
                         game.zone=game.connections[a].id
                         generateLevel(levels[game.level][game.zone],this.layer,4)
+                        break
                     }
                     trigger=true
                 }
@@ -1295,6 +1306,7 @@ class player extends partisan{
                     }else{
                         game.zone=game.connections[a].id
                         generateLevel(levels[game.level][game.zone],this.layer,5)
+                        break
                     }
                 }
             }
@@ -1302,7 +1314,7 @@ class player extends partisan{
         if(this.dashPhase&&game.time%2==0){
             entities.particles.push(new particle(this.layer,this.position.x,this.position.y,1,0,1.5,[this.kimono.color.main.end]))
         }
-        if(this.goal.dead){
+        if(this.goal.dead&&!dev.invincible){
             if(!this.dead){
                 this.dead=true
                 for(let a=0,la=8;a<la;a++){

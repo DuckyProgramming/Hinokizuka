@@ -22,6 +22,15 @@ function keyPressed(){
             inputs.keys[6]=true
         break
     }
+    switch(stage.scene){
+        case 'main':
+            if(dev.editor){
+                for(let a=0,la=entities.uis.length;a<la;a++){
+                    entities.uis[a].onKey(key,keyCode)
+                }
+            }
+        break
+    }
 }
 function keyReleased(){
     switch(key){

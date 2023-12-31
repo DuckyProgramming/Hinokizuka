@@ -34,6 +34,15 @@ class wall extends physical{
             super.display()
         }
     }
+    expel(){
+        for(let a=0,la=this.collide.box.length;a<la;a++){
+            for(let b=0,lb=this.collide.box[a].length;b<lb;b++){
+                if(inBoxBox(this,this.collide.box[a][b])){
+                    this.collide.box[a][b].position.y=this.position.y-this.height/2-this.collide.box[a][b].height/2
+                }
+            }
+        }
+    }
     update(){
         this.fade=smoothAnim(this.fade,0,1,this.trigger.fade,5)
         if(this.fade<=0&&!this.trigger.fade){
