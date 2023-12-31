@@ -6,5 +6,5 @@ entities={walls:[],players:[],uis:[]}
 run={fore:[],over:[]}
 transition={trigger:false,anim:0,scene:stage.scene}
 graphics={main:0}
-inputs={keys:[false,false,false,false,false,false,false],mouse:{x:0,y:0},rel:{x:0,y:0}}
-dev={editor:true,hitbox:true,edge:true,connection:true,freecam:true,infinitedash:false,invincible:false,nograv:false}
+inputs={keys:[false,false,false,false,false,false,false],mouse:{x:0,y:0},rel:{x:0,y:0},pMouse:{x:0,y:0},pRel:{x:0,y:0}}
+dev={editor:true,hitbox:true,edge:true,connection:true,markspawn:true,freecam:true,infinitedash:false,invincible:false,nograv:false}

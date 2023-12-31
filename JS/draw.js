@@ -38,6 +38,7 @@ function mainloop(layer){
     runTransition(layer)
     displayMain(graphics.main)
     updateView()
+    updateMouse(graphics.main)
     game.time++
 }
 function draw(){

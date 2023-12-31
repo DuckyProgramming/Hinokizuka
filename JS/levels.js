@@ -16,7 +16,7 @@ levels=[
                 {x:420,y:298,width:40,height:4,type:2},
             ],
         },{
-            spawn:{x:0,y:0},
+            spawn:{x:100,y:480},
             edge:{x:1200,y:600},
             connections:[
                 {id:0,side:3,region:[0,600]},

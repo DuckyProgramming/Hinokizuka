@@ -63,7 +63,9 @@ class wall extends physical{
                     c.crush[d]=true
                     switch(this.type){
                         case 2:
-                            c.goal.dead=true
+                            if(c.velocity.y>=0){
+                                c.goal.dead=true
+                            }
                         break
                         default:
                         switch(d){

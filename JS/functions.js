@@ -330,6 +330,10 @@ function displayTrianglesFrontMerge(layer,parts,direction,base,width,weight,slan
 }
 //key
 function updateMouse(layer){
+    inputs.pMouse.x=inputs.mouse.x
+    inputs.pMouse.y=inputs.mouse.y
+    inputs.pRel.x=inputs.rel.x
+    inputs.pRel.y=inputs.rel.y
 	inputs.mouse.x=mouseX
 	inputs.mouse.y=mouseY
 	inputs.rel.x=(inputs.mouse.x-width/2)/stage.scale+layer.width/2
@@ -490,11 +494,10 @@ function updateView(){
     }
 }
 function operateInner(layer){
-    if(dev.edge){
-        displayComponent(layer,0)
-    }
-    if(dev.connection){
-        displayComponent(layer,1)
+    for(let a=0,la=3;a<la;a++){
+        if(dev[['edge','connection','markspawn'][a]]){
+            displayComponent(layer,a)
+        }
     }
 }
 function operateOuter(layer){
@@ -518,9 +521,9 @@ function displayComponent(layer,type){
                 layer.stroke(100,255,0)
                 switch(game.connections[a].side){
                     case 0:
-                        layer.line(game.connections[a].region[0]+8,game.edge.y-4,game.connections[a].region[1]-8,game.edge.y-4)
-                        layer.line(game.connections[a].region[0]+8,game.edge.y-12,game.connections[a].region[0]+8,game.edge.y-4)
-                        layer.line(game.connections[a].region[1]-8,game.edge.y-12,game.connections[a].region[1]-8,game.edge.y-4)
+                        layer.line(game.connections[a].region[0]+8,4,game.connections[a].region[1]-8,4)
+                        layer.line(game.connections[a].region[0]+8,12,game.connections[a].region[0]+8,4)
+                        layer.line(game.connections[a].region[1]-8,12,game.connections[a].region[1]-8,4)
                     break
                     case 1:
                         layer.line(game.edge.x-4,game.connections[a].region[0]+8,game.edge.x-4,game.connections[a].region[1]-8)
@@ -528,9 +531,9 @@ function displayComponent(layer,type){
                         layer.line(game.edge.x-4,game.connections[a].region[1]-8,game.edge.x-12,game.connections[a].region[1]-8)
                     break
                     case 2:
-                        layer.line(game.connections[a].region[0]+8,4,game.connections[a].region[1]-8,4)
-                        layer.line(game.connections[a].region[0]+8,12,game.connections[a].region[0]+8,4)
-                        layer.line(game.connections[a].region[1]-8,12,game.connections[a].region[1]-8,4)
+                        layer.line(game.connections[a].region[0]+8,game.edge.y-4,game.connections[a].region[1]-8,game.edge.y-4)
+                        layer.line(game.connections[a].region[0]+8,game.edge.y-12,game.connections[a].region[0]+8,game.edge.y-4)
+                        layer.line(game.connections[a].region[1]-8,game.edge.y-12,game.connections[a].region[1]-8,game.edge.y-4)
                     break
                     case 3:
                         layer.line(4,game.connections[a].region[0]+8,4,game.connections[a].region[1]-8)
@@ -542,19 +545,28 @@ function displayComponent(layer,type){
                 layer.textSize(16)
                 switch(game.connections[a].side){
                     case 0:
-                        layer.text(game.connections[a].id,game.connections[a].region[0]/2+game.connections[a].region[1]/2,game.edge.y-16)
+                        layer.text(game.connections[a].id,game.connections[a].region[0]/2+game.connections[a].region[1]/2,16)
                     break
                     case 1:
                         layer.text(game.connections[a].id,game.edge.x-16,game.connections[a].region[0]/2+game.connections[a].region[1]/2)
                     break
                     case 2:
-                        layer.text(game.connections[a].id,game.connections[a].region[0]/2+game.connections[a].region[1]/2,16)
+                        layer.text(game.connections[a].id,game.connections[a].region[0]/2+game.connections[a].region[1]/2,game.edge.y-16)
                     break
                     case 3:
                         layer.text(game.connections[a].id,16,game.connections[a].region[0]/2+game.connections[a].region[1]/2)
                     break
                 }
             }
+        break
+        case 2:
+            layer.stroke(0,100,255)
+            layer.strokeWeight(2)
+            layer.line(levels[game.level][game.zone].spawn.x-10,levels[game.level][game.zone].spawn.y,levels[game.level][game.zone].spawn.x+10,levels[game.level][game.zone].spawn.y)
+            layer.line(levels[game.level][game.zone].spawn.x,levels[game.level][game.zone].spawn.y+10,levels[game.level][game.zone].spawn.x,levels[game.level][game.zone].spawn.y-10)
+            layer.stroke(0,0,150)
+            layer.line(game.spawn.x-7,game.spawn.y-7,game.spawn.x+7,game.spawn.y+7)
+            layer.line(game.spawn.x-7,game.spawn.y+7,game.spawn.x+7,game.spawn.y-7)
         break
     }
 }
