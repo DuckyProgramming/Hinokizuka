@@ -362,7 +362,7 @@ function generateLevel(level,layer,context){
             let nudge={x:0,y:0}
             for(let a=0,la=level.connections.length;a<la;a++){
                 for(let b=0,lb=game.connections.length;b<lb;b++){
-                    if(level.connections[a].id==game.previous.zone&&game.connections[b].id==game.zone){
+                    if(level.connections[a].id==game.previous.zone&&game.connections[b].id==game.zone&&abs(game.connections[a].side-level.connections[a].side)==2){
                         switch(context){
                             case 2:
                                 nudge.y=level.edge.y

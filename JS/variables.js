@@ -1,3 +1,10 @@
+types={
+    wall:[
+        {name:'Empty'},
+        {name:'Stone'},
+        {name:'Spikes - Up'},
+    ]
+}
 stage={scene:'main',scale:0}
 game={level:0,zone:0,time:0,player:{size:1},edge:{x:0,y:0},spawn:{x:0,y:0},connections:[],previous:{zone:0}}
 physics={gravity:0.5,friction:{x:0.96,y:0.995},resistance:{x:0.84,y:0.99}}

@@ -7,9 +7,12 @@ class wall extends physical{
         this.collide={box:[entities.players]}
         this.base={width:this.width,height:this.height}
         this.deprecate=false
+        this.set()
+    }
+    set(){
         switch(this.type){
             case 2:
-                this.width-=4
+                this.width=this.base.width-4
             break
         }
     }
