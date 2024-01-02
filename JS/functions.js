@@ -1,4 +1,7 @@
 //basic
+function stanh(value){
+    return (2**value-1)/(2**value+1)*0.5+0.5
+}
 function vectorAdd(v1,v2){
     v1.x+=v2.x
     v1.y+=v2.y
@@ -351,7 +354,22 @@ function clearWorld(){
     entities.walls=[]
     entities.uis=[]
 }
+function unlockLevel(level,zone){
+    switch(level){
+        case 0:
+            switch(zone){
+                case 1:
+                    inputs.validKey[4]=true
+                break
+            }
+        break
+    }
+}
 function generateLevel(level,layer,context){
+    if(game.zone>game.progress.zone){
+        game.progress.zone=game.zone
+        unlockLevel(game.level,game.zone)
+    }
     view.previous.scroll.x=view.goal.scroll.x
     view.previous.scroll.y=view.goal.scroll.y
     switch(context){
@@ -362,7 +380,7 @@ function generateLevel(level,layer,context){
             let nudge={x:0,y:0}
             for(let a=0,la=level.connections.length;a<la;a++){
                 for(let b=0,lb=game.connections.length;b<lb;b++){
-                    if(level.connections[a].id==game.previous.zone&&game.connections[b].id==game.zone&&abs(game.connections[a].side-level.connections[a].side)==2){
+                    if(level.connections[a].id==game.previous.zone&&game.connections[b].id==game.zone&&abs(level.connections[a].side-game.connections[b].side)==2){
                         switch(context){
                             case 2:
                                 nudge.y=level.edge.y
@@ -388,6 +406,8 @@ function generateLevel(level,layer,context){
             view.scroll.y-=nudge.y
             view.previous.scroll.x-=nudge.x
             view.previous.scroll.y-=nudge.y
+            game.scroll.x+=nudge.x
+            game.scroll.y+=nudge.y
             let group=[entities.players,entities.walls,entities.particles]
             for(let a=0,la=group.length;a<la;a++){
                 for(let b=0,lb=group[a].length;b<lb;b++){
@@ -493,10 +513,15 @@ function updateView(){
         view.scroll.y=view.scroll.y*0.9+view.goal.scroll.y*0.1
     }
 }
+function operateBack(layer){
+    if(game.level==0){
+        displayComponent(layer,0)
+    }
+}
 function operateInner(layer){
     for(let a=0,la=3;a<la;a++){
         if(dev[['edge','connection','markspawn'][a]]){
-            displayComponent(layer,a)
+            displayComponent(layer,a+1)
         }
     }
 }
@@ -509,12 +534,33 @@ function operateOuter(layer){
 function displayComponent(layer,type){
     switch(type){
         case 0:
+            layer.noStroke()
+            layer.fill(11,18,60)
+            layer.textSize(15)
+            switch(game.zone){
+                case 0:
+                    layer.push()
+                    layer.translate(520,400)
+                    layer.rotate(5)
+                    layer.text('Arrow Keys\nto Move',0,0)
+                    layer.pop()
+                break
+                case 1:
+                    layer.push()
+                    layer.translate(400,380)
+                    layer.rotate(5)
+                    layer.text('Z to\nJump',0,0)
+                    layer.pop()
+                break
+            }
+        break
+        case 1:
             layer.noFill()
             layer.stroke(0,255,100)
             layer.strokeWeight(2)
             layer.rect(game.edge.x/2,game.edge.y/2,game.edge.x,game.edge.y)
         break
-        case 1:
+        case 2:
             layer.fill(255)
             layer.strokeWeight(2)
             for(let a=0,la=game.connections.length;a<la;a++){
@@ -559,7 +605,7 @@ function displayComponent(layer,type){
                 }
             }
         break
-        case 2:
+        case 3:
             layer.stroke(0,100,255)
             layer.strokeWeight(2)
             layer.line(levels[game.level][game.zone].spawn.x-10,levels[game.level][game.zone].spawn.y,levels[game.level][game.zone].spawn.x+10,levels[game.level][game.zone].spawn.y)

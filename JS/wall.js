@@ -22,7 +22,7 @@ class wall extends physical{
         this.layer.noStroke()
         switch(this.type){
             case 1:
-                this.layer.fill(220,160,180,this.fade)
+                this.layer.fill(120,this.fade)
                 this.layer.rect(0,0,this.width,this.height)
             break
             case 2:

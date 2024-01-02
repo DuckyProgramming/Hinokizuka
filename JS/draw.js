@@ -1,13 +1,15 @@
 function mainloop(layer){
     clear()
     background(100)
-    layer.background(150)
     switch(stage.scene){
         case 'main':
+            layer.image(graphics.backgrounds[game.level],-(view.scroll.x+game.scroll.x)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
+            layer.image(graphics.backgrounds[game.level],1800-(view.scroll.x+game.scroll.x)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
             layer.push()
             layer.translate(-view.scroll.x,-view.scroll.y)
             layer.scale(view.zoom)
             layer.translate(graphics.main.width/2,graphics.main.height/2)
+            operateBack(layer)
             for(let a=0,la=run.fore.length;a<la;a++){
                 for(let b=0,lb=run.fore[a].length;b<lb;b++){
                     run.fore[a][b].display()

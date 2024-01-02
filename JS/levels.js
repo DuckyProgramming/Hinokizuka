@@ -1,6 +1,47 @@
 levels=[
     [
         {
+            spawn:{x:50,y:395},
+            edge:{x:1200,y:600},
+            connections:[
+                {id:1,side:1,region:[0,600]},
+            ],walls:[
+                {x:100,y:510,width:200,height:180,type:1},
+                {x:300,y:520,width:200,height:160,type:1},
+                {x:520,y:530,width:240,height:140,type:1},
+                {x:710,y:540,width:140,height:120,type:1},
+                {x:870,y:560,width:180,height:80,type:1},
+                {x:1080,y:570,width:240,height:60,type:1},
+            ],
+        },{
+            spawn:{x:50,y:515},
+            edge:{x:1200,y:600},
+            connections:[
+                {id:2,side:1,region:[0,600]},
+                {id:0,side:3,region:[0,600]},
+            ],walls:[
+                {x:100,y:570,width:200,height:60,type:1},
+                {x:280,y:550,width:160,height:100,type:1},
+                {x:400,y:520,width:80,height:160,type:1},
+                {x:510,y:540,width:140,height:120,type:1},
+                {x:660,y:510,width:160,height:180,type:1},
+                {x:770,y:500,width:60,height:200,type:1},
+                {x:900,y:520,width:120,height:160,type:1},
+                {x:1000,y:530,width:80,height:140,type:1},
+                {x:1120,y:540,width:160,height:120,type:1},
+            ],
+        },{
+            spawn:{x:50,y:480},
+            edge:{x:1200,y:600},
+            connections:[
+                {id:0,side:3,region:[0,600]}
+            ],walls:[
+                {x:100,y:570,width:200,height:60,type:1},
+            ],
+        },
+    ],
+    /*[
+        {
             spawn:{x:100,y:480},
             edge:{x:1200,y:600},
             connections:[
@@ -24,5 +65,5 @@ levels=[
                 {x:100,y:490,width:200,height:220,type:1},
             ],
         },
-    ]
+    ],*/
 ]

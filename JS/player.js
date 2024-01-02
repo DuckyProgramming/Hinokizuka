@@ -16,7 +16,7 @@ class player extends partisan{
         this.dashPhase=false
         this.offset={position:{x:0,y:0}}
         this.dash={active:0,timer:0,available:true,direction:0}
-        this.physics={moveSpeed:0.6,moveCap:4,jumpPower:-8,wallJumpPower:{x:5,y:-6},dashPower:{x:12,y:10},weaken:{dash:18,wallJump:12}}
+        this.physics={moveSpeed:0.6,moveCap:4,jumpPower:-8.5,wallJumpPower:{x:5,y:-6},dashPower:{x:12,y:10},weaken:{dash:18,wallJump:12}}
         this.goal={direction:{main:54,speed:18},dead:false}
         this.base={jumpTime:5,stamina:240,physics:{moveCap:4},dash:{active:9,timer:12}}
         this.setupGraphics()

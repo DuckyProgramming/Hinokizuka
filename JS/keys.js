@@ -1,25 +1,28 @@
+function upKey(id){
+    inputs.keys[id]=inputs.validKey[id]
+}
 function keyPressed(){
     switch(key){
         case 'ArrowUp':
-            inputs.keys[0]=true
+            upKey(0)
         break
         case 'ArrowDown':
-            inputs.keys[1]=true
+            upKey(1)
         break
         case 'ArrowLeft':
-            inputs.keys[2]=true
+            upKey(2)
         break
         case 'ArrowRight':
-            inputs.keys[3]=true
+            upKey(3)
         break
         case 'z': case 'Z':
-            inputs.keys[4]=true
+            upKey(4)
         break
         case 'x': case 'X':
-            inputs.keys[5]=true
+            upKey(5)
         break
         case 'c': case 'C':
-            inputs.keys[6]=true
+            upKey(6)
         break
     }
     switch(stage.scene){
