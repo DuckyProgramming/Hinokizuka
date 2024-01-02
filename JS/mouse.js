@@ -22,13 +22,13 @@ function mouseDragged(){
         break
     }
 }
-function mouseReleased(){
+function mousePressed(){
     updateMouse(graphics.main)
     switch(stage.scene){
         case 'main':
             if(dev.editor){
                 for(let a=0,la=entities.uis.length;a<la;a++){
-                    entities.uis[a].onRelease(inputs.rel)
+                    entities.uis[a].onPress(inputs.rel)
                 }
             }
         break

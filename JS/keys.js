@@ -24,6 +24,9 @@ function keyPressed(){
         case 'c': case 'C':
             upKey(6)
         break
+        case 'r': case 'R':
+            upKey(7)
+        break
     }
     switch(stage.scene){
         case 'main':
@@ -57,6 +60,9 @@ function keyReleased(){
         break
         case 'c': case 'C':
             inputs.keys[6]=false
+        break
+        case 'r': case 'R':
+            inputs.keys[7]=false
         break
     }
 }

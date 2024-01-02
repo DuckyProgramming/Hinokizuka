@@ -3,7 +3,7 @@ class ui{
         this.layer=layer
         this.tab=0
         this.tabNum=4
-        this.hiddenTabNum=7
+        this.hiddenTabNum=8
         this.close=false
         this.closeAnim=0
         this.tabAnim=[]
@@ -12,6 +12,7 @@ class ui{
         }
         this.editing=0
         this.edit={edge:{x:0,y:0},wall:{width:0,height:0,type:-1},add:{connection:{id:0,side:0,region:[0,0]},wall:{width:0,height:0,type:0}}}
+        this.drag={start:{x:0,y:0},end:{x:0,y:0}}
         this.select=0
         this.selectKey=[]
     }
@@ -80,10 +81,21 @@ class ui{
                         }
                     break
                     case 8:
-                        for(let b=0,lb=4;b<lb;b++){
+                        for(let b=0,lb=5;b<lb;b++){
                             this.layer.fill(this.editing==b+1?125:150,this.editing==b+1?255:150,this.editing==b+1?125:150)
-                            this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,40+b*55-floor(b/3)*20,80,30,5)
+                            this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,40+b*55-max(0,b-2)*20,80,30,5)
                         }
+                    break
+                    case 11:
+                        this.layer.fill(150)
+                        this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,20,80,30,5)
+                        this.layer.fill(75,200,75,0.2)
+                        this.layer.stroke(100,255,100)
+                        this.layer.strokeWeight(2)
+                        let ds={x:this.drag.start.x-view.scroll.x+this.layer.width/2,y:this.drag.start.y-view.scroll.y+this.layer.height/2}
+                        let de={x:this.drag.end.x-view.scroll.x+this.layer.width/2,y:this.drag.end.y-view.scroll.y+this.layer.height/2}
+                        this.layer.rect(ds.x/2+de.x/2,ds.y/2+de.y/2,abs(ds.x-de.x),abs(ds.y-de.y))
+                        this.layer.noStroke()
                     break
                 }
                 this.layer.fill(0)
@@ -151,7 +163,7 @@ class ui{
                             this.layer.text(game.connections[this.select].region[1],this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,205)
                         }
                     break
-                    case 6: case 10:
+                    case 6: case 10: case 11:
                         this.layer.text('Cancel',this.layer.width+50-this.tabAnim[a]*100,20)
                     break
                     case 7: case 9:
@@ -165,6 +177,7 @@ class ui{
                         this.layer.text('Height',this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,70)
                         this.layer.text('Type',this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,125)
                         this.layer.text('Add',this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,185)
+                        this.layer.text('Zonal Add',this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,220)
                         this.layer.textSize(10)
                         this.layer.text(this.edit.add.wall.width,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,40)
                         this.layer.text(this.edit.add.wall.height,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,95)
@@ -240,6 +253,12 @@ class ui{
                     }
                 break
                 case 1:
+                    for(let a=0,la=entities.walls.length;a<la;a++){
+                        if(entities.walls[a].select){
+                            entities.walls[a].position.x=round(entities.walls[a].position.x/entities.walls[a].interval.x)*entities.walls[a].interval.x
+                            entities.walls[a].position.y=round(entities.walls[a].position.y/entities.walls[a].interval.y)*entities.walls[a].interval.y
+                        }
+                    }
                     if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:40},width:80,height:30})){
                         this.editing=1
                     }else if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:95},width:80,height:30})){
@@ -374,6 +393,12 @@ class ui{
                         this.tab=9
                     }else if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:185},width:80,height:30})){
                         this.tab=10
+                    }else if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:220},width:80,height:30})){
+                        this.tab=11
+                        this.drag.end.x=0
+                        this.drag.end.y=0
+                        this.drag.start.x=0
+                        this.drag.start.y=0
                     }else{
                         this.editing=0
                     }
@@ -393,8 +418,24 @@ class ui{
                         entities.walls.push(new wall(this.layer,round((inputs.rel.x+view.scroll.x-this.layer.width/2)/10)*10,round((inputs.rel.y+view.scroll.y-this.layer.height/2)*10)/10,this.edit.add.wall.width,this.edit.add.wall.height,this.edit.add.wall.type))
                     }
                 break
+                case 11:
+                    if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:20},width:80,height:30})){
+                        this.tab=1
+                    }
+                break
             }
         }
+        switch(this.tab){
+            case 11:
+                if(dist(this.drag.start.x,this.drag.start.y,this.drag.end.x,this.drag.end.y)>10){
+                    entities.walls.push(new wall(this.layer,round((this.drag.start.x/2+this.drag.end.x/2)/10)*10,round((this.drag.start.y/2+this.drag.end.y/2)/10)*10,ceil(abs(this.drag.start.x-this.drag.end.x)/20)*20,ceil(abs(this.drag.start.y-this.drag.end.y)/20)*20,this.edit.add.wall.type))
+                }
+            break
+        }
+        this.drag.start.x=mouse.x+view.scroll.x-this.layer.width/2
+        this.drag.start.y=mouse.y+view.scroll.y-this.layer.height/2
+        this.drag.end.x=mouse.x+view.scroll.x-this.layer.width/2
+        this.drag.end.y=mouse.y+view.scroll.y-this.layer.height/2
     }
     onDrag(mouse,pMouse){
         switch(this.tab){
@@ -407,14 +448,14 @@ class ui{
                 }
             break
         }
+        this.drag.end.x=mouse.x+view.scroll.x-this.layer.width/2
+        this.drag.end.y=mouse.y+view.scroll.y-this.layer.height/2
     }
-    onRelease(mouse){
-        for(let a=0,la=entities.walls.length;a<la;a++){
-            if(entities.walls[a].select){
-                entities.walls[a].position.x=round(entities.walls[a].position.x/10)*10
-                entities.walls[a].position.y=round(entities.walls[a].position.y/10)*10
-            }
-        }
+    onPress(mouse){
+        this.drag.start.x=mouse.x+view.scroll.x-this.layer.width/2
+        this.drag.start.y=mouse.y+view.scroll.y-this.layer.height/2
+        this.drag.end.x=mouse.x+view.scroll.x-this.layer.width/2
+        this.drag.end.y=mouse.y+view.scroll.y-this.layer.height/2
     }
     onKey(key,code){
         if(!this.close){
@@ -443,6 +484,8 @@ class ui{
                                 if(entities.walls[a].select){
                                     entities.walls[a][marker]=this.edit.wall[marker]
                                     entities.walls[a].base[marker]=this.edit.wall[marker]
+                                    entities.walls[a][['width','height'][2-this.editing]]=entities.walls[a].base[['width','height'][2-this.editing]]
+                                    entities.walls[a].set()
                                 }
                             }
                         }

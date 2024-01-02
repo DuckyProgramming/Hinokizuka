@@ -352,7 +352,6 @@ function initialElements(layer){
 function clearWorld(){
     entities.particles=[]
     entities.walls=[]
-    entities.uis=[]
 }
 function unlockLevel(level,zone){
     switch(level){
@@ -360,6 +359,15 @@ function unlockLevel(level,zone){
             switch(zone){
                 case 1:
                     inputs.validKey[4]=true
+                break
+                case 2:
+                    inputs.validKey[7]=true
+                break
+                case 4:
+                    inputs.validKey[6]=true
+                break
+                case 6:
+                    inputs.validKey[5]=true
                 break
             }
         break
@@ -384,19 +392,19 @@ function generateLevel(level,layer,context){
                         switch(context){
                             case 2:
                                 nudge.y=level.edge.y
-                                nudge.x=level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2
+                                nudge.x=-(level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2)
                             break
                             case 3:
                                 nudge.x=level.edge.x
-                                nudge.y=level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2
+                                nudge.y=-(level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2)
                             break
                             case 4:
                                 nudge.y=-game.edge.y
-                                nudge.x=level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2
+                                nudge.x=-(level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2)
                             break
                             case 5:
                                 nudge.x=-game.edge.x
-                                nudge.y=level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2
+                                nudge.y=-(level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2)
                             break
                         }
                     }
@@ -412,7 +420,7 @@ function generateLevel(level,layer,context){
             for(let a=0,la=group.length;a<la;a++){
                 for(let b=0,lb=group[a].length;b<lb;b++){
                     group[a][b].position.x-=nudge.x
-                    group[a][b].position.x-=nudge.y
+                    group[a][b].position.y-=nudge.y
                 }
             }
             for(let a=0,la=entities.walls.length;a<la;a++){
@@ -550,6 +558,39 @@ function displayComponent(layer,type){
                     layer.translate(400,380)
                     layer.rotate(5)
                     layer.text('Z to\nJump',0,0)
+                    layer.pop()
+                break
+                case 2:
+                    layer.push()
+                    layer.translate(330,460)
+                    layer.rotate(5)
+                    layer.text('R to\nReset',0,0)
+                    layer.pop()
+                break
+                case 4:
+                    layer.push()
+                    layer.translate(160,400)
+                    layer.rotate(5)
+                    layer.text('C to Grab a Wall\nUp and Down Keys to\nClimb While Grabbing',0,0)
+                    layer.pop()
+                break
+                case 6:
+                    layer.push()
+                    layer.translate(310,340)
+                    layer.rotate(5)
+                    layer.text('X to Dash\nHold Down Arrow Keys\nto Set Direction',0,0)
+                    layer.pop()
+                break
+                case 7:
+                    layer.push()
+                    layer.translate(180,420)
+                    layer.rotate(5)
+                    layer.text('Jump (Z) on a Wall\nto Wall Jump',0,0)
+                    layer.pop()
+                    layer.push()
+                    layer.translate(960,180)
+                    layer.rotate(5)
+                    layer.text('Dashes (X) Can\nBe Diagonal',0,0)
                     layer.pop()
                 break
             }

@@ -18,7 +18,7 @@ class player extends partisan{
         this.dash={active:0,timer:0,available:true,direction:0}
         this.physics={moveSpeed:0.6,moveCap:4,jumpPower:-8.5,wallJumpPower:{x:5,y:-6},dashPower:{x:12,y:10},weaken:{dash:18,wallJump:12}}
         this.goal={direction:{main:54,speed:18},dead:false}
-        this.base={jumpTime:5,stamina:240,physics:{moveCap:4},dash:{active:9,timer:12}}
+        this.base={jumpTime:5,stamina:360,physics:{moveCap:4},dash:{active:9,timer:12}}
         this.setupGraphics()
     }
     setupGraphics(){
@@ -1112,7 +1112,7 @@ class player extends partisan{
             }
         }
         this.crouch=false
-        let resolveOrder=[6,1,2,3,4,5]
+        let resolveOrder=[7,6,1,2,3,4,5]
         for(let a=0,la=resolveOrder.length;a<la;a++){
             if(inputs.keys[resolveOrder[a]]){
                 switch(resolveOrder[a]){
@@ -1194,16 +1194,21 @@ class player extends partisan{
                             if(inputs.keys[3]){
                                 b.x++
                             }
-                            if(b.x!=0||b.y!=0){
-                                this.dash.active=this.base.dash.active
-                                this.dash.direction=atan2(b.y,b.x)
-                                if(!dev.infinitedash){
-                                    this.dash.timer=this.base.dash.timer
-                                    this.dash.available=false
+                            if(b.x==0&&b.y==0){
+                                if(this.goal.direction.main<0){
+                                    b.x--
+                                }else if(this.goal.direction.main>0){
+                                    b.x++
                                 }
-                                this.weakTime=this.physics.weaken.dash
-                                this.dashPhase=true
                             }
+                            this.dash.active=this.base.dash.active
+                            this.dash.direction=atan2(b.y,b.x)
+                            if(!dev.infinitedash){
+                                this.dash.timer=this.base.dash.timer
+                                this.dash.available=false
+                            }
+                            this.weakTime=this.physics.weaken.dash
+                            this.dashPhase=true
                         }
                     break
                     case 6:
@@ -1220,6 +1225,12 @@ class player extends partisan{
                                 this.velocity.y=2.5
                                 this.anim.move+=12
                             }
+                        }
+                    break
+                    case 7:
+                        if(!this.goal.dead){
+                            inputs.keys[7]=false
+                            this.goal.dead=true
                         }
                     break
                 }
