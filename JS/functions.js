@@ -490,7 +490,9 @@ function generateLevel(level,layer,context){
         view.scroll.anim=1
     }
     for(let a=0,la=level.walls.length;a<la;a++){
-        entities.walls.push(new wall(layer,level.walls[a].x,level.walls[a].y,level.walls[a].width,level.walls[a].height,level.walls[a].type,a,game.zone))
+        if(level.spawnRule[a]==0){
+            entities.walls.push(new wall(layer,level.walls[a].x,level.walls[a].y,level.walls[a].width,level.walls[a].height,level.walls[a].type,a,game.zone))
+        }
     }
     if(context==2||context==3||context==4||context==5){
         for(let a=0,la=entities.walls.length;a<la;a++){
@@ -556,6 +558,7 @@ function operateOuter(layer){
         view.goal.scroll.x=game.edge.x<layer.width?game.edge.x/2:constrain(entities.players[a].position.x,layer.width/2,game.edge.x-layer.width/2)
         view.goal.scroll.y=game.edge.y<layer.height?game.edge.y/2:constrain(entities.players[a].position.y,layer.height/2,game.edge.y-layer.height/2)
     }
+    displayComponent(layer,4)
 }
 function displayComponent(layer,type){
     switch(type){
@@ -568,47 +571,47 @@ function displayComponent(layer,type){
                     layer.push()
                     layer.translate(520,400)
                     layer.rotate(5)
-                    layer.text('Arrow Keys\nto Move',0,0)
+                    layer.text(game.players.length==1?'Arrow Keys\nto Move':'Arrow Keys / TFGH\nto Move',0,0)
                     layer.pop()
                 break
                 case 1:
                     layer.push()
                     layer.translate(400,380)
                     layer.rotate(5)
-                    layer.text('Z to\nJump',0,0)
+                    layer.text(game.players.length==1?'Z to\nJump':'Comma / Z\nto Jump',0,0)
                     layer.pop()
                 break
                 case 2:
                     layer.push()
                     layer.translate(330,460)
                     layer.rotate(5)
-                    layer.text('R to\nReset',0,0)
+                    layer.text(game.players.length==1?'R to\nReset':'Apostrophe / R\nto Reset',0,0)
                     layer.pop()
                 break
                 case 4:
                     layer.push()
                     layer.translate(160,400)
                     layer.rotate(5)
-                    layer.text('C to Grab a Wall\nUp and Down Keys to\nClimb While Grabbing',0,0)
+                    layer.text(game.players.length==1?'C to Grab a Wall\nUp and Down Keys to\nClimb While Grabbing':'Forward Slash / C\nto Grab a Wall\nUp and Down Keys to\nClimb While Grabbing',0,0)
                     layer.pop()
                 break
                 case 6:
                     layer.push()
                     layer.translate(310,340)
                     layer.rotate(5)
-                    layer.text('X to Dash\nHold Down Arrow Keys\nto Set Direction',0,0)
+                    layer.text(game.players.length==1?'X to Dash\nHold Down Arrow Keys\nto Set Direction':'Period / X to Dash\nHold Down Arrow Keys\nto Set Direction',0,0)
                     layer.pop()
                 break
                 case 7:
                     layer.push()
                     layer.translate(180,420)
                     layer.rotate(5)
-                    layer.text('Jump (Z) on a Wall\nto Wall Jump',0,0)
+                    layer.text(game.players.length==1?'Jump (Z) on a Wall\nto Wall Jump':'Jump (Comma / Z) on a\nWall to Wall Jump',0,0)
                     layer.pop()
                     layer.push()
                     layer.translate(960,180)
                     layer.rotate(5)
-                    layer.text('Dashes (X) Can\nBe Diagonal',0,0)
+                    layer.text(game.players.length==1?'Dashes (X) Can\nBe Diagonal':'Dashes (Period / X)\nCan Be Diagonal',0,0)
                     layer.pop()
                 break
             }
@@ -672,6 +675,38 @@ function displayComponent(layer,type){
             layer.stroke(0,0,150)
             layer.line(game.spawn.x-7,game.spawn.y-7,game.spawn.x+7,game.spawn.y+7)
             layer.line(game.spawn.x-7,game.spawn.y+7,game.spawn.x+7,game.spawn.y-7)
+        break
+        case 4:
+            if(elements.flower.timer>0){
+                elements.flower.timer--
+            }
+            elements.flower.anim=smoothAnim(elements.flower.anim,elements.flower.timer>0,0,1,30)
+            if(elements.flower.anim>0){
+                layer.push()
+                layer.translate(-50+elements.flower.anim*75,25)
+                layer.fill(255)
+                layer.stroke(0)
+                layer.strokeWeight(0.5)
+                layer.textSize(20)
+                layer.text(game.flowers,30,0)
+                layer.noStroke()
+                layer.fill(123,189,156)
+                for(let a=0,la=15;a<la;a++){
+                    layer.triangle(-2.25,12,2.25,12,0,21)
+                    layer.rotate(360/la)
+                }
+                let colors=[[206,111,147],[234,147,180],[253,173,205],[236,141,177],[251,158,193],[255,177,210],[255,203,235]]
+                let offset=[15,10,25,-15,10,15,10,25,-15]
+                for(let a=0,la=7;a<la;a++){
+                    layer.fill(colors[a][0],colors[a][1],colors[a][2])
+                    for(let b=0,lb=9;b<lb;b++){
+                        layer.ellipse(0,9-a,6-a*2/3,18-a*2)
+                        layer.rotate(360/la)
+                    }
+                    layer.rotate(offset[a])
+                }
+                layer.pop()
+            }
         break
     }
 }

@@ -26,6 +26,13 @@ class wall extends physical{
             case 5:
                 this.height=this.base.height-4
             break
+            case 7:
+                this.base.width=0
+                this.base.height=0
+                this.width=30
+                this.height=30
+                this.active=false
+            break
         }
     }
     display(){
@@ -66,7 +73,21 @@ class wall extends physical{
                 this.layer.rect(0,0,this.width+1,this.height+1)
             break
             case 7:
-                /**/
+                this.layer.fill(123,189,156,this.fade)
+                for(let a=0,la=15;a<la;a++){
+                    this.layer.triangle(-2.25,12,2.25,12,0,21)
+                    this.layer.rotate(360/la)
+                }
+                let colors=[[206,111,147],[234,147,180],[253,173,205],[236,141,177],[251,158,193],[255,177,210],[255,203,235]]
+                let offset=[15,10,25,-15,10,15,10,25,-15]
+                for(let a=0,la=7;a<la;a++){
+                    this.layer.fill(colors[a][0],colors[a][1],colors[a][2],this.fade)
+                    for(let b=0,lb=9;b<lb;b++){
+                        this.layer.ellipse(0,9-a,6-a*2/3,18-a*2)
+                        this.layer.rotate(360/la)
+                    }
+                    this.layer.rotate(offset[a])
+                }
             break
         }
         this.layer.pop()
@@ -84,7 +105,7 @@ class wall extends physical{
         }
     }
     update(){
-        this.fade=smoothAnim(this.fade,0,1,this.trigger.fade,5)
+        this.fade=smoothAnim(this.fade,this.trigger.fade,0,1,5)
         if(this.fade<=0&&!this.trigger.fade){
             this.remove=true
         }
@@ -120,6 +141,18 @@ class wall extends physical{
                         case 5:
                             if(c.velocity.x<=0){
                                 c.goal.dead=true
+                            }
+                        break
+                        case 7:
+                            if(!this.active){
+                                this.active=true
+                                this.trigger.fade=false
+                                game.flowers++
+                                elements.flower.timer=180
+                                for(let a=0,la=8;a<la;a++){
+                                    entities.particles.push(new particle(this.layer,this.position.x,this.position.y,0,360*a/la,2,[[251,158,193]]))
+                                }
+                                levels[game.level][game.zone].spawnRule[this.index]=1
                             }
                         break
                         default:

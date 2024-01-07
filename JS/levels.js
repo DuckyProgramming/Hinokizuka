@@ -205,6 +205,7 @@ levels=[
                 {id:-1,side:3,region:[0,600]},
             ],walls:[
                 {x:100,y:510,width:200,height:180,type:6},
+                {x:150,y:310,width:0,height:0,type:7},
             ],
         },
     ]

@@ -2221,7 +2221,7 @@ class player extends partisan{
                     }
                 }
             }
-            if(this.dashPhase&&game.time%2==0){
+            if(this.dashPhase&&game.time%2==0&&!this.dead){
                 entities.particles.push(new particle(this.layer,this.position.x,this.position.y,1,0,1.5,[this.kimono.color.main.end]))
             }
         }
