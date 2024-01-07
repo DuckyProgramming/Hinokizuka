@@ -1,7 +1,9 @@
 class wall extends physical{
-    constructor(layer,x,y,width,height,type){
+    constructor(layer,x,y,width,height,type,index,zone){
         super(layer,x,y,width,height)
         this.type=type
+        this.index=index
+        this.zone=zone
         this.fade=1
         this.trigger={fade:true}
         this.collide={box:[entities.players]}
@@ -59,6 +61,13 @@ class wall extends physical{
                     this.layer.triangle(-this.width/2,-this.base.height/2+a*20/3,-this.width/2,-this.base.height/2+a*20/3+20/3,this.width*3/2,-this.base.height/2+a*20/3+10/3)
                 }
             break
+            case 6:
+                this.layer.fill(90,this.fade)
+                this.layer.rect(0,0,this.width+1,this.height+1)
+            break
+            case 7:
+                /**/
+            break
         }
         this.layer.pop()
         if(dev.hitbox){
@@ -82,7 +91,7 @@ class wall extends physical{
         for(let a=0,la=this.collide.box.length;a<la;a++){
             for(let b=0,lb=this.collide.box[a].length;b<lb;b++){
                 let c=this.collide.box[a][b]
-                if(inBoxBox({position:this.position,width:this.width+2,height:this.height+2},c)){
+                if(inBoxBox({position:this.position,width:this.width+2,height:this.height+2},c)&&!c.orb.active){
                     let d=collideBoxBox(this,c)
                     c.contact[d]=true
                     if(d==1){

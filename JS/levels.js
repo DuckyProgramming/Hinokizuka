@@ -5,6 +5,7 @@ levels=[
             edge:{x:1200,y:600},
             connections:[
                 {id:1,side:1,region:[0,600]},
+                {id:-1,side:3,region:[0,600]},
             ],walls:[
                 {x:100,y:510,width:200,height:180,type:1},
                 {x:300,y:520,width:200,height:160,type:1},
@@ -194,17 +195,19 @@ levels=[
                 {x:1002,y:390,width:4,height:60,type:5},
                 {x:898,y:310,width:4,height:100,type:4},
             ],
-        },/*{
-            spawn:{x:50,y:295},
+        },
+    ],[
+        {
+            spawn:{x:50,y:395},
             edge:{x:1200,y:600},
             connections:[
-                {id:8,side:1,region:[0,600]},
-                {id:6,side:3,region:[300,600]},
+                {id:1,side:1,region:[0,600]},
+                {id:-1,side:3,region:[0,600]},
             ],walls:[
-                {x:60,y:680,width:120,height:440,type:1},
+                {x:100,y:510,width:200,height:180,type:6},
             ],
-        },*/
-    ],
+        },
+    ]
     /*[
         {
             spawn:{x:100,y:480},

@@ -2,7 +2,7 @@ function setupGraphics(){
     setupBase()
     graphics.main=createGraphics(1200,600)
     setupLayer(graphics.main)
-    for(let a=0,la=1;a<la;a++){
+    for(let a=0,la=2;a<la;a++){
         graphics.backgrounds.push(createGraphics(1800,900))
         setupLayer(graphics.backgrounds[a])
         displayBack(graphics.backgrounds[a],a)
@@ -29,6 +29,27 @@ function displayBack(layer,type){
             layer.ellipse(layer.width,layer.height*0.918,210)
             for(let a=0,la=23;a<la;a++){
                 layer.ellipse(layer.width*(a+random(0.9,1.1))/(la+1),layer.height*random(0.92,0.96),random(150,200))
+            }
+        break
+        case 1:
+            layer.background(75,150,200)
+            for(let a=0,la=50;a<la;a++){
+            }
+            for(let a=0,la=200;a<la;a++){
+                let b=-50+a*71%(layer.width+100)+random(-10,10)
+                let c=random(60,80)
+                let d=random(0,0.5)
+                let e=layer.height*(0.8+a/la*0.24)
+                let f=random(80,120)
+                layer.fill(60+a/la*60+random(-20,20))
+                layer.quad(b-c,e,b+c,e,b+c*d,e-f,b-c*d,e-f)
+                if(b-c<0||b+c>layer.width){
+                    b=layer.width-b
+                    c=random(60,80)
+                    d=random(0,0.5)
+                    f=random(80,120)
+                    layer.quad(b-c,e,b+c,e,b+c*d,e-f,b-c*d,e-f)
+                }
             }
         break
     }

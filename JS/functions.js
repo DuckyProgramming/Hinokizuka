@@ -347,7 +347,19 @@ function displayMain(layer){
     image(layer,width/2,height/2,layer.width*stage.scale,layer.height*stage.scale)
 }
 function initialElements(layer){
-    entities.players.push(new player(layer,0,0))
+    for(let a=0,la=game.players.length;a<la;a++){
+        entities.players.push(new player(layer,0,0,game.players[a],a))
+    }
+}
+function initialLevels(Levels){
+    for(let a=0,la=levels.length;a<la;a++){
+        for(let b=0,lb=levels[a].length;b<lb;b++){
+            levels[a][b].spawnRule=[]
+            for(let c=0,lc=levels[a][b].walls.length;c<lc;c++){
+                levels[a][b].spawnRule.push(0)
+            }
+        }
+    }
 }
 function clearWorld(){
     entities.particles=[]
@@ -435,19 +447,21 @@ function generateLevel(level,layer,context){
     for(let a=0,la=entities.players.length;a<la;a++){
         switch(context){
             case 0:
-                entities.players[a].position.x=level.spawn.x
+                entities.players[a].position.x=level.spawn.x-a*10-5+la*5
                 entities.players[a].position.y=level.spawn.y
                 entities.players[a].reset(0)
             break
             case 1:
-                entities.players[a].position.x=game.spawn.x
+                entities.players[a].position.x=game.spawn.x-a*10-5+la*5
                 entities.players[a].position.y=game.spawn.y
                 entities.players[a].reset(0)
             break
             case 2: case 3: case 4: case 5:
-                entities.players[a].reset(1)
-                game.spawn.x=entities.players[a].position.x
-                game.spawn.y=entities.players[a].position.y
+                entities.players[a].reset(entities.players[a].orb.active?2:1)
+                if(!entities.players[a].orb.active){
+                    game.spawn.x=entities.players[a].position.x
+                    game.spawn.y=entities.players[a].position.y
+                }
             break
         }
         view.goal.scroll.x=game.edge.x<layer.width?game.edge.x/2:constrain(entities.players[a].position.x,layer.width/2,game.edge.x-layer.width/2)
@@ -467,14 +481,16 @@ function generateLevel(level,layer,context){
         break
     }
     if(dev.freecam){
+        view.scroll.x=0
+        view.scroll.y=0
         for(let a=0,la=entities.players.length;a<la;a++){
-            view.scroll.x=entities.players[a].position.x
-            view.scroll.y=entities.players[a].position.y
+            view.scroll.x+=entities.players[a].position.x/la
+            view.scroll.y+=entities.players[a].position.y/la
         }
         view.scroll.anim=1
     }
     for(let a=0,la=level.walls.length;a<la;a++){
-        entities.walls.push(new wall(layer,level.walls[a].x,level.walls[a].y,level.walls[a].width,level.walls[a].height,level.walls[a].type))
+        entities.walls.push(new wall(layer,level.walls[a].x,level.walls[a].y,level.walls[a].width,level.walls[a].height,level.walls[a].type,a,game.zone))
     }
     if(context==2||context==3||context==4||context==5){
         for(let a=0,la=entities.walls.length;a<la;a++){
@@ -496,9 +512,11 @@ function generateLevel(level,layer,context){
 }
 function updateView(){
     if(dev.freecam){
+        view.scroll.x=0
+        view.scroll.y=0
         for(let a=0,la=entities.players.length;a<la;a++){
-            view.scroll.x=entities.players[a].position.x
-            view.scroll.y=entities.players[a].position.y
+            view.scroll.x+=entities.players[a].position.x/la
+            view.scroll.y+=entities.players[a].position.y/la
         }
         for(let a=0,la=entities.walls.length;a<la;a++){
             if(entities.walls[a].deprecate){
