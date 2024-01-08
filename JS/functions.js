@@ -554,9 +554,16 @@ function operateInner(layer){
     }
 }
 function operateOuter(layer){
-    for(let a=0,la=entities.players.length;a<la;a++){
-        view.goal.scroll.x=game.edge.x<layer.width?game.edge.x/2:constrain(entities.players[a].position.x,layer.width/2,game.edge.x-layer.width/2)
-        view.goal.scroll.y=game.edge.y<layer.height?game.edge.y/2:constrain(entities.players[a].position.y,layer.height/2,game.edge.y-layer.height/2)
+    if(!dev.freecam){
+        let mid={x:0,y:0}
+        for(let a=0,la=entities.players.length;a<la;a++){
+            mid.x+=entities.players[a].position.x/la
+            mid.y+=entities.players[a].position.y/la
+        }
+        mid.x=constrain(mid.x,layer.width/2,game.edge.x-layer.width/2)
+        mid.y=constrain(mid.y,layer.height/2,game.edge.y-layer.height/2)
+        view.goal.scroll.x=game.edge.x<layer.width?game.edge.x/2:mid.x
+        view.goal.scroll.y=game.edge.y<layer.height?game.edge.y/2:mid.y
     }
     displayComponent(layer,4)
 }

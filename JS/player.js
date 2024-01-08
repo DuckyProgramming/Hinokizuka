@@ -2014,9 +2014,9 @@ class player extends partisan{
                             }
                         break
                         case 4:
-                            if(this.climb>0){
+                            if((this.contact[2]||this.contact[3])&&(this.jumpTime<=0||this.dash.active)||this.climb>0){
+                                inputs.keys[this.id][4]=false
                                 this.climb=0
-                                this.weakTime=this.physics.weaken.wallJump
                                 if(this.anim.jump==0){
                                     this.anim.jump+=6
                                 }
@@ -2034,12 +2034,16 @@ class player extends partisan{
                                     }
                                 }
                                 if(this.dash.active>0){
-                                    this.velocity.y*=1.5
+                                    this.velocity.x*=1.25
+                                    this.velocity.y*=2
+                                    this.dash.active=0
                                     this.dashPhase=true
                                 }else{
                                     this.dashPhase=false
+                                    this.weakTime=this.physics.weaken.wallJump
                                 }
                             }else if(this.jumpTime>0){
+                                inputs.keys[this.id][4]=false
                                 this.jumpTime=0
                                 if(this.anim.jump==0){
                                     this.anim.jump+=6
@@ -2246,9 +2250,17 @@ class player extends partisan{
             }
             if(this.fade>0){
                 this.fade-=0.2
-            }else if(!transition.trigger){
-                transition.trigger=true
-                transition.scene='main'
+            }else{
+                let allDead=true
+                for(let a=0,la=entities.players.length;a<la;a++){
+                    if(!entities.players[a].dead){
+                        allDead=false
+                    }
+                }
+                if(!transition.trigger&&allDead){
+                    transition.trigger=true
+                    transition.scene='main'
+                }
             }
         }else{
             this.fade=smoothAnim(this.fade,!this.orb.active,0,1,5)
