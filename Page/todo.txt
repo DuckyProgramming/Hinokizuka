@@ -1,9 +1,4 @@
-temporary platform
-dash crystal
-4 way springs
-
-aesthetics for world 1
-first few levels of world 1
+world 1 levels
 
 menu page
 ending screen (tutorial)

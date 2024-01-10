@@ -50,8 +50,9 @@ function intersect(p1,q1,p2,q2){
     o4==0&&onSegment(p2,q1,q2)
 } 
 function collideBoxBox(static,mobile){
-    if(inBoxBox(static,{position:mobile.previous.position,width:mobile.width,height:mobile.height})){
-        return intersect(mobile.position,mobile.previous.position,
+    return inBoxBox(static,{position:mobile.previous.position,width:mobile.width,height:mobile.height})?
+        basicCollideBoxBox(static,mobile):
+        intersect(mobile.position,mobile.previous.position,
         {x:static.position.x-static.width/2,y:static.position.y+static.height/2},
         {x:static.position.x+static.width/2,y:static.position.y+static.height/2})?
         0:intersect(mobile.position,mobile.previous.position,
@@ -64,9 +65,6 @@ function collideBoxBox(static,mobile){
         {x:static.position.x-static.width/2,y:static.position.y-static.height/2},
         {x:static.position.x-static.width/2,y:static.position.y+static.height/2})?
         3:basicCollideBoxBox(static,mobile)
-    }else{
-        return basicCollideBoxBox(static,mobile)
-    }
     /*let v={x:0,y:0}
     let w={x:0,y:0}
     v.x=mobile.position.x==mobile.previous.position.x||mobile.position.x<static.position.x&&mobile.position.x<mobile.previous.position.x||mobile.position.x>static.position.x&&mobile.position.x>mobile.previous.position.x||mobile.position.x>static.position.x-static.width/2-mobile.width/2&&mobile.previous.position.x>static.position.x-static.width/2-mobile.width/2&&mobile.position.x<static.position.x+static.width/2+mobile.width/2&&mobile.previous.position.x<static.position.x+static.width/2+mobile.width/2?
@@ -403,7 +401,7 @@ function generateLevel(level,layer,context){
                     if(level.connections[a].id==game.previous.zone&&game.connections[b].id==game.zone&&abs(level.connections[a].side-game.connections[b].side)==2){
                         switch(context){
                             case 2:
-                                nudge.y=level.edge.y
+                                nudge.y=-game.edge.y
                                 nudge.x=-(level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2)
                             break
                             case 3:
@@ -411,7 +409,7 @@ function generateLevel(level,layer,context){
                                 nudge.y=-(level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2)
                             break
                             case 4:
-                                nudge.y=-game.edge.y
+                                nudge.y=level.edge.y
                                 nudge.x=-(level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2)
                             break
                             case 5:
@@ -433,6 +431,10 @@ function generateLevel(level,layer,context){
                 for(let b=0,lb=group[a].length;b<lb;b++){
                     group[a][b].position.x-=nudge.x
                     group[a][b].position.y-=nudge.y
+                    if(a==0){
+                        group[a][b].previous.position.x=group[a][b].position.x
+                        group[a][b].previous.position.y=group[a][b].position.y
+                    }
                 }
             }
             for(let a=0,la=entities.walls.length;a<la;a++){

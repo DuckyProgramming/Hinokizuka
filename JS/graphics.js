@@ -45,9 +45,7 @@ function displayBack(layer,type){
                 layer.quad(b-c,e,b+c,e,b+c*d,e-f,b-c*d,e-f)
                 if(b-c<0||b+c>layer.width){
                     b=layer.width-b
-                    c=random(60,80)
                     d=random(0,0.5)
-                    f=random(80,120)
                     layer.quad(b-c,e,b+c,e,b+c*d,e-f,b-c*d,e-f)
                 }
             }

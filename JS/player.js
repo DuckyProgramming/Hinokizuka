@@ -328,6 +328,12 @@ class player extends partisan{
                 this.dash.timer=0
                 inputs.keys[this.id][5]=false
             break
+            case 3:
+                this.orb.active=true
+                this.orb.speed=0
+                this.dead=false
+                this.goal.dead=false
+            break
         }
     }
     displaySymbol(layer,type,key){
@@ -2145,82 +2151,96 @@ class player extends partisan{
                 this.position.y-=0.2
             }
             if(this.position.y<0&&view.scroll.anim>=1){
-                for(let a=0,la=game.connections.length;a<la;a++){
-                    if(game.connections[a].side==0&&this.position.x>=game.connections[a].region[0]&&this.position.x<=game.connections[a].region[1]){
-                        if(game.connections[a].id==-1){
-                            this.position.y=0
-                        }else{
-                            game.zone=game.connections[a].id
-                            for(let b=0,lb=entities.players.length;b<lb;b++){
-                                if(entities.players[b].id!=this.id){
-                                    entities.players[b].orb.active=true
-                                    entities.players[b].orb.speed=0
+                if(dev.debound){
+                    this.position.y=0
+                }else{
+                    for(let a=0,la=game.connections.length;a<la;a++){
+                        if(game.connections[a].side==0&&this.position.x>=game.connections[a].region[0]&&this.position.x<=game.connections[a].region[1]){
+                            if(game.connections[a].id==-1){d
+                                this.position.y=0
+                            }else{
+                                game.zone=game.connections[a].id
+                                for(let b=0,lb=entities.players.length;b<lb;b++){
+                                    if(entities.players[b].id!=this.id){
+                                        entities.players[b].reset(3)
+                                    }
                                 }
+                                generateLevel(levels[game.level][game.zone],this.layer,2)
+                                break
                             }
-                            generateLevel(levels[game.level][game.zone],this.layer,2)
-                            break
                         }
                     }
                 }
             }
             if(this.position.x>game.edge.x&&view.scroll.anim>=1){
-                for(let a=0,la=game.connections.length;a<la;a++){
-                    if(game.connections[a].side==1&&this.position.y>=game.connections[a].region[0]&&this.position.y<=game.connections[a].region[1]){
-                        if(game.connections[a].id==-1){
-                            this.position.x=game.edge.x
-                        }else{
-                            game.zone=game.connections[a].id
-                            for(let b=0,lb=entities.players.length;b<lb;b++){
-                                if(entities.players[b].id!=this.id){
-                                    entities.players[b].orb.active=true
-                                    entities.players[b].orb.speed=0
+                if(dev.debound){
+                    this.position.x=game.edge.x
+                }else{
+                    for(let a=0,la=game.connections.length;a<la;a++){
+                        if(game.connections[a].side==1&&this.position.y>=game.connections[a].region[0]&&this.position.y<=game.connections[a].region[1]){
+                            if(game.connections[a].id==-1){
+                                this.position.x=game.edge.x
+                            }else{
+                                game.zone=game.connections[a].id
+                                for(let b=0,lb=entities.players.length;b<lb;b++){
+                                    if(entities.players[b].id!=this.id){
+                                        entities.players[b].reset(3)
+                                    }
                                 }
+                                generateLevel(levels[game.level][game.zone],this.layer,3)
+                                break
                             }
-                            generateLevel(levels[game.level][game.zone],this.layer,3)
-                            break
                         }
                     }
                 }
             }
             if(this.position.y>game.edge.y){
-                let trigger=false
-                for(let a=0,la=game.connections.length;a<la;a++){
-                    if(game.connections[a].side==2&&this.position.x>=game.connections[a].region[0]&&this.position.x<=game.connections[a].region[1]){
-                        if(game.connections[a].id==-1){
-                            this.position.y=game.edge.y
-                        }else{
-                            game.zone=game.connections[a].id
-                            for(let b=0,lb=entities.players.length;b<lb;b++){
-                                if(entities.players[b].id!=this.id){
-                                    entities.players[b].orb.active=true
-                                    entities.players[b].orb.speed=0
+                if(dev.debound){
+                    this.position.y=game.edge.y
+                    this.dash.available=true
+                    this.jumpTime=this.base.jumpTime
+                }else{
+                    let trigger=false
+                    for(let a=0,la=game.connections.length;a<la;a++){
+                        if(game.connections[a].side==2&&this.position.x>=game.connections[a].region[0]&&this.position.x<=game.connections[a].region[1]){
+                            if(game.connections[a].id==-1){
+                                this.position.y=game.edge.y
+                            }else{
+                                game.zone=game.connections[a].id
+                                for(let b=0,lb=entities.players.length;b<lb;b++){
+                                    if(entities.players[b].id!=this.id){
+                                        entities.players[b].reset(3)
+                                    }
                                 }
+                                generateLevel(levels[game.level][game.zone],this.layer,4)
+                                break
                             }
-                            generateLevel(levels[game.level][game.zone],this.layer,4)
-                            break
+                            trigger=true
                         }
-                        trigger=true
                     }
-                }
-                if(!this.goal.dead&&!trigger&&view.scroll.anim>=1){
-                    this.goal.dead=true
+                    if(!this.goal.dead&&!trigger&&view.scroll.anim>=1){
+                        this.goal.dead=true
+                    }
                 }
             }
             if(this.position.x<0&&view.scroll.anim>=1){
-                for(let a=0,la=game.connections.length;a<la;a++){
-                    if(game.connections[a].side==3&&this.position.y>=game.connections[a].region[0]&&this.position.y<=game.connections[a].region[1]){
-                        if(game.connections[a].id==-1){
-                            this.position.x=0
-                        }else{
-                            game.zone=game.connections[a].id
-                            for(let b=0,lb=entities.players.length;b<lb;b++){
-                                if(entities.players[b].id!=this.id){
-                                    entities.players[b].orb.active=true
-                                    entities.players[b].orb.speed=0
+                if(dev.debound){
+                    this.position.x=0
+                }else{
+                    for(let a=0,la=game.connections.length;a<la;a++){
+                        if(game.connections[a].side==3&&this.position.y>=game.connections[a].region[0]&&this.position.y<=game.connections[a].region[1]){
+                            if(game.connections[a].id==-1){
+                                this.position.x=0
+                            }else{
+                                game.zone=game.connections[a].id
+                                for(let b=0,lb=entities.players.length;b<lb;b++){
+                                    if(entities.players[b].id!=this.id){
+                                        entities.players[b].reset(3)
+                                    }
                                 }
+                                generateLevel(levels[game.level][game.zone],this.layer,5)
+                                break
                             }
-                            generateLevel(levels[game.level][game.zone],this.layer,5)
-                            break
                         }
                     }
                 }
@@ -2241,7 +2261,10 @@ class player extends partisan{
         }else if(this.anim.stamina<this.stamina/this.base.stamina*20-0.2){
             this.anim.stamina+=0.2
         }
-        if(this.goal.dead&&!dev.invincible){
+        if(this.goal.dead&&dev.invincible){
+            this.goal.dead=false
+        }
+        if(this.goal.dead){
             if(!this.dead){
                 this.dead=true
                 for(let a=0,la=8;a<la;a++){

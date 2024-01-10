@@ -58,7 +58,7 @@ class ui{
                         }
                     break
                     case 3:
-                        let options=['hitbox','edge','connection','markspawn','freecam','infinitedash','invincible','nograv']
+                        let options=['hitbox','edge','connection','markspawn','freecam','infinitedash','invincible','nograv','debound']
                         for(let b=0,lb=options.length;b<lb;b++){
                             this.layer.fill(dev[options[b]]?125:150,dev[options[b]]?255:150,dev[options[b]]?125:150)
                             this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,20+b*35,80,30,5)
@@ -132,7 +132,7 @@ class ui{
                         }
                     break
                     case 3:
-                        let options=['Hitbox','Edge','Connection','Spawn Point','Freecam','Infinite Dash','Invincible','No Gravity']
+                        let options=['Hitbox','Edge','Connection','Spawn Point','Freecam','Infinite Dash','Invincible','No Gravity','No Bounds']
                         for(let b=0,lb=options.length;b<lb;b++){
                             this.layer.text(options[b],this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,20+b*35)
                         }
@@ -322,7 +322,7 @@ class ui{
                     }
                 break
                 case 3:
-                    let options=['hitbox','edge','connection','markspawn','freecam','infinitedash','invincible','nograv']
+                    let options=['hitbox','edge','connection','markspawn','freecam','infinitedash','invincible','nograv','debound']
                     for(let b=0,lb=options.length;b<lb;b++){
                         if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:20+b*35},width:80,height:30})){
                             dev[options[b]]=!dev[options[b]]
