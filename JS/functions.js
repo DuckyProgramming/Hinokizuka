@@ -50,20 +50,20 @@ function intersect(p1,q1,p2,q2){
     o4==0&&onSegment(p2,q1,q2)
 } 
 function collideBoxBox(static,mobile){
-    return inBoxBox(static,{position:mobile.previous.position,width:mobile.width,height:mobile.height})?
+    return inBoxBox(static,{position:mobile.previous.position,width:mobile.width-1,height:mobile.height-1})?
         basicCollideBoxBox(static,mobile):
         intersect(mobile.position,mobile.previous.position,
-        {x:static.position.x-static.width/2,y:static.position.y+static.height/2},
-        {x:static.position.x+static.width/2,y:static.position.y+static.height/2})?
+        {x:static.position.x-static.width/2-mobile.width/2,y:static.position.y+static.height/2+mobile.height/2},
+        {x:static.position.x+static.width/2+mobile.width/2,y:static.position.y+static.height/2+mobile.height/2})?
         0:intersect(mobile.position,mobile.previous.position,
-        {x:static.position.x-static.width/2,y:static.position.y-static.height/2},
-        {x:static.position.x+static.width/2,y:static.position.y-static.height/2})?
+        {x:static.position.x-static.width/2-mobile.width/2,y:static.position.y-static.height/2-mobile.height/2},
+        {x:static.position.x+static.width/2+mobile.width/2,y:static.position.y-static.height/2-mobile.height/2})?
         1:intersect(mobile.position,mobile.previous.position,
-        {x:static.position.x+static.width/2,y:static.position.y-static.height/2},
-        {x:static.position.x+static.width/2,y:static.position.y+static.height/2})?
+        {x:static.position.x+static.width/2+mobile.width/2,y:static.position.y-static.height/2-mobile.height/2},
+        {x:static.position.x+static.width/2+mobile.width/2,y:static.position.y+static.height/2+mobile.height/2})?
         2:intersect(mobile.position,mobile.previous.position,
-        {x:static.position.x-static.width/2,y:static.position.y-static.height/2},
-        {x:static.position.x-static.width/2,y:static.position.y+static.height/2})?
+        {x:static.position.x-static.width/2-mobile.width/2,y:static.position.y-static.height/2-mobile.height/2},
+        {x:static.position.x-static.width/2-mobile.width/2,y:static.position.y+static.height/2+mobile.height/2})?
         3:basicCollideBoxBox(static,mobile)
     /*let v={x:0,y:0}
     let w={x:0,y:0}

@@ -2088,21 +2088,30 @@ class player extends partisan{
                                 if(inputs.keys[this.id][3]){
                                     b.x++
                                 }
-                                if(b.x==0&&b.y==0){
+                                if(b.x==0&&b.y==0&&options.defaultDash){
                                     if(this.goal.direction.main<0){
                                         b.x--
                                     }else if(this.goal.direction.main>0){
                                         b.x++
                                     }
+                                    this.dash.active=this.base.dash.active
+                                    this.dash.direction=atan2(b.y,b.x)
+                                    if(!dev.infinitedash){
+                                        this.dash.timer=this.base.dash.timer
+                                        this.dash.available=false
+                                    }
+                                    this.weakTime=this.physics.weaken.dash
+                                    this.dashPhase=true
+                                }else if(b.x!=0||b.y!=0){
+                                    this.dash.active=this.base.dash.active
+                                    this.dash.direction=atan2(b.y,b.x)
+                                    if(!dev.infinitedash){
+                                        this.dash.timer=this.base.dash.timer
+                                        this.dash.available=false
+                                    }
+                                    this.weakTime=this.physics.weaken.dash
+                                    this.dashPhase=true
                                 }
-                                this.dash.active=this.base.dash.active
-                                this.dash.direction=atan2(b.y,b.x)
-                                if(!dev.infinitedash){
-                                    this.dash.timer=this.base.dash.timer
-                                    this.dash.available=false
-                                }
-                                this.weakTime=this.physics.weaken.dash
-                                this.dashPhase=true
                             }
                         break
                         case 6:
@@ -2276,7 +2285,7 @@ class player extends partisan{
             }else{
                 let allDead=true
                 for(let a=0,la=entities.players.length;a<la;a++){
-                    if(!entities.players[a].dead){
+                    if(!entities.players[a].dead&&!entities.players[a].orb.active){
                         allDead=false
                     }
                 }

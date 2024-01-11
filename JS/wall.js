@@ -46,10 +46,10 @@ class wall extends physical{
                 this.timer=0
             break
             case 9:
-                this.base.width=15
-                this.base.height=15
-                this.width=15
-                this.height=15
+                this.base.width=20
+                this.base.height=20
+                this.width=20
+                this.height=20
                 this.timer=0
             break
             case 10:
@@ -252,7 +252,9 @@ class wall extends physical{
                 for(let b=0,lb=this.collide.box[a].length;b<lb;b++){
                     let c=this.collide.box[a][b]
                     if(!c.orb.active&&!c.goal.dead){
-                        if(inBoxBox({position:this.position,width:this.width+2,height:this.height+2},c)){
+                        if(inBoxBox({position:this.position,width:this.width+2,height:this.height+2},c)&&
+                            this.type!=2&&this.type!=3&&this.type!=4&&this.type!=5&&this.type!=7&&this.type!=9&&this.type!=10&&this.type!=11&&this.type!=12&&this.type!=13
+                        ){
                             let d=collideBoxBox(this,c)
                             c.contact[d]=true
                             if(d==1){

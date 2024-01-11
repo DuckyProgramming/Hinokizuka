@@ -34,6 +34,17 @@ function displayBack(layer,type){
         case 1:
             layer.background(75,150,200)
             for(let a=0,la=50;a<la;a++){
+                let b=-50+a*78%(layer.width+100)+random(-10,10)
+                let c=random(15,20)
+                let d=layer.height*(0.76+a/la*0.24)
+                let e=random(160,240)
+                layer.fill(40+a/la*20+random(-20,20))
+                layer.triangle(b-c,d,b+c,d,b,d-e)
+                if(b-c<0||b+c>layer.width){
+                    b=layer.width-b
+                    e=random(160,240)
+                    layer.triangle(b-c,d,b+c,d,b,d-e)
+                }
             }
             for(let a=0,la=200;a<la;a++){
                 let b=-50+a*71%(layer.width+100)+random(-10,10)
@@ -41,7 +52,7 @@ function displayBack(layer,type){
                 let d=random(0,0.5)
                 let e=layer.height*(0.8+a/la*0.24)
                 let f=random(80,120)
-                layer.fill(60+a/la*60+random(-20,20))
+                layer.fill(60+a/la*20+random(-20,20))
                 layer.quad(b-c,e,b+c,e,b+c*d,e-f,b-c*d,e-f)
                 if(b-c<0||b+c>layer.width){
                     b=layer.width-b
