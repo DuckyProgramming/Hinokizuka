@@ -9,6 +9,7 @@ class wall extends physical{
         this.collide={box:[entities.players]}
         this.base={width:this.width,height:this.height}
         this.deprecate=false
+        this.downsize={trigger:false,value:0}
         this.interval=types.wall[this.type].interval
         this.time=0
         this.set()
@@ -139,6 +140,7 @@ class wall extends physical{
             break
             case 7: case 14:
                 if(this.type==14){
+                    this.layer.noFill()
                     this.layer.stroke(240,this.fade)
                     this.layer.strokeWeight(3)
                     this.layer.rotate(-20+30*sin(this.time*12))
@@ -169,9 +171,13 @@ class wall extends physical{
                 }
             break
             case 8:
-                this.layer.fill(125,this.fade)
+                this.layer.fill(135,this.fade)
                 for(let a=0,la=this.width/10;a<la;a++){
                     this.layer.rect(-this.width/2+5+a*10,0,9,this.height,2)
+                }
+                this.layer.fill(120,this.fade)
+                for(let a=0,la=this.width/10;a<la;a++){
+                    this.layer.rect(-this.width/2+5+a*10,0,5,this.height-4,2)
                 }
             break
             case 9:

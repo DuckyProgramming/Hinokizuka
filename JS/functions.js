@@ -390,12 +390,12 @@ function generateLevel(level,layer,context){
     }
     view.previous.scroll.x=view.goal.scroll.x
     view.previous.scroll.y=view.goal.scroll.y
+    let nudge={x:0,y:0}
     switch(context){
         case 0: case 1:
             clearWorld()
         break
         case 2: case 3: case 4: case 5:
-            let nudge={x:0,y:0}
             for(let a=0,la=level.connections.length;a<la;a++){
                 for(let b=0,lb=game.connections.length;b<lb;b++){
                     if(level.connections[a].id==game.previous.zone&&game.connections[b].id==game.zone&&abs(level.connections[a].side-game.connections[b].side)==2){
@@ -442,6 +442,7 @@ function generateLevel(level,layer,context){
             }
         break
     }
+    let old={edge:{x:game.edge.x,y:game.edge.y}}
     game.previous.zone=game.zone
     game.connections=level.connections
     game.edge.x=level.edge.x
@@ -521,6 +522,40 @@ function generateLevel(level,layer,context){
         for(let a=0,la=entities.walls.length;a<la;a++){
             entities.walls[a].expel()
         }
+        if(nudge.x!=0&&nudge.y!=0){
+            let top=0
+            switch(context){
+                case 2:
+                    top=1
+                break
+                case 3: case 5:
+                    top=level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2>0?1:0
+                break
+                case 4:
+                    top=0
+                break
+            }
+            switch(top){
+                case 0:
+                    for(let a=0,la=entities.walls.length;a<la;a++){
+                        if(entities.walls[a].deprecate&&entities.walls[a].position.y+entities.walls[a].height/2>=old.edge.y){
+                            entities.walls[a].position.y+=level.edge.y/2
+                            entities.walls[a].height+=level.edge.y
+                        }
+                    }
+                break
+                case 1:
+                    for(let a=0,la=entities.walls.length;a<la;a++){
+                        if(!entities.walls[a].deprecate&&entities.walls[a].position.y+entities.walls[a].height/2>=level.edge.y){
+                            entities.walls[a].position.y+=old.edge.y/2
+                            entities.walls[a].height+=old.edge.y
+                            entities.walls[a].downsize.trigger=true
+                            entities.walls[a].downsize.value=old.edge.y
+                        }
+                    }
+                break
+            }
+        }
     }
     if(dev.editor){
         if(entities.uis.length==0){
@@ -546,19 +581,28 @@ function updateView(){
         for(let a=0,la=entities.walls.length;a<la;a++){
             if(entities.walls[a].deprecate){
                 entities.walls[a].remove=true
+            }else if(entities.walls[a].downsize.trigger){
+                entities.walls[a].downsize.trigger=false
+                entities.walls[a].position.y-=entities.walls[a].downsize.value/2
+                entities.walls[a].height-=entities.walls[a].downsize.value
             }
         }
     }else if(view.scroll.anim<10){
         view.scroll.anim++
-        view.scroll.x=map(view.scroll.anim,0,10,view.previous.scroll.x,view.goal.scroll.x)
-        view.scroll.y=map(view.scroll.anim,0,10,view.previous.scroll.y,view.goal.scroll.y)
-        if(view.scroll.anim==10){
+        if(view.scroll.anim>=10){
+            view.scroll.anim=10
             for(let a=0,la=entities.walls.length;a<la;a++){
                 if(entities.walls[a].deprecate){
                     entities.walls[a].remove=true
+                }else if(entities.walls[a].downsize.trigger){
+                    entities.walls[a].downsize.trigger=false
+                    entities.walls[a].position.y-=entities.walls[a].downsize.value/2
+                    entities.walls[a].height-=entities.walls[a].downsize.value
                 }
             }
         }
+        view.scroll.x=map(view.scroll.anim,0,10,view.previous.scroll.x,view.goal.scroll.x)
+        view.scroll.y=map(view.scroll.anim,0,10,view.previous.scroll.y,view.goal.scroll.y)
     }else{
         view.scroll.x=view.scroll.x*0.9+view.goal.scroll.x*0.1
         view.scroll.y=view.scroll.y*0.9+view.goal.scroll.y*0.1

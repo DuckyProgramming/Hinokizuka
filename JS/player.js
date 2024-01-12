@@ -2002,6 +2002,10 @@ class player extends partisan{
             }
             this.crouch=false
         }
+        if(this.goal.dead&&!dev.invincible){
+            this.velocity.x=0
+            this.velocity.y=0
+        }
         super.update()
         if(!this.orb.active){
             let resolveOrder=[7,6,1,2,3,4,5]
@@ -2030,19 +2034,22 @@ class player extends partisan{
                         case 4:
                             if((this.contact[2]||this.contact[3])&&(this.jumpTime<=0||this.dash.active)||this.climb>0){
                                 inputs.keys[this.id][4]=false
+                                if(this.climb>0){
+                                    inputs.keys[this.id][6]=false
+                                }
                                 this.climb=0
                                 if(this.anim.jump==0){
                                     this.anim.jump+=6
                                 }
-                                if(this.crush[2]&&this.crush[3]){
+                                if(this.contact[2]&&this.contact[3]){
                                     this.velocity.x=0
                                     this.velocity.y=this.physics.wallJumpPower.y
                                 }else{
-                                    if(this.crush[2]){
+                                    if(this.contact[2]){
                                         this.velocity.x=this.physics.wallJumpPower.x
                                         this.velocity.y=this.physics.wallJumpPower.y
                                     }
-                                    if(this.crush[3]){
+                                    if(this.contact[3]){
                                         this.velocity.x=-this.physics.wallJumpPower.x
                                         this.velocity.y=this.physics.wallJumpPower.y
                                     }
