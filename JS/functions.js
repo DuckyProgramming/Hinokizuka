@@ -26,10 +26,10 @@ function sign(value){
 }
 //calculatory
 function inPointBox(point,box){
-    return point.position.x>=box.position.x-box.width/2&&point.position.x<=box.position.x+box.width/2&&point.position.y>=box.position.y-box.height/2&&point.position.y<=box.position.y+box.height/2
+    return point.position.x>box.position.x-box.width/2&&point.position.x<box.position.x+box.width/2&&point.position.y>box.position.y-box.height/2&&point.position.y<box.position.y+box.height/2
 }
 function inBoxBox(box1,box2){
-    return box1.position.x>=box2.position.x-box1.width/2-box2.width/2&&box1.position.x<=box2.position.x+box1.width/2+box2.width/2&&box1.position.y>=box2.position.y-box1.height/2-box2.height/2&&box1.position.y<=box2.position.y+box1.height/2+box2.height/2
+    return box1.position.x>box2.position.x-box1.width/2-box2.width/2&&box1.position.x<box2.position.x+box1.width/2+box2.width/2&&box1.position.y>box2.position.y-box1.height/2-box2.height/2&&box1.position.y<box2.position.y+box1.height/2+box2.height/2
 }
 function onSegment(p,q,r){ 
     return q.x<=max(p.x,r.x)&&q.x>=min(p.x, r.x)&&q.y<=max(p.y,r.y)&&q.y>=min(p.y, r.y)
@@ -458,10 +458,31 @@ function generateLevel(level,layer,context){
                 entities.players[a].position.y=game.spawn.y
                 entities.players[a].reset(0)
             break
-            case 2: case 3: case 4: case 5:
+            case 2:
                 entities.players[a].reset(entities.players[a].orb.active?2:1)
                 if(!entities.players[a].orb.active){
                     game.spawn.x=entities.players[a].position.x
+                    game.spawn.y=entities.players[a].position.y-5
+                }
+            break
+            case 3:
+                entities.players[a].reset(entities.players[a].orb.active?2:1)
+                if(!entities.players[a].orb.active){
+                    game.spawn.x=entities.players[a].position.x+5
+                    game.spawn.y=entities.players[a].position.y
+                }
+            break
+            case 4:
+                entities.players[a].reset(entities.players[a].orb.active?2:1)
+                if(!entities.players[a].orb.active){
+                    game.spawn.x=entities.players[a].position.x
+                    game.spawn.y=entities.players[a].position.y+5
+                }
+            break
+            case 5:
+                entities.players[a].reset(entities.players[a].orb.active?2:1)
+                if(!entities.players[a].orb.active){
+                    game.spawn.x=entities.players[a].position.x-5
                     game.spawn.y=entities.players[a].position.y
                 }
             break

@@ -16,6 +16,8 @@ class player extends partisan{
         this.crouch=false
         this.climb=false
         this.dashPhase=false
+        this.setSpawn=false
+        this.stageSpawn=false
         this.offset={position:{x:0,y:0}}
         this.anim={dash:0,stamina:0,staminaActive:0,climb:0,crouch:0,move:0,jump:0,orb:0}
         this.dash={active:0,timer:0,available:true,direction:0}
@@ -1906,7 +1908,6 @@ class player extends partisan{
         }
     }
     update(){
-        super.update()
         if(
             this.direction.main==this.goal.direction.main-900||
             this.direction.main==this.goal.direction.main-540||
@@ -1941,6 +1942,10 @@ class player extends partisan{
             let bound=this.position.x<0||this.position.x>game.edge.x||this.position.y<0||this.position.y>game.edge.y
             this.velocity.x=sin(direction)*this.orb.speed*(bound?5:1)
             this.velocity.y=cos(direction)*this.orb.speed*(bound?5:1)
+            if(this.position.x<-150||this.position.x>game.edge.x+150||this.position.y<-150||this.position.y>game.edge.y+150){
+                this.velocity.x=sin(direction)*this.orb.speed*(bound?5:1)*2
+                this.velocity.y=cos(direction)*this.orb.speed*(bound?5:1)*2
+            }
             this.goal.direction.main=sin(direction)>0?54:-54
             this.dash.active=0
             this.dashPhase=false
@@ -1996,6 +2001,9 @@ class player extends partisan{
                 }
             }
             this.crouch=false
+        }
+        super.update()
+        if(!this.orb.active){
             let resolveOrder=[7,6,1,2,3,4,5]
             for(let a=0,la=resolveOrder.length;a<la;a++){
                 if(inputs.keys[this.id][resolveOrder[a]]){
@@ -2088,21 +2096,18 @@ class player extends partisan{
                                 if(inputs.keys[this.id][3]){
                                     b.x++
                                 }
+                                let trigger=false
                                 if(b.x==0&&b.y==0&&options.defaultDash){
                                     if(this.goal.direction.main<0){
                                         b.x--
                                     }else if(this.goal.direction.main>0){
                                         b.x++
                                     }
-                                    this.dash.active=this.base.dash.active
-                                    this.dash.direction=atan2(b.y,b.x)
-                                    if(!dev.infinitedash){
-                                        this.dash.timer=this.base.dash.timer
-                                        this.dash.available=false
-                                    }
-                                    this.weakTime=this.physics.weaken.dash
-                                    this.dashPhase=true
+                                    trigger=true
                                 }else if(b.x!=0||b.y!=0){
+                                   trigger=true
+                                }
+                                if(trigger){
                                     this.dash.active=this.base.dash.active
                                     this.dash.direction=atan2(b.y,b.x)
                                     if(!dev.infinitedash){
@@ -2111,6 +2116,9 @@ class player extends partisan{
                                     }
                                     this.weakTime=this.physics.weaken.dash
                                     this.dashPhase=true
+                                    for(let a=0,la=entities.walls.length;a<la;a++){
+										entities.walls[a].onDash()
+                                    }
                                 }
                             }
                         break
@@ -2159,7 +2167,7 @@ class player extends partisan{
             if(this.anim.crouch<1&&this.crouch){
                 this.position.y-=0.2
             }
-            if(this.position.y<0&&view.scroll.anim>=1){
+            if(this.position.y<0&&view.scroll.anim>=1&&!this.goal.dead){
                 if(dev.debound){
                     this.position.y=0
                 }else{
@@ -2181,7 +2189,7 @@ class player extends partisan{
                     }
                 }
             }
-            if(this.position.x>game.edge.x&&view.scroll.anim>=1){
+            if(this.position.x>game.edge.x&&view.scroll.anim>=1&&!this.goal.dead){
                 if(dev.debound){
                     this.position.x=game.edge.x
                 }else{
@@ -2203,7 +2211,7 @@ class player extends partisan{
                     }
                 }
             }
-            if(this.position.y>game.edge.y){
+            if(this.position.y>game.edge.y&&!this.goal.dead){
                 if(dev.debound){
                     this.position.y=game.edge.y
                     this.dash.available=true
@@ -2232,7 +2240,7 @@ class player extends partisan{
                     }
                 }
             }
-            if(this.position.x<0&&view.scroll.anim>=1){
+            if(this.position.x<0&&view.scroll.anim>=1&&!this.goal.dead){
                 if(dev.debound){
                     this.position.x=0
                 }else{
@@ -2295,6 +2303,11 @@ class player extends partisan{
                 }
             }
         }else{
+            if(this.stageSpawn){
+                game.spawn.x=this.position.x
+                game.spawn.y=this.position.y
+                this.stageSpawn=false
+            }
             this.fade=smoothAnim(this.fade,!this.orb.active,0,1,5)
         }
     }

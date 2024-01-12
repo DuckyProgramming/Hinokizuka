@@ -7,6 +7,11 @@ function setupGraphics(){
         setupLayer(graphics.backgrounds[a])
         displayBack(graphics.backgrounds[a],a)
     }
+    for(let a=0,la=4;a<la;a++){
+        graphics.walls.push(createGraphics(40,40))
+        setupLayer(graphics.walls[a])
+        displayWallGraphic(graphics.walls[a],a)
+    }
 }
 function displayBack(layer,type){
     layer.noStroke()
@@ -59,6 +64,24 @@ function displayBack(layer,type){
                     d=random(0,0.5)
                     layer.quad(b-c,e,b+c,e,b+c*d,e-f,b-c*d,e-f)
                 }
+            }
+        break
+    }
+}
+function displayWallGraphic(layer,type){
+    layer.noStroke()
+    layer.translate(layer.width/2,layer.height/2)
+    switch(type){
+        case 0: case 1: case 2: case 3:
+            layer.noStroke()
+            layer.rotate(45*type)
+            for(a=0,la=6;a<la;a++){
+                layer.fill(210,225,230)
+                layer.rotate(180/la)
+                layer.triangle(0,0,8,8,5,20)
+                layer.fill(100,140,200)
+                layer.rotate(180/la)
+                layer.triangle(0,0,8,8,5,20)
             }
         break
     }

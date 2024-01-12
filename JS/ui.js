@@ -235,7 +235,7 @@ class ui{
                                 wallForm+=`
                 `
                             }
-                            wallForm+=`{x:${entities.walls[a].position.x},y:${entities.walls[a].position.y},width:${entities.walls[a].base.width},height:${entities.walls[a].base.height},type:${entities.walls[a].type}},`
+                            wallForm+=`{x:${round(entities.walls[a].position.x)},y:${round(entities.walls[a].position.y)},width:${entities.walls[a].base.width},height:${entities.walls[a].base.height},type:${entities.walls[a].type}},`
                         }
                         print(
 `

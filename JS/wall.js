@@ -76,6 +76,28 @@ class wall extends physical{
                 this.anim=0
                 this.timer=0
             break
+            case 14:
+                this.base.width=30
+                this.base.height=30
+                this.width=30
+                this.height=30
+                this.active=false
+                this.fly=false
+                this.velocity={y:0}
+            break
+            case 15:
+                this.base.height=4
+                this.height=4
+            break
+            case 16:
+                this.width=this.base.width-10
+                this.height=this.base.height-10
+            break
+        }
+    }
+    onDash(){
+        if(this.type==14){
+            this.fly=true
         }
     }
     display(){
@@ -84,7 +106,7 @@ class wall extends physical{
         this.layer.noStroke()
         switch(this.type){
             case 1:
-                this.layer.fill(120,this.fade)
+                this.layer.fill(150,this.fade)
                 this.layer.rect(0,0,this.width+1,this.height+1)
             break
             case 2:
@@ -112,10 +134,24 @@ class wall extends physical{
                 }
             break
             case 6:
-                this.layer.fill(90,this.fade)
+                this.layer.fill(120,this.fade)
                 this.layer.rect(0,0,this.width+1,this.height+1)
             break
-            case 7:
+            case 7: case 14:
+                if(this.type==14){
+                    this.layer.stroke(240,this.fade)
+                    this.layer.strokeWeight(3)
+                    this.layer.rotate(-20+30*sin(this.time*12))
+                    this.layer.arc(-15,-24,16,40,95,160)
+                    this.layer.rotate(10)
+                    this.layer.arc(-13,-26,12,36,95,160)
+                    this.layer.rotate(30-60*sin(this.time*12))
+                    this.layer.arc(15,-20,16,40,20,85)
+                    this.layer.rotate(-10)
+                    this.layer.arc(13,-26,12,36,20,85)
+                    this.layer.rotate(-10+30*sin(this.time*12))
+                    this.layer.noStroke()
+                }
                 this.layer.fill(123,189,156,this.fade)
                 for(let a=0,la=15;a<la;a++){
                     this.layer.triangle(-2.25,12,2.25,12,0,21)
@@ -133,7 +169,7 @@ class wall extends physical{
                 }
             break
             case 8:
-                this.layer.fill(80,this.fade)
+                this.layer.fill(125,this.fade)
                 for(let a=0,la=this.width/10;a<la;a++){
                     this.layer.rect(-this.width/2+5+a*10,0,9,this.height,2)
                 }
@@ -192,6 +228,26 @@ class wall extends physical{
                 this.layer.point(this.anim*15,-5)
                 this.layer.point(this.anim*15,5)
             break
+            case 15:
+                this.layer.fill(230,190,140,this.fade)
+                this.layer.rect(0,0,this.width,this.height)
+                this.layer.fill(150,110,60)
+                for(let a=0,la=this.width/10;a<la;a++){
+                    this.layer.rect(-this.width/2+5+a*10,0,2,this.height)
+                }
+                this.layer.fill(180,this.fade)
+                this.layer.quad(-this.width/2+5,this.height/2,-this.width/2+10,this.height/2,-this.width/2,this.height+10,-this.width/2,this.height+5)
+                this.layer.quad(this.width/2-5,this.height/2,this.width/2-10,this.height/2,this.width/2,this.height+10,this.width/2,this.height+5)
+            break
+            case 16:
+                this.layer.fill(155,145,195,this.fade)
+                this.layer.rect(0,0,this.width-10,this.height-10)
+                for(let a=0,la=this.base.width/20;a<la;a++){
+                    for(let b=0,lb=this.base.height/20;b<lb;b++){
+                        this.layer.image(graphics.walls[(a+b)%4],-this.base.width/2+10+a*20,-this.base.height/2+10+b*20,40,40)
+                    }
+                }
+            break
         }
         this.layer.pop()
         if(dev.hitbox){
@@ -246,14 +302,23 @@ class wall extends physical{
                     this.anim=round(this.anim*20-1)/20
                 }
             break
+            case 14:
+                if(this.fly){
+                    this.velocity.y-=physics.gravity
+                    this.position.y+=this.velocity.y
+                }
+            break
         }
         if(this.fade>0.2&&!this.deprecate){
             for(let a=0,la=this.collide.box.length;a<la;a++){
                 for(let b=0,lb=this.collide.box[a].length;b<lb;b++){
                     let c=this.collide.box[a][b]
-                    if(!c.orb.active&&!c.goal.dead){
+                    if(!c.orb.active&&!c.goal.dead&&
+                        !(this.type==15&&(c.velocity.y<=0||c.previous.position.y>this.position.y-this.height/2-c.height/2))
+                    ){
                         if(inBoxBox({position:this.position,width:this.width+2,height:this.height+2},c)&&
-                            this.type!=2&&this.type!=3&&this.type!=4&&this.type!=5&&this.type!=7&&this.type!=9&&this.type!=10&&this.type!=11&&this.type!=12&&this.type!=13
+                            this.type!=2&&this.type!=3&&this.type!=4&&this.type!=5&&this.type!=7&&this.type!=9&&this.type!=10&&this.type!=11&&this.type!=12&&this.type!=13&&
+                            !(this.type==8&&this.timer>0&&this.timer<180)
                         ){
                             let d=collideBoxBox(this,c)
                             c.contact[d]=true
@@ -266,6 +331,9 @@ class wall extends physical{
                             c.crush[d]=true
                             switch(this.type){
                                 case 8:
+                                    if(this.timer==1){
+                                        c.goal.dead=true
+                                    }
                                     if(this.timer==0){
                                         this.timer=240
                                     }
@@ -292,7 +360,10 @@ class wall extends physical{
                                         c.goal.dead=true
                                     }
                                 break
-                                case 7:
+                                case 16:
+                                    c.goal.dead=true
+                                break
+                                case 7: case 14:
                                     if(!this.active){
                                         this.active=true
                                         this.trigger.fade=false
@@ -305,9 +376,6 @@ class wall extends physical{
                                     }
                                 break
                                 case 9:
-                                    if(this.timer==175){
-                                        c.goal.dead=true
-                                    }
                                     if(this.timer==0&&!c.dash.available){
                                         c.dash.available=true
                                         this.timer=240
@@ -367,8 +435,7 @@ class wall extends physical{
                                                     c.dash.available=true
                                                 }
                                                 if(c.setSpawn&&c.position.x>10&&c.position.x<game.edge.x-10&&c.position.y>10&&c.position.y<game.edge.y-10){
-                                                    game.spawn.x=c.position.x
-                                                    game.spawn.y=c.position.y
+                                                    c.stageSpawn=true
                                                     c.setSpawn=false
                                                 }
                                             }
