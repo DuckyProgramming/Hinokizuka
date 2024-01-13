@@ -22,7 +22,7 @@ class player extends partisan{
         this.anim={dash:0,stamina:0,staminaActive:0,climb:0,crouch:0,move:0,jump:0,orb:0}
         this.dash={active:0,timer:0,available:true,direction:0}
         this.physics={moveSpeed:0.6,moveCap:4,jumpPower:-8.5,wallJumpPower:{x:5,y:-6},dashPower:{x:12,y:10},orbSpeed:0.1,weaken:{dash:18,wallJump:12}}
-        this.orb={active:false,speed:0}
+        this.orb={active:false,speed:0,safe:false}
         this.goal={direction:{main:54,speed:18},dead:false}
         this.base={jumpTime:5,stamina:360,physics:{moveCap:4},dash:{active:9,timer:12}}
         this.setupGraphics()
@@ -333,6 +333,7 @@ class player extends partisan{
             case 3:
                 this.orb.active=true
                 this.orb.speed=0
+                this.orb.safe=false
                 this.dead=false
                 this.goal.dead=false
             break
@@ -1949,7 +1950,7 @@ class player extends partisan{
             this.goal.direction.main=sin(direction)>0?54:-54
             this.dash.active=0
             this.dashPhase=false
-            if(dist(this.position.x,this.position.y,game.spawn.x,game.spawn.y)<=this.orb.speed){
+            if(dist(this.position.x,this.position.y,game.spawn.x,game.spawn.y)<=this.orb.speed&&this.orb.safe){
                 this.orb.active=false
                 this.position.x=game.spawn.x
                 this.position.y=game.spawn.y
@@ -2055,8 +2056,8 @@ class player extends partisan{
                                     }
                                 }
                                 if(this.dash.active>0){
-                                    this.velocity.x*=1.25
-                                    this.velocity.y*=2
+                                    this.velocity.x*=1.5
+                                    this.velocity.y*=2.5
                                     this.dash.active=0
                                     this.dashPhase=true
                                 }else{
@@ -2124,7 +2125,9 @@ class player extends partisan{
                                     this.weakTime=this.physics.weaken.dash
                                     this.dashPhase=true
                                     for(let a=0,la=entities.walls.length;a<la;a++){
-										entities.walls[a].onDash()
+                                        for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+										    entities.walls[a][b].onDash()
+                                        }
                                     }
                                 }
                             }
@@ -2314,6 +2317,9 @@ class player extends partisan{
                 game.spawn.x=this.position.x
                 game.spawn.y=this.position.y
                 this.stageSpawn=false
+                for(let a=0,la=entities.players.length;a<la;a++){
+                    entities.players[a].orb.safe=true
+                }
             }
             this.fade=smoothAnim(this.fade,!this.orb.active,0,1,5)
         }

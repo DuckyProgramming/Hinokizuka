@@ -361,7 +361,7 @@ function initialLevels(Levels){
 }
 function clearWorld(){
     entities.particles=[]
-    entities.walls=[]
+    entities.walls=[[],[]]
 }
 function unlockLevel(level,zone){
     switch(level){
@@ -426,7 +426,7 @@ function generateLevel(level,layer,context){
             view.previous.scroll.y-=nudge.y
             game.scroll.x+=nudge.x
             game.scroll.y+=nudge.y
-            let group=[entities.players,entities.walls,entities.particles]
+            let group=[entities.players,entities.walls[0],entities.walls[1],entities.particles]
             for(let a=0,la=group.length;a<la;a++){
                 for(let b=0,lb=group[a].length;b<lb;b++){
                     group[a][b].position.x-=nudge.x
@@ -438,7 +438,9 @@ function generateLevel(level,layer,context){
                 }
             }
             for(let a=0,la=entities.walls.length;a<la;a++){
-                entities.walls[a].deprecate=true
+                for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                    entities.walls[a][b].deprecate=true
+                }
             }
         break
     }
@@ -515,12 +517,14 @@ function generateLevel(level,layer,context){
     }
     for(let a=0,la=level.walls.length;a<la;a++){
         if(level.spawnRule[a]==0){
-            entities.walls.push(new wall(layer,level.walls[a].x,level.walls[a].y,level.walls[a].width,level.walls[a].height,level.walls[a].type,a,game.zone))
+            entities.walls[types.wall[level.walls[a].type].slice].push(new wall(layer,level.walls[a].x,level.walls[a].y,level.walls[a].width,level.walls[a].height,level.walls[a].type,a,game.zone))
         }
     }
     if(context==2||context==3||context==4||context==5){
         for(let a=0,la=entities.walls.length;a<la;a++){
-            entities.walls[a].expel()
+            for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                entities.walls[a][b].expel()
+            }
         }
         if(nudge.x!=0&&nudge.y!=0){
             let top=0
@@ -538,19 +542,23 @@ function generateLevel(level,layer,context){
             switch(top){
                 case 0:
                     for(let a=0,la=entities.walls.length;a<la;a++){
-                        if(entities.walls[a].deprecate&&entities.walls[a].position.y+entities.walls[a].height/2>=old.edge.y){
-                            entities.walls[a].position.y+=level.edge.y/2
-                            entities.walls[a].height+=level.edge.y
+                        for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                            if(entities.walls[a][b].deprecate&&entities.walls[a][b].position.y+entities.walls[a][b].height/2>=old.edge.y){
+                                entities.walls[a][b].position.y+=level.edge.y/2
+                                entities.walls[a][b].height+=level.edge.y
+                            }
                         }
                     }
                 break
                 case 1:
                     for(let a=0,la=entities.walls.length;a<la;a++){
-                        if(!entities.walls[a].deprecate&&entities.walls[a].position.y+entities.walls[a].height/2>=level.edge.y){
-                            entities.walls[a].position.y+=old.edge.y/2
-                            entities.walls[a].height+=old.edge.y
-                            entities.walls[a].downsize.trigger=true
-                            entities.walls[a].downsize.value=old.edge.y
+                        for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                            if(!entities.walls[a][b].deprecate&&entities.walls[a][b].position.y+entities.walls[a][b].height/2>=level.edge.y){
+                                entities.walls[a][b].position.y+=old.edge.y/2
+                                entities.walls[a][b].height+=old.edge.y
+                                entities.walls[a][b].downsize.trigger=true
+                                entities.walls[a][b].downsize.value=old.edge.y
+                            }
                         }
                     }
                 break
@@ -567,7 +575,7 @@ function generateLevel(level,layer,context){
             }
         }
     }
-    run.fore=[entities.particles,entities.players,entities.walls]
+    run.fore=[entities.walls[0],entities.particles,entities.players,entities.walls[1]]
     run.over=dev.editor?[entities.uis]:[]
 }
 function updateView(){
@@ -579,12 +587,14 @@ function updateView(){
             view.scroll.y+=entities.players[a].position.y/la
         }
         for(let a=0,la=entities.walls.length;a<la;a++){
-            if(entities.walls[a].deprecate){
-                entities.walls[a].remove=true
-            }else if(entities.walls[a].downsize.trigger){
-                entities.walls[a].downsize.trigger=false
-                entities.walls[a].position.y-=entities.walls[a].downsize.value/2
-                entities.walls[a].height-=entities.walls[a].downsize.value
+            for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                if(entities.walls[a][b].deprecate){
+                    entities.walls[a][b].remove=true
+                }else if(entities.walls[a][b].downsize.trigger){
+                    entities.walls[a][b].downsize.trigger=false
+                    entities.walls[a][b].position.y-=entities.walls[a][b].downsize.value/2
+                    entities.walls[a][b].height-=entities.walls[a][b].downsize.value
+                }
             }
         }
     }else if(view.scroll.anim<10){
@@ -592,12 +602,14 @@ function updateView(){
         if(view.scroll.anim>=10){
             view.scroll.anim=10
             for(let a=0,la=entities.walls.length;a<la;a++){
-                if(entities.walls[a].deprecate){
-                    entities.walls[a].remove=true
-                }else if(entities.walls[a].downsize.trigger){
-                    entities.walls[a].downsize.trigger=false
-                    entities.walls[a].position.y-=entities.walls[a].downsize.value/2
-                    entities.walls[a].height-=entities.walls[a].downsize.value
+                for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                    if(entities.walls[a][b].deprecate){
+                        entities.walls[a][b].remove=true
+                    }else if(entities.walls[a][b].downsize.trigger){
+                        entities.walls[a][b].downsize.trigger=false
+                        entities.walls[a][b].position.y-=entities.walls[a][b].downsize.value/2
+                        entities.walls[a][b].height-=entities.walls[a][b].downsize.value
+                    }
                 }
             }
         }

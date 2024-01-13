@@ -58,7 +58,7 @@ class ui{
                         }
                     break
                     case 3:
-                        let options=['hitbox','edge','connection','markspawn','freecam','infinitedash','invincible','nograv','debound']
+                        let options=['hitbox','edge','connection','markspawn','freecam','infinitedash','invincible','nograv','debound','clear']
                         for(let b=0,lb=options.length;b<lb;b++){
                             this.layer.fill(dev[options[b]]?125:150,dev[options[b]]?255:150,dev[options[b]]?125:150)
                             this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,20+b*35,80,30,5)
@@ -132,7 +132,7 @@ class ui{
                         }
                     break
                     case 3:
-                        let options=['Hitbox','Edge','Connection','Spawn Point','Freecam','Infinite Dash','Invincible','No Gravity','No Bounds']
+                        let options=['Hitbox','Edge','Connection','Spawn Point','Freecam','Infinite Dash','Invincible','No Gravity','No Bounds','Clear']
                         for(let b=0,lb=options.length;b<lb;b++){
                             this.layer.text(options[b],this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,20+b*35)
                         }
@@ -230,12 +230,16 @@ class ui{
                             connectionForm+=`{id:${game.connections[a].id},side:${game.connections[a].side},region:[${game.connections[a].region[0]},${game.connections[a].region[1]}]},`
                         }
                         let wallForm=``
+                        let total=0
                         for(let a=0,la=entities.walls.length;a<la;a++){
-                            if(a>=1){
-                                wallForm+=`
+                            for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                                if(total>=1){
+                                    wallForm+=`
                 `
+                                }
+                                total++
+                                wallForm+=`{x:${round(entities.walls[a][b].position.x)},y:${round(entities.walls[a][b].position.y)},width:${entities.walls[a][b].base.width},height:${entities.walls[a][b].base.height},type:${entities.walls[a][b].type}},`
                             }
-                            wallForm+=`{x:${round(entities.walls[a].position.x)},y:${round(entities.walls[a].position.y)},width:${entities.walls[a].base.width},height:${entities.walls[a].base.height},type:${entities.walls[a].type}},`
                         }
                         print(
 `
@@ -254,9 +258,11 @@ class ui{
                 break
                 case 1:
                     for(let a=0,la=entities.walls.length;a<la;a++){
-                        if(entities.walls[a].select){
-                            entities.walls[a].position.x=round(entities.walls[a].position.x/entities.walls[a].interval.x)*entities.walls[a].interval.x
-                            entities.walls[a].position.y=round(entities.walls[a].position.y/entities.walls[a].interval.y)*entities.walls[a].interval.y
+                        for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                            if(entities.walls[a][b].select){
+                                entities.walls[a][b].position.x=round(entities.walls[a][b].position.x/entities.walls[a][b].interval.x)*entities.walls[a][b].interval.x
+                                entities.walls[a][b].position.y=round(entities.walls[a][b].position.y/entities.walls[a][b].interval.y)*entities.walls[a][b].interval.y
+                            }
                         }
                     }
                     if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:40},width:80,height:30})){
@@ -267,8 +273,10 @@ class ui{
                         this.tab=7
                     }else if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:185},width:80,height:30})){
                         for(let a=0,la=entities.walls.length;a<la;a++){
-                            if(entities.walls[a].select){
-                                entities.walls[a].remove=true
+                            for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                                if(entities.walls[a][b].select){
+                                    entities.walls[a][b].remove=true
+                                }
                             }
                         }
                     }else if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:220},width:80,height:30})){
@@ -276,29 +284,35 @@ class ui{
                     }else{
                         let selected=0
                         for(let a=0,la=entities.walls.length;a<la;a++){
-                            if(inPointBox({position:{x:inputs.rel.x+view.scroll.x-this.layer.width/2,y:inputs.rel.y+view.scroll.y-this.layer.height/2}},entities.walls[a])){
-                                if(entities.walls[a].select){
-                                    entities.walls[a].select=false
-                                    this.selectKey.splice(this.selectKey.indexOf(a),1)
-                                }else{
-                                    entities.walls[a].select=true
-                                    this.selectKey.push(a)
+                            for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                                if(inPointBox({position:{x:inputs.rel.x+view.scroll.x-this.layer.width/2,y:inputs.rel.y+view.scroll.y-this.layer.height/2}},entities.walls[a][b])){
+                                    if(entities.walls[a][b].select){
+                                        entities.walls[a][b].select=false
+                                        this.selectKey.splice(this.selectKey.indexOf(a),1)
+                                    }else{
+                                        entities.walls[a][b].select=true
+                                        this.selectKey.push([a,b])
+                                    }
+                                    selected++
                                 }
-                                selected++
                             }
                         }
                         if(selected==0){
                             this.selectKey=[]
                             for(let a=0,la=entities.walls.length;a<la;a++){
-                                entities.walls[a].select=false
+                                for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                                    entities.walls[a][b].select=false
+                                }
                             }
                         }
                         if(this.selectKey.length==1){
                             for(let a=0,la=entities.walls.length;a<la;a++){
-                                if(entities.walls[a].select){
-                                    this.edit.wall.width=entities.walls[a].base.width
-                                    this.edit.wall.height=entities.walls[a].base.height
-                                    this.edit.wall.type=entities.walls[a].type
+                                for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                                    if(entities.walls[a][b].select){
+                                        this.edit.wall.width=entities.walls[a][b].base.width
+                                        this.edit.wall.height=entities.walls[a][b].base.height
+                                        this.edit.wall.type=entities.walls[a][b].type
+                                    }
                                 }
                             }
                         }else{
@@ -326,6 +340,11 @@ class ui{
                     for(let b=0,lb=options.length;b<lb;b++){
                         if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:20+b*35},width:80,height:30})){
                             dev[options[b]]=!dev[options[b]]
+                        }
+                    }
+                    if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:20+options.length*35},width:80,height:30})){
+                        for(let b=0,lb=options.length;b<lb;b++){
+                            dev[options[b]]=false
                         }
                     }
                 break
@@ -375,9 +394,11 @@ class ui{
                         if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:10+a*15},width:80,height:10})){
                             this.edit.wall.type=a
                             for(let b=0,lb=entities.walls.length;b<lb;b++){
-                                if(entities.walls[b].select){
-                                    entities.walls[b].type=a
-                                    entities.walls[b].set()
+                                for(let c=0,lc=entities.walls[b].length;c<lc;c++){
+                                    if(entities.walls[b][c].select){
+                                        entities.walls[b][c].type=a
+                                        entities.walls[b][c].set()
+                                    }
                                 }
                             }
                             this.tab=1
@@ -415,7 +436,7 @@ class ui{
                     if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:20},width:80,height:30})){
                         this.tab=1
                     }else{
-                        entities.walls.push(new wall(this.layer,round((inputs.rel.x+view.scroll.x-this.layer.width/2)/10)*10,round((inputs.rel.y+view.scroll.y-this.layer.height/2)*10)/10,this.edit.add.wall.width,this.edit.add.wall.height,this.edit.add.wall.type))
+                        entities.walls[types.wall[this.edit.add.wall.type].slice].push(new wall(this.layer,round((inputs.rel.x+view.scroll.x-this.layer.width/2)/10)*10,round((inputs.rel.y+view.scroll.y-this.layer.height/2)*10)/10,this.edit.add.wall.width,this.edit.add.wall.height,this.edit.add.wall.type))
                     }
                 break
                 case 11:
@@ -428,7 +449,7 @@ class ui{
         switch(this.tab){
             case 11:
                 if(dist(this.drag.start.x,this.drag.start.y,this.drag.end.x,this.drag.end.y)>10){
-                    entities.walls.push(new wall(this.layer,round((this.drag.start.x/2+this.drag.end.x/2)/10)*10,round((this.drag.start.y/2+this.drag.end.y/2)/10)*10,ceil(abs(this.drag.start.x-this.drag.end.x)/20)*20,ceil(abs(this.drag.start.y-this.drag.end.y)/20)*20,this.edit.add.wall.type))
+                    entities.walls[types.wall[this.edit.add.wall.type].slice].push(new wall(this.layer,round((this.drag.start.x/2+this.drag.end.x/2)/10)*10,round((this.drag.start.y/2+this.drag.end.y/2)/10)*10,ceil(abs(this.drag.start.x-this.drag.end.x)/20)*20,ceil(abs(this.drag.start.y-this.drag.end.y)/20)*20,this.edit.add.wall.type))
                 }
             break
         }
@@ -441,9 +462,11 @@ class ui{
         switch(this.tab){
             case 1:
                 for(let a=0,la=entities.walls.length;a<la;a++){
-                    if(entities.walls[a].select){
-                        entities.walls[a].position.x+=mouse.x-pMouse.x
-                        entities.walls[a].position.y+=mouse.y-pMouse.y
+                    for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                        if(entities.walls[a][b].select){
+                            entities.walls[a][b].position.x+=mouse.x-pMouse.x
+                            entities.walls[a][b].position.y+=mouse.y-pMouse.y
+                        }
                     }
                 }
             break
@@ -481,11 +504,13 @@ class ui{
                             this.edit.wall[marker]=floor(this.edit.wall[marker]/10)
                         }else if(code==ENTER){
                             for(let a=0,la=entities.walls.length;a<la;a++){
-                                if(entities.walls[a].select){
-                                    entities.walls[a][marker]=this.edit.wall[marker]
-                                    entities.walls[a].base[marker]=this.edit.wall[marker]
-                                    entities.walls[a][['width','height'][2-this.editing]]=entities.walls[a].base[['width','height'][2-this.editing]]
-                                    entities.walls[a].set()
+                                for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                                    if(entities.walls[a][b].select){
+                                        entities.walls[a][b][marker]=this.edit.wall[marker]
+                                        entities.walls[a][b].base[marker]=this.edit.wall[marker]
+                                        entities.walls[a][b][['width','height'][2-this.editing]]=entities.walls[a][b].base[['width','height'][2-this.editing]]
+                                        entities.walls[a][b].set()
+                                    }
                                 }
                             }
                         }

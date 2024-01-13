@@ -11,6 +11,7 @@ class wall extends physical{
         this.deprecate=false
         this.downsize={trigger:false,value:0}
         this.interval=types.wall[this.type].interval
+        this.slice=types.wall[this.type].slice
         this.time=0
         this.set()
     }
@@ -234,7 +235,7 @@ class wall extends physical{
                 this.layer.point(this.anim*15,-5)
                 this.layer.point(this.anim*15,5)
             break
-            case 15:
+            case 15: case 18: case 19:
                 this.layer.fill(230,190,140,this.fade)
                 this.layer.rect(0,0,this.width,this.height)
                 this.layer.fill(150,110,60)
@@ -242,8 +243,12 @@ class wall extends physical{
                     this.layer.rect(-this.width/2+5+a*10,0,2,this.height)
                 }
                 this.layer.fill(180,this.fade)
-                this.layer.quad(-this.width/2+5,this.height/2,-this.width/2+10,this.height/2,-this.width/2,this.height+10,-this.width/2,this.height+5)
-                this.layer.quad(this.width/2-5,this.height/2,this.width/2-10,this.height/2,this.width/2,this.height+10,this.width/2,this.height+5)
+                if(this.type!=18){
+                    this.layer.quad(-this.width/2+5,this.height/2,-this.width/2+10,this.height/2,-this.width/2,this.height+10,-this.width/2,this.height+5)
+                }
+                if(this.type!=19){
+                    this.layer.quad(this.width/2-5,this.height/2,this.width/2-10,this.height/2,this.width/2,this.height+10,this.width/2,this.height+5)
+                }
             break
             case 16:
                 this.layer.fill(155,145,195,this.fade)
@@ -253,6 +258,10 @@ class wall extends physical{
                         this.layer.image(graphics.walls[(a+b)%4],-this.base.width/2+10+a*20,-this.base.height/2+10+b*20,40,40)
                     }
                 }
+            break
+            case 17:
+                this.layer.fill(80,this.fade)
+                this.layer.rect(0,0,this.width-8,this.height+1)
             break
         }
         this.layer.pop()
@@ -315,12 +324,14 @@ class wall extends physical{
                 }
             break
         }
-        if(this.fade>0.2&&!this.deprecate){
+        if(this.fade>0.2&&!this.deprecate&&
+            this.type!=17
+        ){
             for(let a=0,la=this.collide.box.length;a<la;a++){
                 for(let b=0,lb=this.collide.box[a].length;b<lb;b++){
                     let c=this.collide.box[a][b]
                     if(!c.orb.active&&!c.goal.dead&&
-                        !(this.type==15&&(c.velocity.y<=0||c.previous.position.y>this.position.y-this.height/2-c.height/2))
+                        !((this.type==15||this.type==18||this.type==19)&&(c.velocity.y<=0||c.previous.position.y>this.position.y-this.height/2-c.height/2))
                     ){
                         if(inBoxBox({position:this.position,width:this.width+2,height:this.height+2},c)&&
                             this.type!=2&&this.type!=3&&this.type!=4&&this.type!=5&&this.type!=7&&this.type!=9&&this.type!=10&&this.type!=11&&this.type!=12&&this.type!=13&&
@@ -384,6 +395,7 @@ class wall extends physical{
                                 case 9:
                                     if(this.timer==0&&!c.dash.available){
                                         c.dash.available=true
+                                        c.stamina=c.base.stamina
                                         this.timer=240
                                     }
                                 break
@@ -391,32 +403,48 @@ class wall extends physical{
                                     if(this.timer==0&&this.anim==0){
                                         this.timer=5
                                         c.dash.available=true
-                                        c.velocity.y=-10
+                                        c.stamina=c.base.stamina
+                                        c.velocity.y=-15
                                         c.velocity.x=0
+                                        if(c.dash.active>0){
+                                            c.dash.active=0
+                                        }
                                     }
                                 break
                                 case 11:
                                     if(this.timer==0&&this.anim==0){
                                         this.timer=5
                                         c.dash.available=true
-                                        c.velocity.y=10
+                                        c.stamina=c.base.stamina
+                                        c.velocity.y=9
                                         c.velocity.x=0
+                                        if(c.dash.active>0){
+                                            c.dash.active=0
+                                        }
                                     }
                                 break
                                 case 12:
                                     if(this.timer==0&&this.anim==0){
                                         this.timer=5
                                         c.dash.available=true
-                                        c.velocity.x=-10
-                                        c.velocity.y=-2
+                                        c.stamina=c.base.stamina
+                                        c.velocity.x=-12
+                                        c.velocity.y=-6
+                                        if(c.dash.active>0){
+                                            c.dash.active=0
+                                        }
                                     }
                                 break
                                 case 13:
                                     if(this.timer==0&&this.anim==0){
                                         this.timer=5
                                         c.dash.available=true
-                                        c.velocity.x=10
-                                        c.velocity.y=-2
+                                        c.stamina=c.base.stamina
+                                        c.velocity.x=12
+                                        c.velocity.y=-6
+                                        if(c.dash.active>0){
+                                            c.dash.active=0
+                                        }
                                     }
                                 break
                                 default:
