@@ -2,3 +2,7 @@ world 1 levels
 
 menu page
 ending screen (tutorial)
+
+boundary display + redundancy (still see full box)
+
+bent fallen

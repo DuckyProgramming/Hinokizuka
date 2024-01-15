@@ -50,21 +50,34 @@ function intersect(p1,q1,p2,q2){
     o4==0&&onSegment(p2,q1,q2)
 } 
 function collideBoxBox(static,mobile){
-    return inBoxBox(static,{position:mobile.previous.position,width:mobile.width-1,height:mobile.height-1})?
+    if(inBoxBox(static,{position:mobile.previous.position,width:mobile.width-1,height:mobile.height-1})){
+        return basicCollideBoxBox(static,mobile)
+    }
+    for(let a=0,la=static.boundary.length;a<la;a++){
+        for(let b=0,lb=static.boundary[a].length;b<lb;b++){
+            if(intersect(mobile.position,mobile.previous.position,
+                {x:static.boundary[a][b][0].x+mobile.width/2*(a==2?1:-1),y:static.boundary[a][b][0].y+mobile.height/2*(a==0?1:-1)},
+                {x:static.boundary[a][b][1].x+mobile.width/2*(a!=3?1:-1),y:static.boundary[a][b][1].y+mobile.height/2*(a!=1?1:-1)})){
+                return a
+            }
+        }
+    }
+    return basicCollideBoxBox(static,mobile)
+    /*return inBoxBox(static,{position:mobile.previous.position,width:mobile.width-1,height:mobile.height-1})?
         basicCollideBoxBox(static,mobile):
         intersect(mobile.position,mobile.previous.position,
-        {x:static.position.x-static.width/2-mobile.width/2,y:static.position.y+static.height/2+mobile.height/2},
-        {x:static.position.x+static.width/2+mobile.width/2,y:static.position.y+static.height/2+mobile.height/2})?
+        {x:static.boundary[0][0].x-mobile.width/2,y:static.boundary[0][0].y+mobile.height/2},
+        {x:static.boundary[0][0].x+mobile.width/2,y:static.boundary[0][1].y+mobile.height/2})?
         0:intersect(mobile.position,mobile.previous.position,
-        {x:static.position.x-static.width/2-mobile.width/2,y:static.position.y-static.height/2-mobile.height/2},
-        {x:static.position.x+static.width/2+mobile.width/2,y:static.position.y-static.height/2-mobile.height/2})?
+        {x:static.boundary[1][0].x-mobile.width/2,y:static.boundary[1][0].y-mobile.height/2},
+        {x:static.boundary[1][1].x+mobile.width/2,y:static.boundary[1][1].y-mobile.height/2})?
         1:intersect(mobile.position,mobile.previous.position,
-        {x:static.position.x+static.width/2+mobile.width/2,y:static.position.y-static.height/2-mobile.height/2},
-        {x:static.position.x+static.width/2+mobile.width/2,y:static.position.y+static.height/2+mobile.height/2})?
+        {x:static.boundary[2][0].x+mobile.width/2,y:static.boundary[2][0].y-mobile.height/2},
+        {x:static.boundary[2][1].x+mobile.width/2,y:static.boundary[2][1].y+mobile.height/2})?
         2:intersect(mobile.position,mobile.previous.position,
-        {x:static.position.x-static.width/2-mobile.width/2,y:static.position.y-static.height/2-mobile.height/2},
-        {x:static.position.x-static.width/2-mobile.width/2,y:static.position.y+static.height/2+mobile.height/2})?
-        3:basicCollideBoxBox(static,mobile)
+        {x:static.boundary[3][0].x-mobile.width/2,y:static.boundary[3][0].y-mobile.height/2},
+        {x:static.boundary[3][1].x-mobile.width/2,y:static.boundary[3][1].y+mobile.height/2})?
+        3:basicCollideBoxBox(static,mobile)*/
     /*let v={x:0,y:0}
     let w={x:0,y:0}
     v.x=mobile.position.x==mobile.previous.position.x||mobile.position.x<static.position.x&&mobile.position.x<mobile.previous.position.x||mobile.position.x>static.position.x&&mobile.position.x>mobile.previous.position.x||mobile.position.x>static.position.x-static.width/2-mobile.width/2&&mobile.previous.position.x>static.position.x-static.width/2-mobile.width/2&&mobile.position.x<static.position.x+static.width/2+mobile.width/2&&mobile.previous.position.x<static.position.x+static.width/2+mobile.width/2?
@@ -518,6 +531,11 @@ function generateLevel(level,layer,context){
     for(let a=0,la=level.walls.length;a<la;a++){
         if(level.spawnRule[a]==0){
             entities.walls[types.wall[level.walls[a].type].slice].push(new wall(layer,level.walls[a].x,level.walls[a].y,level.walls[a].width,level.walls[a].height,level.walls[a].type,a,game.zone))
+        }
+    }
+    for(let a=0,la=entities.walls.length;a<la;a++){
+        for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+            entities.walls[a][b].checkRedundant()
         }
     }
     if(context==2||context==3||context==4||context==5){

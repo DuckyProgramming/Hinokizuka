@@ -3,6 +3,7 @@ function mainloop(layer){
     background(100)
     switch(stage.scene){
         case 'main':
+            layer.image(graphics.backgrounds[game.level],-1800-(view.scroll.x+game.scroll.x)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
             layer.image(graphics.backgrounds[game.level],-(view.scroll.x+game.scroll.x)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
             layer.image(graphics.backgrounds[game.level],1800-(view.scroll.x+game.scroll.x)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
             layer.push()

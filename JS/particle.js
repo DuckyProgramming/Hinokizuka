@@ -11,6 +11,11 @@ class particle extends entity{
                 this.fade=1
                 this.color=args[0]
             break
+            case 2:
+                this.scale=1
+                this.fade=1.5
+                this.color=args[0]
+            break
         }
 
     }
@@ -21,7 +26,7 @@ class particle extends entity{
         this.layer.scale(this.size*this.scale)
         this.layer.noStroke()
         switch(this.type){
-            case 0: case 1:
+            case 0: case 1: case 2:
                 this.layer.fill(this.color[0],this.color[1],this.color[2],this.fade)
                 this.layer.ellipse(0,0,10,10)
             break
@@ -42,6 +47,13 @@ class particle extends entity{
             case 1:
                 this.scale-=1/15
                 if(this.scale<=0){
+                    this.remove=true
+                }
+            break
+            case 2:
+                this.scale+=1/5
+                this.fade-=1/15
+                if(this.fade<=0){
                     this.remove=true
                 }
             break

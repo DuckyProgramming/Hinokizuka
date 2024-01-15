@@ -1965,7 +1965,7 @@ class player extends partisan{
             if(dev.nograv){
                 this.velocity.y*=0.96
                 this.jumpTime=5
-            }else if(!this.climb){
+            }else if(!this.climb&&this.dash.active==0){
                 this.velocity.y+=physics.gravity
             }
             if(this.crush[0]&&this.crush[1]||this.crush[2]&&this.crush[3]){
@@ -2034,6 +2034,7 @@ class player extends partisan{
                         break
                         case 4:
                             if((this.contact[2]||this.contact[3])&&(this.jumpTime<=0||this.dash.active)||this.climb>0){
+                                let a=this.velocity.y
                                 inputs.keys[this.id][4]=false
                                 if(this.climb>0){
                                     inputs.keys[this.id][6]=false
@@ -2055,12 +2056,15 @@ class player extends partisan{
                                         this.velocity.y=this.physics.wallJumpPower.y
                                     }
                                 }
-                                if(this.dash.active>0){
+                                if(this.dash.active>0&&abs(a)>1){
                                     this.velocity.x*=1.5
                                     this.velocity.y*=2.5
                                     this.dash.active=0
                                     this.dashPhase=true
                                 }else{
+                                    if(this.dash.active>0){
+                                        this.dash.active=0
+                                    }
                                     this.dashPhase=false
                                     this.weakTime=this.physics.weaken.wallJump
                                 }

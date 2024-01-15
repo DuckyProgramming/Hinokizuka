@@ -265,6 +265,11 @@ class ui{
                             }
                         }
                     }
+                    for(let a=0,la=entities.walls.length;a<la;a++){
+                        for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                            entities.walls[a][b].checkRedundant()
+                        }
+                    }
                     if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:40},width:80,height:30})){
                         this.editing=1
                     }else if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:95},width:80,height:30})){
@@ -437,6 +442,11 @@ class ui{
                         this.tab=1
                     }else{
                         entities.walls[types.wall[this.edit.add.wall.type].slice].push(new wall(this.layer,round((inputs.rel.x+view.scroll.x-this.layer.width/2)/10)*10,round((inputs.rel.y+view.scroll.y-this.layer.height/2)*10)/10,this.edit.add.wall.width,this.edit.add.wall.height,this.edit.add.wall.type))
+                        for(let a=0,la=entities.walls.length;a<la;a++){
+                            for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                                entities.walls[a][b].checkRedundant()
+                            }
+                        }
                     }
                 break
                 case 11:
@@ -450,6 +460,11 @@ class ui{
             case 11:
                 if(dist(this.drag.start.x,this.drag.start.y,this.drag.end.x,this.drag.end.y)>10){
                     entities.walls[types.wall[this.edit.add.wall.type].slice].push(new wall(this.layer,round((this.drag.start.x/2+this.drag.end.x/2)/10)*10,round((this.drag.start.y/2+this.drag.end.y/2)/10)*10,ceil(abs(this.drag.start.x-this.drag.end.x)/20)*20,ceil(abs(this.drag.start.y-this.drag.end.y)/20)*20,this.edit.add.wall.type))
+                    for(let a=0,la=entities.walls.length;a<la;a++){
+                        for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                            entities.walls[a][b].checkRedundant()
+                        }
+                    }
                 }
             break
         }
@@ -473,6 +488,11 @@ class ui{
         }
         this.drag.end.x=mouse.x+view.scroll.x-this.layer.width/2
         this.drag.end.y=mouse.y+view.scroll.y-this.layer.height/2
+        for(let a=0,la=entities.walls.length;a<la;a++){
+            for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                entities.walls[a][b].checkRedundant()
+            }
+        }
     }
     onPress(mouse){
         this.drag.start.x=mouse.x+view.scroll.x-this.layer.width/2
@@ -511,6 +531,11 @@ class ui{
                                         entities.walls[a][b][['width','height'][2-this.editing]]=entities.walls[a][b].base[['width','height'][2-this.editing]]
                                         entities.walls[a][b].set()
                                     }
+                                }
+                            }
+                            for(let a=0,la=entities.walls.length;a<la;a++){
+                                for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                                    entities.walls[a][b].checkRedundant()
                                 }
                             }
                         }
