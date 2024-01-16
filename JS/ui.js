@@ -46,7 +46,7 @@ class ui{
                         }
                     break
                     case 1:
-                        for(let b=0,lb=5;b<lb;b++){
+                        for(let b=0,lb=6;b<lb;b++){
                             this.layer.fill(this.editing==b+1?125:150,this.editing==b+1?255:150,this.editing==b+1?125:150)
                             this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,40+b*55-max(0,(b-2))*20,80,30,5)
                         }
@@ -117,6 +117,7 @@ class ui{
                         this.layer.text('Type',this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,125)
                         this.layer.text('Delete',this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,185)
                         this.layer.text('New',this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,220)
+                        this.layer.text('Spikify',this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,255)
                         this.layer.textSize(10)
                         this.layer.text(this.edit.wall.width,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,40)
                         this.layer.text(this.edit.wall.height,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,95)
@@ -260,8 +261,8 @@ class ui{
                     for(let a=0,la=entities.walls.length;a<la;a++){
                         for(let b=0,lb=entities.walls[a].length;b<lb;b++){
                             if(entities.walls[a][b].select){
-                                entities.walls[a][b].position.x=round(entities.walls[a][b].position.x/entities.walls[a][b].interval.x)*entities.walls[a][b].interval.x
-                                entities.walls[a][b].position.y=round(entities.walls[a][b].position.y/entities.walls[a][b].interval.y)*entities.walls[a][b].interval.y
+                                entities.walls[a][b].position.x=round((entities.walls[a][b].position.x-entities.walls[a][b].interval.x[1])/entities.walls[a][b].interval.x[0])*entities.walls[a][b].interval.x[0]+entities.walls[a][b].interval.x[1]
+                                entities.walls[a][b].position.y=round((entities.walls[a][b].position.y-entities.walls[a][b].interval.y[1])/entities.walls[a][b].interval.y[0])*entities.walls[a][b].interval.y[0]+entities.walls[a][b].interval.y[1]
                             }
                         }
                     }
@@ -286,6 +287,19 @@ class ui{
                         }
                     }else if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:220},width:80,height:30})){
                         this.tab=8
+                    }else if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:255},width:80,height:30})){
+                        for(let a=0,la=entities.walls.length;a<la;a++){
+                            for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                                if(entities.walls[a][b].select){
+                                    entities.walls[a][b].spikify()
+                                }
+                            }
+                        }
+                        for(let a=0,la=entities.walls.length;a<la;a++){
+                            for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                                entities.walls[a][b].checkRedundant()
+                            }
+                        }
                     }else{
                         let selected=0
                         for(let a=0,la=entities.walls.length;a<la;a++){
@@ -441,7 +455,7 @@ class ui{
                     if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:20},width:80,height:30})){
                         this.tab=1
                     }else{
-                        entities.walls[types.wall[this.edit.add.wall.type].slice].push(new wall(this.layer,round((inputs.rel.x+view.scroll.x-this.layer.width/2)/10)*10,round((inputs.rel.y+view.scroll.y-this.layer.height/2)*10)/10,this.edit.add.wall.width,this.edit.add.wall.height,this.edit.add.wall.type))
+                        entities.walls[types.wall[this.edit.add.wall.type].slice].push(new wall(this.layer,round((inputs.rel.x+view.scroll.x-this.layer.width/2-types.wall[this.edit.add.wall.type].interval.x[1])/types.wall[this.edit.add.wall.type].interval.x[0])*types.wall[this.edit.add.wall.type].interval.x[0]+types.wall[this.edit.add.wall.type].interval.x[1],round((inputs.rel.y+view.scroll.y-this.layer.height/2-types.wall[this.edit.add.wall.type].interval.y[1])/types.wall[this.edit.add.wall.type].interval.y[0])*types.wall[this.edit.add.wall.type].interval.y[0]+types.wall[this.edit.add.wall.type].interval.y[1],this.edit.add.wall.width,this.edit.add.wall.height,this.edit.add.wall.type))
                         for(let a=0,la=entities.walls.length;a<la;a++){
                             for(let b=0,lb=entities.walls[a].length;b<lb;b++){
                                 entities.walls[a][b].checkRedundant()
@@ -459,7 +473,7 @@ class ui{
         switch(this.tab){
             case 11:
                 if(dist(this.drag.start.x,this.drag.start.y,this.drag.end.x,this.drag.end.y)>10){
-                    entities.walls[types.wall[this.edit.add.wall.type].slice].push(new wall(this.layer,round((this.drag.start.x/2+this.drag.end.x/2)/10)*10,round((this.drag.start.y/2+this.drag.end.y/2)/10)*10,ceil(abs(this.drag.start.x-this.drag.end.x)/20)*20,ceil(abs(this.drag.start.y-this.drag.end.y)/20)*20,this.edit.add.wall.type))
+                    entities.walls[types.wall[this.edit.add.wall.type].slice].push(new wall(this.layer,round((this.drag.start.x/2+this.drag.end.x/2-types.wall[this.edit.add.wall.type].interval.x[1])/types.wall[this.edit.add.wall.type].interval.x[0])*types.wall[this.edit.add.wall.type].interval.x[0]+types.wall[this.edit.add.wall.type].interval.x[1],round((this.drag.start.y/2+this.drag.end.y/2-types.wall[this.edit.add.wall.type].interval.y[1])/types.wall[this.edit.add.wall.type].interval.y[0])*types.wall[this.edit.add.wall.type].interval.y[0]+types.wall[this.edit.add.wall.type].interval.y[1],ceil(abs(this.drag.start.x-this.drag.end.x)/20)*20,ceil(abs(this.drag.start.y-this.drag.end.y)/20)*20,this.edit.add.wall.type))
                     for(let a=0,la=entities.walls.length;a<la;a++){
                         for(let b=0,lb=entities.walls[a].length;b<lb;b++){
                             entities.walls[a][b].checkRedundant()

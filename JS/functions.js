@@ -414,19 +414,19 @@ function generateLevel(level,layer,context){
                     if(level.connections[a].id==game.previous.zone&&game.connections[b].id==game.zone&&abs(level.connections[a].side-game.connections[b].side)==2){
                         switch(context){
                             case 2:
-                                nudge.y=-game.edge.y
+                                nudge.y=-level.edge.y
                                 nudge.x=-(level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2)
                             break
                             case 3:
-                                nudge.x=level.edge.x
+                                nudge.x=game.edge.x
                                 nudge.y=-(level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2)
                             break
                             case 4:
-                                nudge.y=level.edge.y
+                                nudge.y=game.edge.y
                                 nudge.x=-(level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2)
                             break
                             case 5:
-                                nudge.x=-game.edge.x
+                                nudge.x=-level.edge.x
                                 nudge.y=-(level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2)
                             break
                         }
@@ -457,7 +457,7 @@ function generateLevel(level,layer,context){
             }
         break
     }
-    let old={edge:{x:game.edge.x,y:game.edge.y}}
+    let old={edge:{x:game.edge.x,y:game.edge.y},previous:{zone:game.previous.zone},connections:game.connections}
     game.previous.zone=game.zone
     game.connections=level.connections
     game.edge.x=level.edge.x
@@ -551,7 +551,13 @@ function generateLevel(level,layer,context){
                     top=1
                 break
                 case 3: case 5:
-                    top=level.connections[a].region[0]/2+level.connections[a].region[1]/2-game.connections[b].region[0]/2-game.connections[b].region[1]/2>0?1:0
+                    for(let a=0,la=level.connections.length;a<la;a++){
+                        for(let b=0,lb=old.connections.length;b<lb;b++){
+                            if(level.connections[a].id==old.previous.zone&&old.connections[b].id==game.zone&&abs(level.connections[a].side-old.connections[b].side)==2){
+                                top=level.connections[a].region[0]/2+level.connections[a].region[1]/2-old.connections[b].region[0]/2-old.connections[b].region[1]/2>0?1:0
+                            }
+                        }
+                    }
                 break
                 case 4:
                     top=0
@@ -561,9 +567,10 @@ function generateLevel(level,layer,context){
                 case 0:
                     for(let a=0,la=entities.walls.length;a<la;a++){
                         for(let b=0,lb=entities.walls[a].length;b<lb;b++){
-                            if(entities.walls[a][b].deprecate&&entities.walls[a][b].position.y+entities.walls[a][b].height/2>=old.edge.y){
+                            if(entities.walls[a][b].deprecate&&entities.walls[a][b].position.y+entities.walls[a][b].base.height/2+nudge.y>=old.edge.y){
                                 entities.walls[a][b].position.y+=level.edge.y/2
                                 entities.walls[a][b].height+=level.edge.y
+                                entities.walls[a][b].base.height+=level.edge.y
                             }
                         }
                     }
@@ -571,9 +578,10 @@ function generateLevel(level,layer,context){
                 case 1:
                     for(let a=0,la=entities.walls.length;a<la;a++){
                         for(let b=0,lb=entities.walls[a].length;b<lb;b++){
-                            if(!entities.walls[a][b].deprecate&&entities.walls[a][b].position.y+entities.walls[a][b].height/2>=level.edge.y){
+                            if(!entities.walls[a][b].deprecate&&entities.walls[a][b].position.y+entities.walls[a][b].base.height/2>=level.edge.y){
                                 entities.walls[a][b].position.y+=old.edge.y/2
                                 entities.walls[a][b].height+=old.edge.y
+                                entities.walls[a][b].base.height+=old.edge.y
                                 entities.walls[a][b].downsize.trigger=true
                                 entities.walls[a][b].downsize.value=old.edge.y
                             }
@@ -612,6 +620,7 @@ function updateView(){
                     entities.walls[a][b].downsize.trigger=false
                     entities.walls[a][b].position.y-=entities.walls[a][b].downsize.value/2
                     entities.walls[a][b].height-=entities.walls[a][b].downsize.value
+                    entities.walls[a][b].base.height-=entities.walls[a][b].downsize.value
                 }
             }
         }
@@ -627,6 +636,7 @@ function updateView(){
                         entities.walls[a][b].downsize.trigger=false
                         entities.walls[a][b].position.y-=entities.walls[a][b].downsize.value/2
                         entities.walls[a][b].height-=entities.walls[a][b].downsize.value
+                        entities.walls[a][b].base.height-=entities.walls[a][b].downsize.value
                     }
                 }
             }
@@ -651,6 +661,10 @@ function operateInner(layer){
     }
 }
 function operateOuter(layer){
+    if(game.loadPlan>0){
+        generateLevel(levels[game.level][game.zone],layer,game.loadPlan)
+        game.loadPlan=0
+    }
     if(!dev.freecam){
         let mid={x:0,y:0}
         for(let a=0,la=entities.players.length;a<la;a++){

@@ -9,6 +9,8 @@ class player extends partisan{
         this.direction={main:54}
         this.jumpTime=5
         this.weakTime=0
+        this.safeTime=0
+        this.staySafeTime=0
         this.stamina=360
         this.crush=[false,false,false,false]
         this.contact=[false,false,false,false]
@@ -17,7 +19,8 @@ class player extends partisan{
         this.climb=false
         this.dashPhase=false
         this.setSpawn=false
-        this.stageSpawn=false
+        this.stageSpawn=1
+        this.safe=0
         this.offset={position:{x:0,y:0}}
         this.anim={dash:0,stamina:0,staminaActive:0,climb:0,crouch:0,move:0,jump:0,orb:0}
         this.dash={active:0,timer:0,available:true,direction:0}
@@ -1018,7 +1021,8 @@ class player extends partisan{
                             if(this.kimono.display.sleeve.main){
                                 this.layer.noStroke()
                                 for(let b=0,lb=10;b<lb;b++){
-                                    this.layer.fill(mergeColor(this.kimono.color.sleeve.back,this.kimono.color.sleeve.front,0.6+b/lb*0.2),this.fade)
+                                    let c=mergeColor(this.kimono.color.sleeve.back,this.kimono.color.sleeve.front,0.6+b/lb*0.2)
+                                    this.layer.fill(c[0],c[1],c[2],this.fade)
                                     this.layer.quad(
                                         this.skin.arms[a].points.rotate.top.x+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)*0.15*(1-b/lb)*(a*2-1)*sign(cos(this.direction.main))-(this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)/16,
                                         this.skin.arms[a].points.rotate.top.y-(this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)*0.15*(1-b/lb)*(a*2-1)*sign(cos(this.direction.main))-(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)/16,
@@ -1032,7 +1036,7 @@ class player extends partisan{
                                     this.layer.push()
                                     this.layer.translate(this.skin.arms[a].points.rotate.middle.x,this.skin.arms[a].points.rotate.middle.y)
                                     this.layer.rotate(atan2(this.skin.arms[a].points.rotate.middle.x-this.skin.arms[a].points.rotate.top.x,this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y))
-                                    let c=0.36*(1-b/lb)*(a*2-1)*sqrt((this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)**2+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)**2)
+                                    c=0.36*(1-b/lb)*(a*2-1)*sqrt((this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)**2+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)**2)
                                     this.layer.arc(0,0,c,c,-180,0)
                                     this.layer.pop()
                                     this.layer.quad(
@@ -1055,7 +1059,8 @@ class player extends partisan{
                         this.layer.noStroke()
                         let a=[this.kimono.level+(this.sash.bow.level-this.kimono.level)*this.fade]
                         for(let b=0,lb=10;b<lb;b++){
-                            this.layer.fill(mergeColor(this.sash.color.in,this.sash.color.out,-b/lb)[0],mergeColor(this.sash.color.in,this.sash.color.out,-b/lb)[1],mergeColor(this.sash.color.in,this.sash.color.out,-b/lb)[2],this.fade)
+                            let c=mergeColor(this.sash.color.in,this.sash.color.out,-b/lb)
+                            this.layer.fill(c[0],c[1],c[2],this.fade)
                             this.layer.triangle(
                                 sin(this.sash.bow.spin+this.direction.main)*5.8*this.fade,a[0],
                                 sin(this.sash.bow.spin+this.direction.main)*6.1*this.fade-cos(this.sash.bow.spin+this.direction.main)*6,a[0]+4*(1-b/lb),
@@ -1088,7 +1093,8 @@ class player extends partisan{
                             if(this.kimono.display.sleeve.main){
                                 this.layer.noStroke()
                                 for(let b=0,lb=10;b<lb;b++){
-                                    this.layer.fill(mergeColor(this.kimono.color.sleeve.back,this.kimono.color.sleeve.front,0.6+b/lb*0.2),this.fade)
+                                    let c=mergeColor(this.kimono.color.sleeve.back,this.kimono.color.sleeve.front,0.6+b/lb*0.2)
+                                    this.layer.fill(c[0],c[1],c[2],this.fade)
                                     this.layer.quad(
                                         this.skin.arms[a].points.rotate.top.x+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)*0.15*(1-b/lb)*(a*2-1)*sign(cos(this.direction.main))-(this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)/16,
                                         this.skin.arms[a].points.rotate.top.y-(this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)*0.15*(1-b/lb)*(a*2-1)*sign(cos(this.direction.main))-(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)/16,
@@ -1102,7 +1108,7 @@ class player extends partisan{
                                     this.layer.push()
                                     this.layer.translate(this.skin.arms[a].points.rotate.middle.x,this.skin.arms[a].points.rotate.middle.y)
                                     this.layer.rotate(atan2(this.skin.arms[a].points.rotate.middle.x-this.skin.arms[a].points.rotate.top.x,this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y))
-                                    let c=0.36*(1-b/lb)*(a*2-1)*sqrt((this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)**2+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)**2)
+                                    c=0.36*(1-b/lb)*(a*2-1)*sqrt((this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)**2+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)**2)
                                     this.layer.arc(0,0,c,c,-180,0)
                                     this.layer.pop()
                                     this.layer.quad(
@@ -1144,7 +1150,7 @@ class player extends partisan{
                                 }
                                 if(this.skin.legs[b].display){
                                     let c=cos(this.direction.main+this.skin.legs[b].top.phi)*10
-                                    this.layer.stroke(this.skin.legs[b].color[0]+c,this.skin.legs[b].color[1]+c,this.skin.legs[b].color[2]+c)
+                                    this.layer.stroke(this.skin.legs[b].color[0]+c,this.skin.legs[b].color[1]+c,this.skin.legs[b].color[2]+c,this.fade)
                                     this.layer.strokeWeight(4)
                                     this.layer.line(this.skin.legs[b].points.rotate.top.x,this.skin.legs[b].points.rotate.top.y,this.skin.legs[b].points.rotate.middle.x,this.skin.legs[b].points.rotate.middle.y)
                                     this.layer.line(this.skin.legs[b].points.rotate.middle.x,this.skin.legs[b].points.rotate.middle.y,this.skin.legs[b].points.rotate.bottom.x,this.skin.legs[b].points.rotate.bottom.y)
@@ -1221,7 +1227,8 @@ class player extends partisan{
                     if(this.sash.display.main){
                         this.layer.noStroke()
                         for(let a=0,la=10;a<la;a++){
-                            this.layer.fill(mergeColor(this.sash.color.in,this.sash.color.out,1-a/la)[0],mergeColor(this.sash.color.in,this.sash.color.out,1-a/la)[1],mergeColor(this.sash.color.in,this.sash.color.out,1-a/la)[2],this.fade)
+                            let b=mergeColor(this.sash.color.in,this.sash.color.out,1-a/la)
+                            this.layer.fill(b[0],b[1],b[2],this.fade)
                             this.layer.quad(
                                 -5.4*(1-a/la)*this.fade,this.kimono.level+10*this.fade,
                                 5.4*(1-a/la)*this.fade,this.kimono.level+10*this.fade,
@@ -1250,7 +1257,8 @@ class player extends partisan{
                         this.layer.noStroke()
                         let a=[this.kimono.level+(this.sash.bow.level-this.kimono.level)*this.fade]
                         for(let b=0,lb=10;b<lb;b++){
-                            this.layer.fill(mergeColor(this.sash.color.in,this.sash.color.out,-b/lb)[0],mergeColor(this.sash.color.in,this.sash.color.out,-b/lb)[1],mergeColor(this.sash.color.in,this.sash.color.out,-b/lb)[2],this.fade)
+                            let c=mergeColor(this.sash.color.in,this.sash.color.out,-b/lb)
+                            this.layer.fill(c[0],c[1],c[2],this.fade)
                             this.layer.triangle(
                                 sin(this.sash.bow.spin+this.direction.main)*5.8*this.fade,a[0],
                                 sin(this.sash.bow.spin+this.direction.main)*6.1*this.fade-cos(this.sash.bow.spin+this.direction.main)*6,a[0]+4*(1-b/lb),
@@ -1304,7 +1312,8 @@ class player extends partisan{
                         if(cos(this.skin.arms[a].top.phi+this.direction.main)>-0.1&&this.kimono.display.sleeve){
                             this.layer.noStroke()
                             for(let b=0,lb=10;b<lb;b++){
-                                this.layer.fill(mergeColor(this.kimono.color.sleeve.back,this.kimono.color.sleeve.front,0.6+b/lb*0.2),this.fade)
+                                let c=mergeColor(this.kimono.color.sleeve.back,this.kimono.color.sleeve.front,0.6+b/lb*0.2)
+                                this.layer.fill(c[0],c[1],c[2],this.fade)
                                 this.layer.quad(
                                     this.skin.arms[a].points.rotate.top.x+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)*0.3*constrain(cos(this.skin.arms[a].top.phi+this.direction.main),0.2,0.5)*(1-b/lb)*(a*2-1)*sign(cos(this.direction.main))-(this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)/16,
                                     this.skin.arms[a].points.rotate.top.y-(this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)*0.3*constrain(cos(this.skin.arms[a].top.phi+this.direction.main),0.2,0.5)*(1-b/lb)*(a*2-1)*sign(cos(this.direction.main))-(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)/16,
@@ -1318,7 +1327,7 @@ class player extends partisan{
                                 this.layer.push()
                                 this.layer.translate(this.skin.arms[a].points.rotate.middle.x,this.skin.arms[a].points.rotate.middle.y)
                                 this.layer.rotate(atan2(this.skin.arms[a].points.rotate.middle.x-this.skin.arms[a].points.rotate.top.x,this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y))
-                                let c=0.36*(1-b/lb)*(a*2-1)*sqrt((this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)**2+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)**2)
+                                c=0.36*(1-b/lb)*(a*2-1)*sqrt((this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)**2+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)**2)
                                 this.layer.arc(0,0,c,c,-180,0)
                                 this.layer.pop()
                             }
@@ -1326,12 +1335,13 @@ class player extends partisan{
                         if((cos(this.skin.arms[a].top.phi+this.direction.main)>-0.1||cos(this.skin.arms[a].bottom.phi+this.direction.main)>=0.8)&&this.kimono.display.sleeve.main){
                             this.layer.noStroke()
                             for(let b=0,lb=10;b<lb;b++){
-                                this.layer.fill(mergeColor(this.kimono.color.sleeve.back,this.kimono.color.sleeve.front,0.6+b/lb*0.2),this.fade)
+                                let c=mergeColor(this.kimono.color.sleeve.back,this.kimono.color.sleeve.front,0.6+b/lb*0.2)
+                                this.layer.fill(c[0],c[1],c[2],this.fade)
                                 if(cos(this.skin.arms[a].top.phi+this.direction.main)<=-0.1){
                                     this.layer.push()
                                     this.layer.translate(this.skin.arms[a].points.rotate.middle.x,this.skin.arms[a].points.rotate.middle.y)
                                     this.layer.rotate(atan2(this.skin.arms[a].points.rotate.middle.x-this.skin.arms[a].points.rotate.bottom.x,this.skin.arms[a].points.rotate.bottom.y-this.skin.arms[a].points.rotate.middle.y))
-                                    let c=0.36*(1-b/lb)*(a*2-1)*sqrt((this.skin.arms[a].points.rotate.bottom.x-this.skin.arms[a].points.rotate.middle.x)**2+(this.skin.arms[a].points.rotate.bottom.y-this.skin.arms[a].points.rotate.middle.y)**2)
+                                    c=0.36*(1-b/lb)*(a*2-1)*sqrt((this.skin.arms[a].points.rotate.bottom.x-this.skin.arms[a].points.rotate.middle.x)**2+(this.skin.arms[a].points.rotate.bottom.y-this.skin.arms[a].points.rotate.middle.y)**2)
                                     this.layer.arc(0,0,c,c,-180,0)
                                     this.layer.pop()
                                 }
@@ -1406,7 +1416,8 @@ class player extends partisan{
                     }
                     if(this.hair.display.glow){
                         this.layer.noFill()
-                        this.layer.stroke(mergeColor(this.hair.color[0].glow,this.hair.color[1].glow,this.anim.dash/5)[0],mergeColor(this.hair.color[0].glow,this.hair.color[1].glow,this.anim.dash/5)[1],mergeColor(this.hair.color[0].glow,this.hair.color[1].glow,this.anim.dash/5)[2],this.fade*0.05)
+                        let a=mergeColor(this.hair.color[0].glow,this.hair.color[1].glow,this.anim.dash/5)
+                        this.layer.stroke(a[0],a[1],a[2],this.fade*0.05)
                         for(let a=0,la=6;a<la;a++){
                             this.layer.strokeWeight((3-a/la*3)*this.fade)
                             this.layer.arc(0,this.skin.head.level,28+a,28+a,-72+a*6,-12-a*6)
@@ -1444,7 +1455,8 @@ class player extends partisan{
                     }
                     if(this.hair.display.bunGlow&&cos(this.hair.pieces.bun.spin+this.direction.main)<=0){
                         this.layer.noFill()
-                        this.layer.stroke(mergeColor(this.hair.color[0].bunGlow,this.hair.color[1].bunGlow,this.anim.dash/5)[0],mergeColor(this.hair.color[0].bunGlow,this.hair.color[1].bunGlow,this.anim.dash/5)[1],mergeColor(this.hair.color[0].bunGlow,this.hair.color[1].bunGlow,this.anim.dash/5)[2],this.fade*0.05)
+                        let a=mergeColor(this.hair.color[0].bunGlow,this.hair.color[1].bunGlow,this.anim.dash/5)
+                        this.layer.stroke(a[0],a[1],a[2],this.fade*0.05)
                         for(let a=0,la=3;a<la;a++){
                             this.layer.strokeWeight((2-a/2)*this.fade)
                             this.layer.arc(sin(this.hair.pieces.bun.spin+this.direction.main)*18,this.skin.head.level+12,11+a,11+a,-60+a*6,-24-a*6)
@@ -1464,7 +1476,8 @@ class player extends partisan{
                             if(this.kimono.display.sleeve.main){
                                 this.layer.noStroke()
                                 for(let b=0,lb=10;b<lb;b++){
-                                    this.layer.fill(mergeColor(this.kimono.color.sleeve.back,this.kimono.color.sleeve.front,b/lb),this.fade)
+                                    let c=mergeColor(this.kimono.color.sleeve.back,this.kimono.color.sleeve.front,b/lb)
+                                    this.layer.fill(c[0],c[1],c[2],this.fade)
                                     this.layer.quad(
                                         this.skin.arms[a].points.rotate.top.x+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)*0.15*(1-b/lb)*(a*2-1)*sign(cos(this.direction.main))-(this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)/12,
                                         this.skin.arms[a].points.rotate.top.y-(this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)*0.15*(1-b/lb)*(a*2-1)*sign(cos(this.direction.main))-(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)/12,
@@ -1478,8 +1491,8 @@ class player extends partisan{
                                     this.layer.push()
                                     this.layer.translate(this.skin.arms[a].points.rotate.middle.x,this.skin.arms[a].points.rotate.middle.y)
                                     this.layer.rotate(atan2(this.skin.arms[a].points.rotate.middle.x-this.skin.arms[a].points.rotate.top.x,this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y))
-                                    let i=0.36*(1-b/lb)*(a*2-1)*sqrt((this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)**2+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)**2)
-                                    this.layer.arc(0,0,i,i,-180,0)
+                                    c=0.36*(1-b/lb)*(a*2-1)*sqrt((this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)**2+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)**2)
+                                    this.layer.arc(0,0,c,c,-180,0)
                                     this.layer.pop()
                                     this.layer.quad(
                                         this.skin.arms[a].points.rotate.middle.x+(this.skin.arms[a].points.rotate.middle.y-this.skin.arms[a].points.rotate.bottom.y)*0.18*(1-b/lb)*(a*2-1)*sign(cos(this.direction.main)),
@@ -1532,7 +1545,8 @@ class player extends partisan{
                         if(this.kimono.display.sleeve.main&&cos(this.skin.arms[a].top.phi+this.direction.main)<=-0.3&&cos(this.skin.arms[a].top.phi+this.direction.main)>-0.5){
                             this.layer.noStroke()
                             for(let b=0,lb=10;b<lb;b++){
-                                this.layer.fill(mergeColor(this.kimono.color.sleeve.back,this.kimono.color.sleeve.front,b/lb),this.fade)
+                                let c=mergeColor(this.kimono.color.sleeve.back,this.kimono.color.sleeve.front,b/lb)
+                                this.layer.fill(c[0],c[1],c[2],this.fade)
                                 this.layer.quad(
                                     this.skin.arms[a].points.rotate.top.x+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)*0.15*(1-b/lb)*(a*2-1)*sign(cos(this.direction.main))-(this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)/12,
                                     this.skin.arms[a].points.rotate.top.y-(this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)*0.15*(1-b/lb)*(a*2-1)*sign(cos(this.direction.main))-(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)/12,
@@ -1546,8 +1560,8 @@ class player extends partisan{
                                 this.layer.push()
                                 this.layer.translate(this.skin.arms[a].points.rotate.middle.x,this.skin.arms[a].points.rotate.middle.y)
                                 this.layer.rotate(atan2(this.skin.arms[a].points.rotate.middle.x-this.skin.arms[a].points.rotate.top.x,this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y))
-                                let i=0.36*(1-b/lb)*(a*2-1)*sqrt((this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)**2+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)**2)
-                                this.layer.arc(0,0,i,i,-180,0)
+                                c=0.36*(1-b/lb)*(a*2-1)*sqrt((this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)**2+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)**2)
+                                this.layer.arc(0,0,c,c,-180,0)
                                 this.layer.pop()
                                 this.layer.quad(
                                     this.skin.arms[a].points.rotate.middle.x+(this.skin.arms[a].points.rotate.middle.y-this.skin.arms[a].points.rotate.bottom.y)*0.18*(1-b/lb)*(a*2-1)*sign(cos(this.direction.main)),
@@ -1737,7 +1751,8 @@ class player extends partisan{
                         if(this.kimono.display.sleeve.main&&cos(this.skin.arms[a].top.phi+this.direction.main)>-0.3){
                             this.layer.noStroke()
                             for(let b=0,lb=10;b<lb;b++){
-                                this.layer.fill(mergeColor(this.kimono.color.sleeve.back,this.kimono.color.sleeve.front,b/lb),this.fade)
+                                let c=mergeColor(this.kimono.color.sleeve.back,this.kimono.color.sleeve.front,b/lb)
+                                this.layer.fill(c[0],c[1],c[2],this.fade)
                                 this.layer.quad(
                                     this.skin.arms[a].points.rotate.top.x+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)*0.3*constrain(cos(this.skin.arms[a].top.phi+this.direction.main),0.2,0.5)*(1-b/lb)*(a*2-1)*sign(cos(this.direction.main))-(this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)/12,
                                     this.skin.arms[a].points.rotate.top.y-(this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)*0.3*constrain(cos(this.skin.arms[a].top.phi+this.direction.main),0.2,0.5)*(1-b/lb)*(a*2-1)*sign(cos(this.direction.main))-(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)/12,
@@ -1751,7 +1766,7 @@ class player extends partisan{
                                 this.layer.push()
                                 this.layer.translate(this.skin.arms[a].points.rotate.middle.x,this.skin.arms[a].points.rotate.middle.y)
                                 this.layer.rotate(atan2(this.skin.arms[a].points.rotate.middle.x-this.skin.arms[a].points.rotate.top.x,this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y))
-                                let c=0.36*(1-b/lb)*(a*2-1)*sqrt((this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)**2+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)**2)
+                                c=0.36*(1-b/lb)*(a*2-1)*sqrt((this.skin.arms[a].points.rotate.top.x-this.skin.arms[a].points.rotate.middle.x)**2+(this.skin.arms[a].points.rotate.top.y-this.skin.arms[a].points.rotate.middle.y)**2)
                                 this.layer.arc(0,0,c,c,-180,0)
                                 this.layer.pop()
                                 this.layer.quad(
@@ -1825,7 +1840,8 @@ class player extends partisan{
                     }
                     if(this.hair.display.glow){
                         this.layer.noFill()
-                        this.layer.stroke(mergeColor(this.hair.color[0].glow,this.hair.color[1].glow,this.anim.dash/5)[0],mergeColor(this.hair.color[0].glow,this.hair.color[1].glow,this.anim.dash/5)[1],mergeColor(this.hair.color[0].glow,this.hair.color[1].glow,this.anim.dash/5)[2],this.fade*0.05)
+                        let a=mergeColor(this.hair.color[0].glow,this.hair.color[1].glow,this.anim.dash/5)
+                        this.layer.stroke(a[0],a[1],a[2],this.fade*0.05)
                         for(let a=0,la=6;a<la;a++){
                             this.layer.strokeWeight((3-a/la*3)*this.fade)
                             this.layer.arc(0,this.skin.head.level,28+a,28+a,-72+a*6,-12-a*6)
@@ -1844,7 +1860,8 @@ class player extends partisan{
                             this.layer.fill(this.hair.color[0].pin[1],this.fade)
                             this.layer.ellipse(sin(this.hair.pieces.bun.spin+this.direction.main)*18+cos(this.hair.pieces.bun.spin+this.direction.main)*7,this.skin.level+11,2,2)
                         }
-                        this.layer.fill(mergeColor(this.hair.color.front,this.hair.color.bun,cos(this.hair.pieces.bun.spin+this.direction.main)),this.fade)
+                        let a=mergeColor(this.hair.color.front,this.hair.color.bun,cos(this.hair.pieces.bun.spin+this.direction.main))
+                        this.layer.fill(a[0],a[1],a[2],this.fade)
                         this.layer.ellipse(sin(this.hair.pieces.bun.spin+this.direction.main)*18,this.skin.head.level+12,14,14)
                         if(sin(this.hair.pieces.bun.spin+this.direction.main)>0){
                             this.layer.fill(this.hair.color[0].pin[0],this.fade)
@@ -1977,6 +1994,12 @@ class player extends partisan{
             if(this.weakTime>0){
                 this.weakTime--
             }
+            if(this.safeTime>0){
+                this.safeTime--
+                this.staySafeTime++
+            }else{
+                this.staySafeTime=0
+            }
             if(this.dash.timer>0){
                 this.dash.timer--
             }
@@ -2003,7 +2026,7 @@ class player extends partisan{
             }
             this.crouch=false
         }
-        if(this.goal.dead&&!dev.invincible){
+        if(this.goal.dead&&!(dev.invincible||!dev.freecam&&view.scroll.anim<10)){
             this.velocity.x=0
             this.velocity.y=0
         }
@@ -2196,7 +2219,7 @@ class player extends partisan{
                                         entities.players[b].reset(3)
                                     }
                                 }
-                                generateLevel(levels[game.level][game.zone],this.layer,2)
+                                game.loadPlan=2
                                 break
                             }
                         }
@@ -2218,7 +2241,7 @@ class player extends partisan{
                                         entities.players[b].reset(3)
                                     }
                                 }
-                                generateLevel(levels[game.level][game.zone],this.layer,3)
+                                game.loadPlan=3
                                 break
                             }
                         }
@@ -2243,13 +2266,13 @@ class player extends partisan{
                                         entities.players[b].reset(3)
                                     }
                                 }
-                                generateLevel(levels[game.level][game.zone],this.layer,4)
+                                game.loadPlan=4
                                 break
                             }
                             trigger=true
                         }
                     }
-                    if(!this.goal.dead&&!trigger&&view.scroll.anim>=1){
+                    if(!this.goal.dead&&!trigger&&view.scroll.anim>=1&&this.position.y>game.edge.y+this.height*0.4){
                         this.goal.dead=true
                     }
                 }
@@ -2269,7 +2292,7 @@ class player extends partisan{
                                         entities.players[b].reset(3)
                                     }
                                 }
-                                generateLevel(levels[game.level][game.zone],this.layer,5)
+                                game.loadPlan=5
                                 break
                             }
                         }
@@ -2292,7 +2315,7 @@ class player extends partisan{
         }else if(this.anim.stamina<this.stamina/this.base.stamina*20-0.2){
             this.anim.stamina+=0.2
         }
-        if(this.goal.dead&&dev.invincible){
+        if(this.goal.dead&&(dev.invincible||!dev.freecam&&view.scroll.anim<10)){
             this.goal.dead=false
         }
         if(this.goal.dead){
@@ -2317,14 +2340,18 @@ class player extends partisan{
                 }
             }
         }else{
-            if(this.stageSpawn){
+            if(this.stageSpawn>0){
+                this.stageSpawn++
+            }
+            if(this.stageSpawn>3&&this.safe>3){
                 game.spawn.x=this.position.x
                 game.spawn.y=this.position.y
-                this.stageSpawn=false
+                this.stageSpawn=0
                 for(let a=0,la=entities.players.length;a<la;a++){
                     entities.players[a].orb.safe=true
                 }
             }
+            this.safe++
             this.fade=smoothAnim(this.fade,!this.orb.active,0,1,5)
         }
     }

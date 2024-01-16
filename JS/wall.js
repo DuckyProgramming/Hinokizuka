@@ -20,6 +20,7 @@ class wall extends physical{
     }
     set(){
         this.standard=this.type!=2&&this.type!=3&&this.type!=4&&this.type!=5&&this.type!=7&&this.type!=8&&this.type!=9&&this.type!=10&&this.type!=11&&this.type!=12&&this.type!=13&&this.type!=15&&this.type!=17&&this.type!=18&&this.type!=19
+        this.safe=this.type==1||this.type==6
         switch(this.type){
             case 2:
                 this.base.height=4
@@ -41,12 +42,26 @@ class wall extends physical{
                 this.width=4
                 this.height=this.base.height-4
             break
-            case 7:
+            case 7: case 14:
                 this.base.width=30
                 this.base.height=30
                 this.width=30
                 this.height=30
                 this.active=false
+                this.grabbed=[-1,-1]
+                let total714=0
+                for(let a=0,la=entities.walls.length;a<la;a++){
+                    for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                        if(!entities.walls[a][b].deprecated&&(entities.walls[a][b].type==7||entities.walls[a][b].type==14)){
+                            total714++
+                        }
+                    }
+                }
+                this.speedMark=total714
+                if(this.type==14){
+                    this.fly=false
+                    this.velocity={y:0}
+                }
             break
             case 8:
                 this.timer=0
@@ -82,15 +97,6 @@ class wall extends physical{
                 this.anim=0
                 this.timer=0
             break
-            case 14:
-                this.base.width=30
-                this.base.height=30
-                this.width=30
-                this.height=30
-                this.active=false
-                this.fly=false
-                this.velocity={y:0}
-            break
             case 15:
                 this.base.height=4
                 this.height=4
@@ -122,6 +128,18 @@ class wall extends physical{
             [[{x:this.position.x-this.width/2,y:this.position.y-this.height/2},{x:this.position.x-this.width/2,y:this.position.y+this.height/2}]],
         ]
         if(this.standard){
+            if(this.position.y+this.height/2>=game.edge.y){
+                this.redundant[0]=true
+            }
+            if(this.position.y-this.height/2<=0){
+                this.redundant[1]=true
+            }
+            if(this.position.x+this.width/2>=game.edge.x){
+                this.redundant[2]=true
+            }
+            if(this.position.x-this.width/2<=0){
+                this.redundant[3]=true
+            }
             for(let a=0,la=entities.walls.length;a<la;a++){
                 for(let b=0,lb=entities.walls[a].length;b<lb;b++){
                     let c=entities.walls[a][b]
@@ -138,20 +156,18 @@ class wall extends physical{
                                 this.boundary[1][d][1].x=c.position.x-c.width/2
                             }
                         }
-
                         for(let d=0,ld=this.boundary[2].length;d<ld;d++){
                             if(c.position.x==this.position.x+this.width/2+c.width/2&&c.position.y-c.height/2>this.boundary[2][d][0].y&&c.position.y+c.height/2<this.boundary[2][d][1].y){
-                                this.boundary[2].push([{x:c.position.y+c.height/2,y:this.boundary[2][d][0].x},{x:this.boundary[2][d][1].y,y:this.boundary[2][d][1].x}])
+                                this.boundary[2].push([{x:this.boundary[2][d][0].x,y:c.position.y+c.height/2},{x:this.boundary[2][d][1].x,y:this.boundary[2][d][1].y}])
                                 this.boundary[2][d][1].y=c.position.y-c.height/2
                             }
                         }
                         for(let d=0,ld=this.boundary[3].length;d<ld;d++){
                             if(c.position.x==this.position.x-this.width/2-c.width/2&&c.position.y-c.height/2>this.boundary[3][d][0].y&&c.position.y+c.height/2<this.boundary[3][d][1].y){
-                                this.boundary[3].push([{x:c.position.y+c.height/2,y:this.boundary[3][d][0].x},{x:this.boundary[3][d][1].y,y:this.boundary[3][d][1].x}])
+                                this.boundary[3].push([{x:this.boundary[3][d][0].x,y:c.position.y+c.height/2},{x:this.boundary[3][d][1].x,y:this.boundary[3][d][1].y}])
                                 this.boundary[3][d][1].y=c.position.y-c.height/2
                             }
                         }
-
                         for(let d=0,ld=2;d<ld;d++){
                             for(let e=0,le=this.boundary[0].length;e<le;e++){
                                 if(c.position.y==this.position.y+this.height/2+c.height/2&&c.position.x-c.width/2<=this.boundary[0][e][d].x&&c.position.x+c.width/2>=this.boundary[0][e][d].x){
@@ -186,6 +202,28 @@ class wall extends physical{
                         if(c.position.x==this.position.x-this.width/2-c.width/2&&c.position.y-c.height/2<=this.position.y-this.height/2&&c.position.y+c.height/2>=this.position.y+this.height/2){
                             this.redundant[3]=true
                         }
+                    }
+                }
+            }
+        }
+    }
+    spikify(){
+        for(let a=0,la=this.boundary.length;a<la;a++){
+            if(!this.redundant[a]){
+                for(let b=0,lb=this.boundary[a].length;b<lb;b++){
+                    switch(a){
+                        case 0:
+                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2+2,abs(this.boundary[a][b][0].x-this.boundary[a][b][1].x),4,3,entities.walls.length,game.zone))
+                        break
+                        case 1:
+                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2-2,abs(this.boundary[a][b][0].x-this.boundary[a][b][1].x),4,2,entities.walls.length,game.zone))
+                        break
+                        case 2:
+                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2+2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2,4,abs(this.boundary[a][b][0].y-this.boundary[a][b][1].y),5,entities.walls.length,game.zone))
+                        break
+                        case 3:
+                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2-2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2,4,abs(this.boundary[a][b][0].y-this.boundary[a][b][1].y),4,entities.walls.length,game.zone))
+                        break
                     }
                 }
             }
@@ -373,12 +411,11 @@ class wall extends physical{
         }
         this.layer.pop()
         if(dev.hitbox){
-            this.layer.noFill()
-            this.layer.strokeWeight(2)
+            super.display()
             for(let a=0,la=4;a<la;a++){
                 if(!this.redundant[a]){
                     for(let b=0,lb=this.boundary[a].length;b<lb;b++){
-                        this.layer.stroke(255,this.select?255:100,this.select?100:0)
+                        this.layer.stroke(255,this.select?150:50,this.select?50:0)
                         this.layer.line(
                             this.boundary[a][b][0].x<this.position.x?this.boundary[a][b][0].x+1:this.boundary[a][b][0].x-1,
                             this.boundary[a][b][0].y<this.position.y?this.boundary[a][b][0].y+1:this.boundary[a][b][0].y-1,
@@ -420,6 +457,28 @@ class wall extends physical{
         this.time++
         this.fade=smoothAnim(this.fade,this.trigger.fade,0,1,5)
         switch(this.type){
+            case 7: case 14:
+                if(this.grabbed[0]>=0&&!this.active){
+                    this.position.x=map(0.05-this.speedMark*0.015,0,1,this.position.x,this.collide.box[this.grabbed[0]][this.grabbed[1]].position.x)
+                    this.position.y=map(0.05-this.speedMark*0.015,0,1,this.position.y,this.collide.box[this.grabbed[0]][this.grabbed[1]].position.y)
+                    if(this.collide.box[this.grabbed[0]][this.grabbed[1]].staySafeTime>5){
+                        this.active=true
+                        this.trigger.fade=false
+                        game.flowers++
+                        elements.flower.timer=180
+                        for(let a=0,la=8;a<la;a++){
+                            entities.particles.push(new particle(this.layer,this.position.x,this.position.y,0,360*a/la,2,[[251,158,193]]))
+                        }
+                        levels[game.level][game.zone].spawnRule[this.index]=1
+                    }
+                    if(this.collide.box[this.grabbed[0]][this.grabbed[1]].goal.dead||this.collide.box[this.grabbed[0]][this.grabbed[1]].orb.active){
+                        this.grabbed=[-1,-1]
+                    }
+                }else if(this.type==14&&this.fly){
+                    this.velocity.y-=physics.gravity
+                    this.position.y+=this.velocity.y
+                }
+            break
             case 8:
                 if(this.timer>0){
                     this.timer--
@@ -438,12 +497,6 @@ class wall extends physical{
                     this.anim+=0.2
                 }else if(this.anim>0){
                     this.anim=round(this.anim*20-1)/20
-                }
-            break
-            case 14:
-                if(this.fly){
-                    this.velocity.y-=physics.gravity
-                    this.position.y+=this.velocity.y
                 }
             break
             case 20:
@@ -488,6 +541,7 @@ class wall extends physical{
                                 case 2:
                                     if(c.velocity.y>=0){
                                         this.kill++
+                                        c.safe=0
                                         if(this.kill>=2){
                                             c.goal.dead=true
                                         }
@@ -496,6 +550,7 @@ class wall extends physical{
                                 case 3:
                                     if(c.velocity.y<=0){
                                         this.kill++
+                                        c.safe=0
                                         if(this.kill>=2){
                                             c.goal.dead=true
                                         }
@@ -504,6 +559,7 @@ class wall extends physical{
                                 case 4:
                                     if(c.velocity.x>=0){
                                         this.kill++
+                                        c.safe=0
                                         if(this.kill>=2){
                                             c.goal.dead=true
                                         }
@@ -512,6 +568,7 @@ class wall extends physical{
                                 case 5:
                                     if(c.velocity.x<=0){
                                         this.kill++
+                                        c.safe=0
                                         if(this.kill>=2){
                                             c.goal.dead=true
                                         }
@@ -521,15 +578,8 @@ class wall extends physical{
                                     c.goal.dead=true
                                 break
                                 case 7: case 14:
-                                    if(!this.active){
-                                        this.active=true
-                                        this.trigger.fade=false
-                                        game.flowers++
-                                        elements.flower.timer=180
-                                        for(let a=0,la=8;a<la;a++){
-                                            entities.particles.push(new particle(this.layer,this.position.x,this.position.y,0,360*a/la,2,[[251,158,193]]))
-                                        }
-                                        levels[game.level][game.zone].spawnRule[this.index]=1
+                                    if(this.grabbed[0]<0){
+                                        this.grabbed=[a,b]
                                     }
                                 break
                                 case 9:
@@ -546,8 +596,10 @@ class wall extends physical{
                                         c.stamina=c.base.stamina
                                         c.velocity.y=-15
                                         c.velocity.x=0
+                                        c.dashPhase=false
                                         if(c.dash.active>0){
                                             c.dash.active=0
+                                            inputs.keys[c.id][5]=false
                                         }
                                     }
                                 break
@@ -558,8 +610,10 @@ class wall extends physical{
                                         c.stamina=c.base.stamina
                                         c.velocity.y=9
                                         c.velocity.x=0
+                                        c.dashPhase=false
                                         if(c.dash.active>0){
                                             c.dash.active=0
+                                            inputs.keys[c.id][5]=false
                                         }
                                     }
                                 break
@@ -570,8 +624,10 @@ class wall extends physical{
                                         c.stamina=c.base.stamina
                                         c.velocity.x=-12
                                         c.velocity.y=-6
+                                        c.dashPhase=false
                                         if(c.dash.active>0){
                                             c.dash.active=0
+                                            inputs.keys[c.id][5]=false
                                         }
                                     }
                                 break
@@ -582,8 +638,10 @@ class wall extends physical{
                                         c.stamina=c.base.stamina
                                         c.velocity.x=12
                                         c.velocity.y=-6
+                                        c.dashPhase=false
                                         if(c.dash.active>0){
                                             c.dash.active=0
+                                            inputs.keys[c.id][5]=false
                                         }
                                     }
                                 break
@@ -591,7 +649,11 @@ class wall extends physical{
                                     if(this.timer==0){
                                         this.timer=5
                                         c.dash.available=true
-                                        c.dash.active=0
+                                        c.dashPhase=true
+                                        if(c.dash.active>0){
+                                            c.dash.active=0
+                                            inputs.keys[c.id][5]=false
+                                        }
                                         c.stamina=c.base.stamina
                                         entities.particles.push(new particle(this.layer,this.position.x,this.position.y,2,0,2,[[125,200,255]]))
                                         let direction=atan2(c.position.x-this.position.x,c.position.y-this.position.y)
@@ -615,14 +677,17 @@ class wall extends physical{
                                                     c.velocity.y=0
                                                     c.jumpTime=c.base.jumpTime
                                                     c.dashPhase=false
+                                                    if(this.safe&&!c.goal.dead&&c.safe){
+                                                        c.safeTime=5
+                                                    }
                                                     if(c.dash.active==0){
                                                         c.velocity.x*=physics.friction.x
                                                     }
                                                     if(c.dash.timer==0){
                                                         c.dash.available=true
                                                     }
-                                                    if(c.setSpawn&&c.position.x>10&&c.position.x<game.edge.x-10&&c.position.y>10&&c.position.y<game.edge.y-10){
-                                                        c.stageSpawn=true
+                                                    if(c.setSpawn&&c.position.x>10&&c.position.x<game.edge.x-10&&c.position.y>10&&c.position.y<game.edge.y-10&&this.standard){
+                                                        c.stageSpawn=max(1,c.stageSpawn)
                                                         c.setSpawn=false
                                                     }
                                                 }
