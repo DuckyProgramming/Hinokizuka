@@ -32,7 +32,6 @@ function mouseClicked(){
                             game.running.deaths=0
                             reformLevels()
                             reformElements()
-                            generateLevel(levels[game.level][game.zone],graphics.main,0)
                             inputs.validKey=a==0?[true,true,true,true,false,false,false,false]:[true,true,true,true,true,true,true,true]
                         }else{
                             menu.select=a

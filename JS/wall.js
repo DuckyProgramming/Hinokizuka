@@ -522,7 +522,7 @@ class wall extends physical{
                 for(let b=0,lb=this.collide.box[a].length;b<lb;b++){
                     let c=this.collide.box[a][b]
                     if(!c.orb.active&&!c.goal.dead&&
-                        !((this.type==15||this.type==18||this.type==19)&&(c.velocity.y<=0||c.previous.position.y>this.position.y-this.height/2-c.height/2+4))
+                        !((this.type==15||this.type==18||this.type==19)&&(c.velocity.y<=0||c.previous.position.y>this.position.y-this.height/2-c.height/2+6))
                     ){
                         if(inBoxBox({position:this.position,width:this.width+2,height:this.height+2},c)&&
                             this.type!=2&&this.type!=3&&this.type!=4&&this.type!=5&&this.type!=7&&this.type!=9&&this.type!=10&&this.type!=11&&this.type!=12&&this.type!=13&&

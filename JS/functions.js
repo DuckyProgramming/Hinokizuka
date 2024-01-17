@@ -548,7 +548,7 @@ function generateLevel(level,layer,context){
             view.scroll.x+=entities.players[a].position.x/la
             view.scroll.y+=entities.players[a].position.y/la
         }
-        view.scroll.anim=1
+        view.scroll.anim=10
     }
     for(let a=0,la=level.walls.length;a<la;a++){
         if(level.spawnRule[a]==0||level.spawnRule[a]==2){
@@ -689,12 +689,23 @@ function operateOuter(layer){
     }
     if(!dev.freecam){
         let mid={x:0,y:0}
+        let total=0
         for(let a=0,la=entities.players.length;a<la;a++){
-            mid.x+=entities.players[a].position.x/la
-            mid.y+=entities.players[a].position.y/la
+            if(!entities.players[a].goal.dead){
+                mid.x+=entities.players[a].position.x
+                mid.y+=entities.players[a].position.y
+                total++
+            }
         }
-        mid.x=constrain(mid.x,layer.width/2,game.edge.x-layer.width/2)
-        mid.y=constrain(mid.y,layer.height/2,game.edge.y-layer.height/2)
+        if(mid.x==0&&mid.y==0){
+            for(let a=0,la=entities.players.length;a<la;a++){
+                mid.x+=entities.players[a].position.x
+                mid.y+=entities.players[a].position.y
+                total++
+            }
+        }
+        mid.x=constrain(mid.x/total,layer.width/2,game.edge.x-layer.width/2)
+        mid.y=constrain(mid.y/total,layer.height/2,game.edge.y-layer.height/2)
         view.goal.scroll.x=game.edge.x<layer.width?game.edge.x/2:mid.x
         view.goal.scroll.y=game.edge.y<layer.height?game.edge.y/2:mid.y
     }
@@ -918,12 +929,12 @@ function runTransition(layer){
         transition.anim+=0.1
         if(transition.anim>=1){
             transition.trigger=false
-            stage.scene=transition.scene
-            switch(stage.scene){
+            switch(transition.scene){
                 case 'main':
-                    generateLevel(levels[game.level][game.zone],layer,1)
+                    generateLevel(levels[game.level][game.zone],layer,stage.scene=='main'?1:0)
                 break
             }
+            stage.scene=transition.scene
         }
     }else if(transition.anim>0){
         transition.anim-=0.1

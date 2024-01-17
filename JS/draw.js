@@ -12,9 +12,8 @@ function mainloop(layer){
             operateEnding(layer)
         break
         case 'main':
-            layer.image(graphics.backgrounds[game.level],-1800-(view.scroll.x+game.scroll.x)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
-            layer.image(graphics.backgrounds[game.level],-(view.scroll.x+game.scroll.x)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
-            layer.image(graphics.backgrounds[game.level],1800-(view.scroll.x+game.scroll.x)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
+            layer.image(graphics.backgrounds[game.level],900-(view.scroll.x+game.scroll.x)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
+            layer.image(graphics.backgrounds[game.level],2700-(view.scroll.x+game.scroll.x)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
             layer.push()
             layer.translate(-view.scroll.x,-view.scroll.y)
             layer.scale(view.zoom)
@@ -22,12 +21,19 @@ function mainloop(layer){
             operateBack(layer)
             for(let a=0,la=run.fore.length;a<la;a++){
                 for(let b=0,lb=run.fore[a].length;b<lb;b++){
-                    run.fore[a][b].display()
-                    run.fore[a][b].update()
-                    if(run.fore[a][b].remove){
-                        run.fore[a].splice(b,1)
-                        b--
-                        lb--
+                    if(
+                        run.fore[a][b].position.x+run.fore[a][b].width/2>view.scroll.x-graphics.main.width*0.6/view.zoom&&
+                        run.fore[a][b].position.x-run.fore[a][b].width/2<view.scroll.x+graphics.main.width*0.6/view.zoom&&
+                        run.fore[a][b].position.y+run.fore[a][b].height/2>view.scroll.y-graphics.main.height*0.6/view.zoom&&
+                        run.fore[a][b].position.y-run.fore[a][b].height/2<view.scroll.y+graphics.main.height*0.6/view.zoom
+                    ){
+                        run.fore[a][b].display()
+                        run.fore[a][b].update()
+                        if(run.fore[a][b].remove){
+                            run.fore[a].splice(b,1)
+                            b--
+                            lb--
+                        }
                     }
                 }
             }

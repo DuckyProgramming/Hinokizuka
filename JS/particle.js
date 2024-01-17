@@ -5,6 +5,8 @@ class particle extends entity{
         this.direction=direction
         this.size=size
         this.args=args
+        this.width=20
+        this.height=20
         switch(this.type){
             case 0: case 1:
                 this.scale=1

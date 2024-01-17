@@ -2290,9 +2290,9 @@ class player extends partisan{
                     }
                 }
             }
-            if(this.position.y>game.edge.y&&!this.goal.dead){
+            if(this.position.y>game.edge.y+this.height/2&&!this.goal.dead){
                 if(dev.debound){
-                    this.position.y=game.edge.y
+                    this.position.y=game.edge.y+this.height/2
                     this.dash.available=true
                     this.jumpTime=this.base.jumpTime
                 }else{
@@ -2317,7 +2317,7 @@ class player extends partisan{
                             trigger=true
                         }
                     }
-                    if(!this.goal.dead&&!trigger&&view.scroll.anim>=1&&this.position.y>game.edge.y+this.height*0.4){
+                    if(!this.goal.dead&&!trigger&&view.scroll.anim>=10){
                         this.goal.dead=true
                     }
                 }
