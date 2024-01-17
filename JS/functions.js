@@ -144,7 +144,7 @@ function setupLayer(layer){
     layer.noStroke()
 }
 function regTriangle(layer,x,y,radiusX,radiusY,direction){
-    layer.triangle(x+sin(direction)*radiusX,y+cos(direction)*radiusY,x+sin(direction+50)*radiusX,y+cos(direction+50)*radiusY,x+sin(direction+120)*radiusX,y+cos(direction+120)*radiusY)
+    layer.triangle(x+sin(direction)*radiusX,y+cos(direction)*radiusY,x+sin(direction+120)*radiusX,y+cos(direction+120)*radiusY,x+sin(direction-120)*radiusX,y+cos(direction-120)*radiusY)
 }
 function regPoly(layer,x,y,sides,radiusX,radiusY,direction){
     layer.beginShape()
@@ -160,6 +160,9 @@ function regStar(layer,x,y,points,radiusX,radiusY,innerRadiusX,innerRadiusY,dire
         layer.vertex(x+sin((a+0.5)/la*360+direction)*innerRadiusX,y+cos((a+0.5)/la*360+direction)*innerRadiusY)
     }
     layer.endShape(CLOSE)
+}
+function diamond(layer,x,y,width,height){
+    layer.quad(x-width/2,y,x,y-height/2,x+width/2,y,x,y+height/2)
 }
 //character graphical
 function mergeColor(color1,color2,key){
@@ -358,16 +361,35 @@ function displayMain(layer){
     image(layer,width/2,height/2,layer.width*stage.scale,layer.height*stage.scale)
 }
 function initialElements(layer){
-    for(let a=0,la=game.players.length;a<la;a++){
-        entities.players.push(new player(layer,0,0,game.players[a],a))
+    for(let a=0,la=2;a<la;a++){
+        entities.reserve.push(new player(layer,0,0,a,a))
     }
 }
-function initialLevels(Levels){
+function reformElements(){
+    entities.players=[]
+    for(let a=0,la=game.players.length;a<la;a++){
+        entities.reserve[game.players[a]].id=a
+        entities.players.push(entities.reserve[game.players[a]])
+    }
+}
+function initialLevels(){
     for(let a=0,la=levels.length;a<la;a++){
+        game.levelData.push({flowers:0,deaths:0})
         for(let b=0,lb=levels[a].length;b<lb;b++){
             levels[a][b].spawnRule=[]
             for(let c=0,lc=levels[a][b].walls.length;c<lc;c++){
                 levels[a][b].spawnRule.push(0)
+            }
+        }
+    }
+}
+function reformLevels(){
+    for(let a=0,la=levels.length;a<la;a++){
+        for(let b=0,lb=levels[a].length;b<lb;b++){
+            for(let c=0,lc=levels[a][b].walls.length;c<lc;c++){
+                if(levels[a][b].spawnRule[c]==1){
+                    levels[a][b].spawnRule[c]=2
+                }
             }
         }
     }
@@ -529,8 +551,8 @@ function generateLevel(level,layer,context){
         view.scroll.anim=1
     }
     for(let a=0,la=level.walls.length;a<la;a++){
-        if(level.spawnRule[a]==0){
-            entities.walls[types.wall[level.walls[a].type].slice].push(new wall(layer,level.walls[a].x,level.walls[a].y,level.walls[a].width,level.walls[a].height,level.walls[a].type,a,game.zone))
+        if(level.spawnRule[a]==0||level.spawnRule[a]==2){
+            entities.walls[types.wall[level.walls[a].type].slice].push(new wall(layer,level.walls[a].x,level.walls[a].y,level.walls[a].width,level.walls[a].height,level.walls[a].type,a,level.spawnRule[a]))
         }
     }
     for(let a=0,la=entities.walls.length;a<la;a++){
@@ -678,6 +700,69 @@ function operateOuter(layer){
     }
     displayComponent(layer,4)
 }
+function operateMenu(layer){
+    menu.transition=smoothAnim(menu.transition,menu.scene==1,0,1,60)
+    for(let a=0,la=menu.sceneAnim.length;a<la;a++){
+        menu.sceneAnim[a]=smoothAnim(menu.sceneAnim[a],menu.scene==a&&menu.transition==a,0,1,30)
+    }
+    for(let a=0,la=menu.selectAnim.length;a<la;a++){
+        menu.selectAnim[a]=smoothAnim(menu.selectAnim[a],menu.select==a,0,1,15)
+    }
+    for(let a=0,la=menu.playerAnim.length;a<la;a++){
+        menu.playerAnim[a]=smoothAnim(menu.playerAnim[a],game.players.includes(a),0,1,15)
+    }
+    layer.noStroke()
+    for(let a=0,la=menu.levelPos.length;a<la;a++){
+        layer.fill(220,menu.sceneAnim[1]*menu.selectAnim[a])
+        layer.rect(menu.levelPos[a][0]+80,menu.levelPos[a][1],100,a==0?40:60,4)
+        layer.fill(180,menu.sceneAnim[1]*menu.selectAnim[a])
+        layer.rect(menu.levelPos[a][0]+80,menu.levelPos[a][1],95,a==0?35:55,4)
+        layer.fill(0,menu.sceneAnim[1]*menu.selectAnim[a])
+        layer.textSize(12)
+        layer.text(`${a==0?'Tutorial':`Chapter ${a}\n${game.levelData[a].flowers}/12 Flowers`}\n${game.levelData[a].deaths} Death${game.levelData[a].deaths!=1?`s`:``}`,menu.levelPos[a][0]+80,menu.levelPos[a][1])
+        layer.fill(180,255,255,menu.sceneAnim[1])
+        diamond(layer,menu.levelPos[a][0],menu.levelPos[a][1],50,50)
+        layer.fill(220,255,255,menu.sceneAnim[1])
+        diamond(layer,menu.levelPos[a][0],menu.levelPos[a][1],40,40)
+        layer.fill(0,0,40,menu.sceneAnim[1])
+        layer.textSize(20)
+        layer.text(a==0?'T':a,menu.levelPos[a][0],menu.levelPos[a][1]+1)
+    }
+    layer.noFill()
+    for(let a=0,la=menu.playerAnim.length;a<la;a++){
+        layer.stroke(500-menu.playerAnim[a]*500,menu.playerAnim[a]*500,0,menu.sceneAnim[0]*0.8)
+        layer.strokeWeight(3)
+        let center=220+a*330-600*(0.5-cos(menu.transition*180)*0.5)
+        layer.ellipse(center,400,50)
+        layer.line(center+12*(1-menu.playerAnim[a]),388-3*menu.playerAnim[a],center+15*menu.playerAnim[a],400)
+        layer.line(center-12*(1-menu.playerAnim[a]),388-3*menu.playerAnim[a],center-15*menu.playerAnim[a],400)
+        layer.line(center+12*(1-menu.playerAnim[a]),412+3*menu.playerAnim[a],center+15*menu.playerAnim[a],400)
+        layer.line(center-12*(1-menu.playerAnim[a]),412+3*menu.playerAnim[a],center-15*menu.playerAnim[a],400)
+    }
+    layer.noStroke()
+    layer.fill(100,menu.sceneAnim[1])
+    layer.rect(30,layer.height-30,40,40,4)
+    layer.fill(120,menu.sceneAnim[1])
+    layer.rect(30,layer.height-30,32,32,4)
+    layer.fill(40,menu.sceneAnim[1])
+    regTriangle(layer,32,layer.height-30,12,12,30)
+    if(menu.scene==1){
+        elements.flower.timer=1
+    }
+    displayComponent(layer,4)
+}
+function operateEnding(layer){
+    layer.noStroke()
+    layer.fill(0,0.2)
+    layer.rect(layer.width/2,layer.height/2,layer.width,layer.height)
+    layer.fill(0,0,20)
+    layer.textSize(30)
+    layer.text(`${game.level==0?``:`${game.running.flowers}/12 Flowers\n`}${game.running.deaths} Death${game.running.deaths!=1?`s`:``}`,layer.width/2,300)
+    layer.textSize(50)
+    layer.text('End of Chapter',layer.width/2,520)
+    layer.textSize(25)
+    layer.text('Any Key to Continue',layer.width/2,560)
+}
 function displayComponent(layer,type){
     switch(type){
         case 0:
@@ -795,10 +880,10 @@ function displayComponent(layer,type){
             layer.line(game.spawn.x-7,game.spawn.y+7,game.spawn.x+7,game.spawn.y-7)
         break
         case 4:
+            elements.flower.anim=smoothAnim(elements.flower.anim,elements.flower.timer>0,0,1,30)
             if(elements.flower.timer>0){
                 elements.flower.timer--
             }
-            elements.flower.anim=smoothAnim(elements.flower.anim,elements.flower.timer>0,0,1,30)
             if(elements.flower.anim>0){
                 layer.push()
                 layer.translate(-50+elements.flower.anim*75,25)

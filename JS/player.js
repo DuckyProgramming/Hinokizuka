@@ -14,9 +14,9 @@ class player extends partisan{
         this.stamina=360
         this.crush=[false,false,false,false]
         this.contact=[false,false,false,false]
+        this.climb=0
         this.dead=false
         this.crouch=false
-        this.climb=false
         this.dashPhase=false
         this.setSpawn=false
         this.stageSpawn=1
@@ -24,7 +24,7 @@ class player extends partisan{
         this.offset={position:{x:0,y:0}}
         this.anim={dash:0,stamina:0,staminaActive:0,climb:0,crouch:0,move:0,jump:0,orb:0}
         this.dash={active:0,timer:0,available:true,direction:0}
-        this.physics={moveSpeed:0.6,moveCap:4,jumpPower:-8.5,wallJumpPower:{x:5,y:-6},dashPower:{x:12,y:10},orbSpeed:0.1,weaken:{dash:18,wallJump:12}}
+        this.physics={moveSpeed:0.6,moveCap:4,jumpPower:-8.75,wallJumpPower:{x:5,y:-6},dashPower:{x:12,y:10},orbSpeed:0.1,weaken:{dash:18,wallJump:12}}
         this.orb={active:false,speed:0,safe:false}
         this.goal={direction:{main:54,speed:18},dead:false}
         this.base={jumpTime:5,stamina:360,physics:{moveCap:4},dash:{active:9,timer:12}}
@@ -149,7 +149,7 @@ class player extends partisan{
                     sprites:{back:[],front:[]},
                     display:{
                         main:{back:true,front:true},decoration:true,
-                        sleeve:{main:true,decoration:!this.graphical},
+                        sleeve:{main:true,decoration:this.graphical},
                     },color:{
                         main:{start:[230,211,227],end:[183,188,224]},
                         mainBack:{start:[192,190,215],end:[161,165,214]},
@@ -291,7 +291,7 @@ class player extends partisan{
                     sprites:{back:[],front:[]},
                     display:{
                         main:{back:true,front:true},decoration:true,
-                        sleeve:{main:!this.graphical,decoration:true},
+                        sleeve:{main:true,decoration:this.graphical},
                     },color:{
                         main:{start:[168,189,216],end:[148,160,197]},
                         mainBack:{start:[139,168,223],end:[97,124,207]},
@@ -310,7 +310,7 @@ class player extends partisan{
             break
         }
         this.gen={amount:20,interval:18,direction:0,spin:{main:0,index:0}}
-        this.generateGeneral(0)
+        this.generateGeneral(this.graphical?1:0)
     }
     reset(type){
         switch(type){
@@ -500,12 +500,16 @@ class player extends partisan{
             if(this.kimono.display.decoration){this.generateParts(1)}
             if(this.kimono.display.sleeve.decoration){this.generateParts(2)}
         }
-        if(type==0||type==2){
+        if(type==0){
             if(this.hair.display.back||this.hair.display.front){this.generateSprites(0)}
             if(this.kimono.display.main.back||this.kimono.display.main.front){this.generateSprites(1)}
         }
-        if(type==0||type==3){
+        if(type==0||type==1){
             if(this.skin.legs[0].display||this.skin.legs[1].display){this.generateGraphics(0)}
+        }
+        if(type==2){
+            if(this.hair.display.back||this.hair.display.front){this.generateSpritesInstant(0)}
+            if(this.kimono.display.main.back||this.kimono.display.main.front){this.generateSpritesInstant(1)}
         }
     }
     generateParts(type){
@@ -696,6 +700,32 @@ class player extends partisan{
             break
         }
     }
+    generateSpritesInstant(type){
+        switch(type){
+            case 0:
+                this.hair.sprites={front:[[],[],[],[],[],[]],back:[[],[],[],[],[],[]]}
+                for(let b=0,lb=2;b<lb;b++){
+                    for(let c=0,lc=this.hair.sprites[['front','back'][b]].length;c<lc;c++){
+                        this.hair.sprites[['front','back'][b]][c].push(createGraphics(200,300))
+                        setupLayer(this.hair.sprites[['front','back'][b]][c][0])
+                        this.hair.sprites[['front','back'][b]][c][0].translate(100,100)
+                        this.hair.sprites[['front','back'][b]][c][0].scale(5)
+                        this.generateSprite(this.hair.sprites[['front','back'][b]][c][0],b+1,this.direction.main,c/(lc-1))
+                    }
+                }
+            break
+            case 1:
+                this.kimono.sprites={front:[],back:[]}
+                for(let b=0,lb=2;b<lb;b++){
+                    this.kimono.sprites[['front','back'][b]].push(createGraphics(200,330))
+                    setupLayer(this.kimono.sprites[['front','back'][b]][0])
+                    this.kimono.sprites[['front','back'][b]][0].translate(100,0)
+                    this.kimono.sprites[['front','back'][b]][0].scale(5)
+                    this.generateSprite(this.kimono.sprites[['front','back'][b]][0],b+3,this.direction.main,0)
+                }
+            break
+        }
+    }
     generateGraphics(type){
         switch(this.type){
             case 0:
@@ -762,11 +792,11 @@ class player extends partisan{
                         layer.arc(0,0,32,32,-180,0)
                         layer.line(-16,0,16,0)
                         controlSpin(this.hair.pieces.reverse,direction,0)
-                        displayTrianglesFront(layer,this.hair.pieces.reverse,direction,0.5,32,0.1,0.1,-1,1)
+                        displayTrianglesFront(layer,this.hair.pieces.reverse,direction,1,32,0.1,0.1,-1,1)
                     break
                     case 2:
                         displayTrianglesBack(layer,this.hair.pieces.main,direction,0,32,1,0.1,mergeColor(this.hair.color[0].back,this.hair.color[1].back,key),1)
-                        displayTrianglesFront(layer,this.hair.pieces.reverse,direction,0.5,32,0.1,0.1,mergeColor(this.hair.color[0].back,this.hair.color[1].back,key),1)
+                        displayTrianglesFront(layer,this.hair.pieces.reverse,direction,1,32,0.1,0.1,mergeColor(this.hair.color[0].back,this.hair.color[1].back,key),1)
                         displayTrianglesBack(layer,this.hair.pieces.inside,direction,0,30,1,0.05,mergeColor(this.hair.color[0].insideBack,this.hair.color[1].insideBack,key),1)
                     break
                     case 3:
@@ -843,11 +873,11 @@ class player extends partisan{
                         layer.arc(0,0,32,32,-180,0)
                         layer.line(-16,0,16,0)
                         controlSpin(this.hair.pieces.reverse,direction,0)
-                        displayTrianglesFront(layer,this.hair.pieces.reverse,direction,0.5,32,0.1,0.1,-1,1)
+                        displayTrianglesFront(layer,this.hair.pieces.reverse,direction,1,32,0.1,0.1,-1,1)
                     break
                     case 2:
                         displayTrianglesBack(layer,this.hair.pieces.main,direction,0,32,1,-0.1,mergeColor(this.hair.color[0].back,this.hair.color[1].back,key),1)
-                        displayTrianglesFront(layer,this.hair.pieces.reverse,direction,0.5,32,0.1,0.1,mergeColor(this.hair.color[0].back,this.hair.color[1].back,key),1)
+                        displayTrianglesFront(layer,this.hair.pieces.reverse,direction,1,32,0.1,0.1,mergeColor(this.hair.color[0].back,this.hair.color[1].back,key),1)
                         displayTrianglesBack(layer,this.hair.pieces.inside,direction,0,30,1,-0.15,mergeColor(this.hair.color[0].insideBack,this.hair.color[1].insideBack,key),1)
                     break
                     case 3:
@@ -890,7 +920,9 @@ class player extends partisan{
         }
     }
     calculateParts(){
-        this.calculateAnim()
+        if(!this.graphical){
+            this.calculateAnim()
+        }
         for(let a=0,la=2;a<la;a++){
             this.skin.legs[a].points.base.middle.x=this.skin.legs[a].points.base.top.x+sin(this.skin.legs[a].top.theta)*this.skin.legs[a].top.length
             this.skin.legs[a].points.base.middle.y=this.skin.legs[a].points.base.top.y+cos(this.skin.legs[a].top.theta)*this.skin.legs[a].top.length
@@ -927,8 +959,11 @@ class player extends partisan{
             this.skin.arms[a].points.stack.bottom.x=(this.skin.arms[a].points.base.bottom.x+(4-min(4,cos(this.skin.arms[a].top.phi+this.direction.main)*5+2))/2)*sin(this.skin.arms[a].bottom.phi+this.direction.main),
             this.skin.arms[a].points.stack.bottom.y=this.skin.arms[a].points.base.bottom.y
         }
-        this.gen.spin.main=(((this.direction.main%360)+360)%360)
-        this.gen.spin.index=floor((((this.direction.main%360)+360)%360)/this.gen.interval)
+        if(this.graphical){
+            this.generateGeneral(2)
+        }
+        this.gen.spin.main=this.graphical?0:(((this.direction.main%360)+360)%360)
+        this.gen.spin.index=this.graphical?0:floor((((this.direction.main%360)+360)%360)/this.gen.interval)
     }
     calculateAnim(){
         switch(this.type){
@@ -1921,7 +1956,7 @@ class player extends partisan{
             }
         }
         this.layer.pop()
-        if(dev.hitbox){
+        if(dev.hitbox&&!this.graphical){
             super.display()
         }
     }
@@ -2162,6 +2197,7 @@ class player extends partisan{
                         case 6:
                             if((this.contact[2]||this.contact[3])&&this.stamina>0){
                                 this.climb=3
+                                this.dashPhase=false
                                 if(this.dash.active==0){
                                     this.velocity.y=0
                                     this.stamina--
@@ -2210,8 +2246,11 @@ class player extends partisan{
                 }else{
                     for(let a=0,la=game.connections.length;a<la;a++){
                         if(game.connections[a].side==0&&this.position.x>=game.connections[a].region[0]&&this.position.x<=game.connections[a].region[1]){
-                            if(game.connections[a].id==-1){d
+                            if(game.connections[a].id==-1){
                                 this.position.y=0
+                            }else if(game.connections[a].id==-2){
+                                transition.trigger=true
+                                transition.scene='ending'
                             }else{
                                 game.zone=game.connections[a].id
                                 for(let b=0,lb=entities.players.length;b<lb;b++){
@@ -2234,6 +2273,9 @@ class player extends partisan{
                         if(game.connections[a].side==1&&this.position.y>=game.connections[a].region[0]&&this.position.y<=game.connections[a].region[1]){
                             if(game.connections[a].id==-1){
                                 this.position.x=game.edge.x
+                            }else if(game.connections[a].id==-2){
+                                transition.trigger=true
+                                transition.scene='ending'
                             }else{
                                 game.zone=game.connections[a].id
                                 for(let b=0,lb=entities.players.length;b<lb;b++){
@@ -2259,6 +2301,9 @@ class player extends partisan{
                         if(game.connections[a].side==2&&this.position.x>=game.connections[a].region[0]&&this.position.x<=game.connections[a].region[1]){
                             if(game.connections[a].id==-1){
                                 this.position.y=game.edge.y
+                            }else if(game.connections[a].id==-2){
+                                transition.trigger=true
+                                transition.scene='ending'
                             }else{
                                 game.zone=game.connections[a].id
                                 for(let b=0,lb=entities.players.length;b<lb;b++){
@@ -2285,6 +2330,9 @@ class player extends partisan{
                         if(game.connections[a].side==3&&this.position.y>=game.connections[a].region[0]&&this.position.y<=game.connections[a].region[1]){
                             if(game.connections[a].id==-1){
                                 this.position.x=0
+                            }else if(game.connections[a].id==-2){
+                                transition.trigger=true
+                                transition.scene='ending'
                             }else{
                                 game.zone=game.connections[a].id
                                 for(let b=0,lb=entities.players.length;b<lb;b++){
@@ -2324,6 +2372,9 @@ class player extends partisan{
                 for(let a=0,la=8;a<la;a++){
                     entities.particles.push(new particle(this.layer,this.position.x,this.position.y,0,360*a/la,2,[this.hair.color[0].front]))
                 }
+                game.running.deaths++
+                game.deaths++
+                game.levelData[game.level].deaths++
             }
             if(this.fade>0){
                 this.fade-=0.2

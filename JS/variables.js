@@ -26,15 +26,16 @@ types={
 
     ]
 }
-stage={scene:'main',scale:0}
-game={level:1,zone:23,progress:{zone:0},time:0,player:{size:1},edge:{x:0,y:0},spawn:{x:0,y:0},connections:[],previous:{zone:0},scroll:{x:0,y:0},players:[0],flowers:0,loadPlan:0}
+stage={scene:'menu',scale:0}
+menu={scene:0,transition:0,sceneAnim:[0,0],select:-1,selectAnim:[0,0],levelPos:[[600,540],[360,420]],playerAnim:[0,0]}
+game={level:0,zone:0,progress:{zone:0},time:0,player:{size:1},edge:{x:0,y:0},spawn:{x:0,y:0},connections:[],previous:{zone:0},scroll:{x:0,y:0},players:[0],flowers:0,deaths:0,running:{flowers:0,deaths:0},loadPlan:0,levelData:[]}
 physics={gravity:0.5,friction:{x:0.96,y:0.995},resistance:{x:0.84,y:0.99}}
 view={scroll:{x:0,y:0,anim:0},zoom:1,goal:{scroll:{x:0,y:0}},previous:{scroll:{x:0,y:0}}}
 elements={flower:{anim:0,timer:0}}
-entities={walls:[[],[]],players:[],uis:[]}
+entities={walls:[[],[]],players:[],reserve:[],uis:[]}
 run={fore:[],over:[]}
 transition={trigger:false,anim:0,scene:stage.scene}
-graphics={main:0,backgrounds:[],walls:[]}
+graphics={main:0,backgrounds:[],scenes:[],walls:[],players:[]}
 inputs={
     keys:[
         [false,false,false,false,false,false,false,false],
@@ -42,4 +43,4 @@ inputs={
     ],validKey:[true,true,true,true,true,true,true,true],
 mouse:{x:0,y:0},rel:{x:0,y:0},pMouse:{x:0,y:0},pRel:{x:0,y:0}}
 options={defaultDash:false}
-dev={editor:true,hitbox:true,edge:true,connection:true,markspawn:true,freecam:true,infinitedash:false,invincible:true,nograv:false,debound:true}
+dev={editor:false,hitbox:false,edge:false,connection:false,markspawn:false,freecam:false,infinitedash:false,invincible:false,nograv:false,debound:false}

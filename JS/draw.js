@@ -2,6 +2,15 @@ function mainloop(layer){
     clear()
     background(100)
     switch(stage.scene){
+        case 'menu':
+            layer.image(graphics.scenes[0],900-600*(0.5-cos(menu.transition*180)*0.5),300,1800,600)
+            layer.image(graphics.scenes[1],900-1200*(0.5-cos(menu.transition*180)*0.5),300,1800,600)
+            operateMenu(layer)
+        break
+        case 'ending':
+            layer.image(graphics.backgrounds[game.level],600,300,1200,600)
+            operateEnding(layer)
+        break
         case 'main':
             layer.image(graphics.backgrounds[game.level],-1800-(view.scroll.x+game.scroll.x)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
             layer.image(graphics.backgrounds[game.level],-(view.scroll.x+game.scroll.x)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)

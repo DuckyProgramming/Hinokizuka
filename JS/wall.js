@@ -1,9 +1,9 @@
 class wall extends physical{
-    constructor(layer,x,y,width,height,type,index,zone){
+    constructor(layer,x,y,width,height,type,index,spawnRule){
         super(layer,x,y,width,height)
         this.type=type
         this.index=index
-        this.zone=zone
+        this.spawnRule=spawnRule
         this.fade=1
         this.kill=0
         this.trigger={fade:true}
@@ -287,7 +287,9 @@ class wall extends physical{
                     this.layer.triangle(-2.25,12,2.25,12,0,21)
                     this.layer.rotate(360/la)
                 }
-                let colors=[[206,111,147],[234,147,180],[253,173,205],[236,141,177],[251,158,193],[255,177,210],[255,203,235]]
+                let colors=this.spawnRule==0?
+                [[206,111,147],[234,147,180],[253,173,205],[236,141,177],[251,158,193],[255,177,210],[255,203,235]]:
+                [[111,147,206],[147,180,234],[173,205,253],[141,177,236],[158,193,251],[177,210,255],[203,235,255]]
                 let offset=[15,10,25,-15,10,15,10,25,-15]
                 for(let a=0,la=7;a<la;a++){
                     this.layer.fill(colors[a][0],colors[a][1],colors[a][2],this.fade)
@@ -464,10 +466,18 @@ class wall extends physical{
                     if(this.collide.box[this.grabbed[0]][this.grabbed[1]].staySafeTime>5){
                         this.active=true
                         this.trigger.fade=false
-                        game.flowers++
-                        elements.flower.timer=180
-                        for(let a=0,la=8;a<la;a++){
-                            entities.particles.push(new particle(this.layer,this.position.x,this.position.y,0,360*a/la,2,[[251,158,193]]))
+                        game.running.flowers++
+                        if(this.spawnRule==0){
+                            game.flowers++
+                            game.levelData[game.level].flowers++
+                            elements.flower.timer=180
+                            for(let a=0,la=8;a<la;a++){
+                                entities.particles.push(new particle(this.layer,this.position.x,this.position.y,0,360*a/la,2,[[251,158,193]]))
+                            }
+                        }else{
+                            for(let a=0,la=8;a<la;a++){
+                                entities.particles.push(new particle(this.layer,this.position.x,this.position.y,0,360*a/la,2,[[158,193,251]]))
+                            }
                         }
                         levels[game.level][game.zone].spawnRule[this.index]=1
                     }
@@ -542,7 +552,7 @@ class wall extends physical{
                                     if(c.velocity.y>=0){
                                         this.kill++
                                         c.safe=0
-                                        if(this.kill>=2){
+                                        if(this.kill>=2||c.previous.velocity.y>=2){
                                             c.goal.dead=true
                                         }
                                     }
@@ -551,7 +561,7 @@ class wall extends physical{
                                     if(c.velocity.y<=0){
                                         this.kill++
                                         c.safe=0
-                                        if(this.kill>=2){
+                                        if(this.kill>=2||c.previous.velocity.y<=-2){
                                             c.goal.dead=true
                                         }
                                     }
@@ -560,7 +570,7 @@ class wall extends physical{
                                     if(c.velocity.x>=0){
                                         this.kill++
                                         c.safe=0
-                                        if(this.kill>=2){
+                                        if(this.kill>=2||c.previous.velocity.x>=2){
                                             c.goal.dead=true
                                         }
                                     }
@@ -569,7 +579,7 @@ class wall extends physical{
                                     if(c.velocity.x<=0){
                                         this.kill++
                                         c.safe=0
-                                        if(this.kill>=2){
+                                        if(this.kill>=2||c.previous.velocity.x<=-2){
                                             c.goal.dead=true
                                         }
                                     }
@@ -710,8 +720,6 @@ class wall extends physical{
                                     break
                                 }
                             }
-                        }else if(this.type==2||this.type==3||this.type==4||this.type==5){
-                            this.kill=0
                         }
                     }
                 }

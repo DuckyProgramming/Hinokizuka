@@ -2,6 +2,17 @@ function upKey(index,id){
     inputs.keys[id][index]=inputs.validKey[index]
 }
 function keyPressed(){
+    switch(stage.scene){
+        case 'menu':
+            if(menu.scene==0){
+                menu.scene=1
+            }
+        break
+        case 'ending':
+            transition.trigger=true
+            transition.scene='menu'
+        break
+    }
     if(game.players.length==1){
         switch(key){
             case 'ArrowUp': upKey(0,0); break
