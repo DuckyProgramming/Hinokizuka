@@ -4,7 +4,7 @@ function setupGraphics(){
     setupLayer(graphics.main)
     graphics.players.push(new player(this.layer,0,0,0,0,true))
     graphics.players.push(new player(this.layer,0,0,1,0,true))
-    for(let a=0,la=2;a<la;a++){
+    for(let a=0,la=4;a<la;a++){
         graphics.backgrounds.push(createGraphics(1800,900))
         setupLayer(graphics.backgrounds[a])
         displayBack(graphics.backgrounds[a],a)
@@ -91,7 +91,7 @@ function displayBack(layer,type){
                 let b=-50+a*78%(layer.width+100)+random(-10,10)
                 let c=random(15,20)
                 let d=layer.height*(0.76+a/la*0.24)
-                let e=random(160,240)
+                let e=random(120,180)
                 layer.fill(40+a/la*20+random(-20,20))
                 layer.triangle(b-c,d,b+c,d,b,d-e)
                 if(b-c<0||b+c>layer.width){
@@ -111,6 +111,52 @@ function displayBack(layer,type){
                 if(b-c<0||b+c>layer.width){
                     b=layer.width-b
                     layer.quad(b-c,e,b+c,e,b+c*d,e-f,b-c*d,e-f)
+                }
+            }
+        break
+        case 2:
+            layer.background(75,150,150)
+            for(let a=0,la=50;a<la;a++){
+                let b=-50+a*78%(layer.width+100)+random(-10,10)
+                let c=random(20,25)
+                let d=layer.height*(0.76+a/la*0.24)
+                let e=random(100,150)
+                layer.fill(40+a/la*20+random(-20,20))
+                layer.triangle(b-c,d,b+c,d,b,d-e)
+                if(b-c<0||b+c>layer.width){
+                    b=layer.width-b
+                    e=random(100,150)
+                    layer.triangle(b-c,d,b+c,d,b,d-e)
+                }
+            }
+            for(let a=0,la=200;a<la;a++){
+                let b=-50+a*71%(layer.width+100)+random(-10,10)
+                let c=random(45,60)
+                let d=random(0.2,0.6)
+                let e=layer.height*(0.8+a/la*0.24)
+                let f=random(80,120)
+                layer.noStroke()
+                layer.fill(60+a/la*20+random(-20,20))
+                layer.quad(b-c,e,b+c,e,b+c*d,e-f,b-c*d,e-f)
+                layer.stroke(250)
+                layer.strokeWeight(random(6,8))
+                layer.line(b+c*d-1,e-f+3,b-c*d+1,e-f+3)
+                if(b-c<0||b+c>layer.width){
+                    b=layer.width-b
+                    layer.noStroke()
+                    layer.fill(60+a/la*20+random(-20,20))
+                    layer.quad(b-c,e,b+c,e,b+c*d,e-f,b-c*d,e-f)
+                    layer.stroke(250)
+                    layer.strokeWeight(random(6,8))
+                    layer.line(b+c*d-1,e-f+3,b-c*d+1,e-f+3)
+                }
+            }
+        break
+        case 3:
+            layer.fill(250)
+            for(let a=0,la=20;a<la;a++){
+                for(let b=0,lb=10;b<lb;b++){
+                    layer.ellipse((a+random(0.1,0.9))/la*layer.width,(b+random(0.1,0.9))/lb*layer.height,random(2,3))
                 }
             }
         break

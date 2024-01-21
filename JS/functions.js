@@ -126,6 +126,55 @@ function smoothAnim(anim,trigger,minPoint,maxPoint,speed){
 	}
 	return anim
 }
+function numericalDirection(direction){
+    switch(direction){
+        case 0:
+            return {x:0,y:-1}
+        case 1:
+            return {x:1,y:-1}
+        case 2:
+            return {x:1,y:0}
+        case 3:
+            return {x:1,y:1}
+        case 4:
+            return {x:0,y:1}
+        case 5:
+            return {x:-1,y:1}
+        case 6:
+            return {x:-1,y:0}
+        case 7:
+            return {x:-1,y:-1}
+    }
+}
+function deNumericalDirection(x,y){
+    switch(x){
+        case 0:
+            switch(y){
+                case -1:
+                    return 0
+                case 1:
+                    return 4
+            }
+        case -1:
+            switch(y){
+                case -1:
+                    return 7
+                case 0:
+                    return 6
+                case 1:
+                    return 5
+            }
+        case 1:
+            switch(y){
+                case -1:
+                    return 1
+                case 0:
+                    return 2
+                case 1:
+                    return 3
+            }
+    }
+}
 //graphical
 function setupBase(){
     colorMode(RGB,255,255,255,1)
@@ -167,6 +216,9 @@ function diamond(layer,x,y,width,height){
 //character graphical
 function mergeColor(color1,color2,key){
     return [color1[0]*(1-key)+color2[0]*key,color1[1]*(1-key)+color2[1]*key,color1[2]*(1-key)+color2[2]*key]
+}
+function tripletColor(color1,color2,color3,key){
+    return key>=1?[color2[0]*(2-key)+color3[0]*(key-1),color2[1]*(2-key)+color3[1]*(key-1),color2[2]*(2-key)+color3[2]*(key-1)]:[color1[0]*(1-key)+color2[0]*key,color1[1]*(1-key)+color2[1]*key,color1[2]*(1-key)+color2[2]*key]
 }
 function controlSpin(list,direction,spec){
     for(let a=0,la=list.length;a<la;a++){
@@ -362,7 +414,11 @@ function displayMain(layer){
 }
 function initialElements(layer){
     for(let a=0,la=2;a<la;a++){
-        entities.reserve.push(new player(layer,0,0,a,a))
+        if(dev.editor&&!game.players.includes(a)){
+            entities.reserve.push(0)
+        }else{
+            entities.reserve.push(new player(layer,0,0,a,a,false))
+        }
     }
 }
 function reformElements(){
@@ -550,9 +606,11 @@ function generateLevel(level,layer,context){
         }
         view.scroll.anim=10
     }
-    for(let a=0,la=level.walls.length;a<la;a++){
-        if(level.spawnRule[a]==0||level.spawnRule[a]==2){
-            entities.walls[types.wall[level.walls[a].type].slice].push(new wall(layer,level.walls[a].x,level.walls[a].y,level.walls[a].width,level.walls[a].height,level.walls[a].type,a,level.spawnRule[a]))
+    for(let a=0,la=3;a<la;a++){
+        for(let b=0,lb=level.walls.length;b<lb;b++){
+            if((level.spawnRule[b]==0||level.spawnRule[b]==2)&&types.wall[level.walls[b].type].clump==a){
+                entities.walls[types.wall[level.walls[b].type].slice].push(new wall(layer,level.walls[b].x,level.walls[b].y,level.walls[b].width,level.walls[b].height,level.walls[b].type,b,level.spawnRule[b],level.walls[b].args))
+            }
         }
     }
     for(let a=0,la=entities.walls.length;a<la;a++){

@@ -19,15 +19,17 @@ class player extends partisan{
         this.crouch=false
         this.dashPhase=false
         this.setSpawn=false
+        this.dashPush=false
         this.stageSpawn=1
         this.safe=0
         this.offset={position:{x:0,y:0}}
-        this.anim={dash:0,stamina:0,staminaActive:0,climb:0,crouch:0,move:0,jump:0,orb:0}
-        this.dash={active:0,timer:0,available:true,direction:0}
+        this.anim={dash:5,stamina:0,staminaActive:0,climb:0,crouch:0,move:0,jump:0,orb:0}
+        this.dash={active:0,timer:0,available:true,direction:0,second:{available:false}}
         this.physics={moveSpeed:0.6,moveCap:4,jumpPower:-8.75,wallJumpPower:{x:5,y:-6},dashPower:{x:12,y:10},orbSpeed:0.1,weaken:{dash:18,wallJump:12}}
         this.orb={active:false,speed:0,safe:false}
-        this.goal={direction:{main:54,speed:18},dead:false}
-        this.base={jumpTime:5,stamina:360,physics:{moveCap:4},dash:{active:9,timer:12}}
+        this.bubble={active:false,shift:{x:0,y:0},shiftTime:0}
+        this.goal={direction:{main:54,speed:18},dead:false,anim:{dash:1}}
+        this.base={jumpTime:5,stamina:360,physics:{moveCap:4},dash:{active:9,timer:12},width:this.width,height:this.height,base:{width:this.width,height:this.height}}
         this.setupGraphics()
     }
     setupGraphics(){
@@ -107,10 +109,11 @@ class player extends partisan{
                 }
                 this.hair={
                     display:{back:true,front:true,glow:true},
-                    sprites:{back:[[],[],[],[],[],[]],front:[[],[],[],[],[],[]]},
+                    sprites:{back:[[],[],[],[],[],[],[],[],[],[],[]],front:[[],[],[],[],[],[],[],[],[],[],[]]},
                     color:[
-                        {back:[123,127,171],front:[91,72,117],insideBack:[116,100,141],insideFront:[107,87,128],glow:[216,175,212]},
                         {back:[154,214,225],front:[217,242,246],insideBack:[191,206,249],insideFront:[173,221,231],glow:[235,253,253]},
+                        {back:[123,127,171],front:[91,72,117],insideBack:[116,100,141],insideFront:[107,87,128],glow:[216,175,212]},
+                        {back:[188,93,193],front:[235,190,231],insideBack:[192,128,202],insideFront:[212,119,210],glow:[211,182,226]},
                     ],pieces:{
                         main:[
                             {spin:[-9,-3,-6],height:0.25},
@@ -244,8 +247,9 @@ class player extends partisan{
                     display:{back:true,front:true,glow:true,bun:true,bunGlow:true},
                     sprites:{back:[[],[],[],[],[],[]],front:[[],[],[],[],[],[]]},
                     color:[
-                        {back:[66,60,44],front:[63,47,26],insideBack:[44,24,6],insideFront:[59,41,25],glow:[238,231,220],bun:[79,59,40],bunGlow:[226,217,211],tie:[115,111,143],pin:[[50,77,168],[74,113,199]]},
-                        {back:[181,241,242],front:[236,255,251],insideBack:[124,206,230],insideFront:[179,238,242],glow:[240,255,252],bun:[222,251,246],bunGlow:[251,255,254]},
+                        {back:[181,241,242],front:[236,255,251],insideBack:[124,206,230],insideFront:[179,238,242],glow:[240,255,252],bun:[222,251,246],bunGlow:[251,255,254],tie:[115,111,143],pin:[[50,77,168],[74,113,199]]},
+                        {back:[66,60,44],front:[63,47,26],insideBack:[44,24,6],insideFront:[59,41,25],glow:[238,231,220],bun:[79,59,40],bunGlow:[226,217,211]},
+                        {back:[118,68,129],front:[145,77,128],insideBack:[64,37,90],insideFront:[134,67,121],glow:[174,150,186],bun:[147,84,131],bunGlow:[160,117,170]},
                     ],pieces:{
                         main:[
                             {spin:[-9,3,-3],height:3},
@@ -673,15 +677,22 @@ class player extends partisan{
     generateSprites(type){
         switch(type){
             case 0:
-                this.hair.sprites={front:[[],[],[],[],[],[]],back:[[],[],[],[],[],[]]}
+                this.hair.sprites={front:[[],[],[],[],[],[],[],[],[],[],[]],back:[[],[],[],[],[],[],[],[],[],[],[]]}
                 for(let a=0,la=this.gen.amount;a<la;a++){
                     for(let b=0,lb=2;b<lb;b++){
                         for(let c=0,lc=this.hair.sprites[['front','back'][b]].length;c<lc;c++){
-                            this.hair.sprites[['front','back'][b]][c].push(createGraphics(200,300))
-                            setupLayer(this.hair.sprites[['front','back'][b]][c][a])
-                            this.hair.sprites[['front','back'][b]][c][a].translate(100,100)
-                            this.hair.sprites[['front','back'][b]][c][a].scale(5)
-                            this.generateSprite(this.hair.sprites[['front','back'][b]][c][a],b+1,a*this.gen.interval,c/(lc-1))
+                            if(this.graphical){
+                                this.hair.sprites[['front','back'][b]][c].push(createGraphics(200,300))
+                                setupLayer(this.hair.sprites[['front','back'][b]][c][a])
+                                this.hair.sprites[['front','back'][b]][c][a].translate(100,100)
+                                this.hair.sprites[['front','back'][b]][c][a].scale(5)
+                                this.generateSprite(this.hair.sprites[['front','back'][b]][c][a],b+1,a*this.gen.interval,2*c/(lc-1))
+                            }else{
+                                this.hair.sprites[['front','back'][b]][c].push(createGraphics(40,60))
+                                setupLayer(this.hair.sprites[['front','back'][b]][c][a])
+                                this.hair.sprites[['front','back'][b]][c][a].translate(20,20)
+                                this.generateSprite(this.hair.sprites[['front','back'][b]][c][a],b+1,a*this.gen.interval,2*c/(lc-1))
+                            }                            
                         }
                     }
                 }
@@ -690,11 +701,18 @@ class player extends partisan{
                 this.kimono.sprites={front:[],back:[]}
                 for(let a=0,la=this.gen.amount;a<la;a++){
                     for(let b=0,lb=2;b<lb;b++){
-                        this.kimono.sprites[['front','back'][b]].push(createGraphics(200,330))
-                        setupLayer(this.kimono.sprites[['front','back'][b]][a])
-                        this.kimono.sprites[['front','back'][b]][a].translate(100,0)
-                        this.kimono.sprites[['front','back'][b]][a].scale(5)
-                        this.generateSprite(this.kimono.sprites[['front','back'][b]][a],b+3,a*this.gen.interval,0)
+                        if(this.graphical){
+                            this.kimono.sprites[['front','back'][b]].push(createGraphics(200,330))
+                            setupLayer(this.kimono.sprites[['front','back'][b]][a])
+                            this.kimono.sprites[['front','back'][b]][a].translate(100,0)
+                            this.kimono.sprites[['front','back'][b]][a].scale(5)
+                            this.generateSprite(this.kimono.sprites[['front','back'][b]][a],b+3,a*this.gen.interval,0)
+                        }else{
+                            this.kimono.sprites[['front','back'][b]].push(createGraphics(40,66))
+                            setupLayer(this.kimono.sprites[['front','back'][b]][a])
+                            this.kimono.sprites[['front','back'][b]][a].translate(20,0)
+                            this.generateSprite(this.kimono.sprites[['front','back'][b]][a],b+3,a*this.gen.interval,0)
+                        }
                     }
                 }
             break
@@ -703,14 +721,14 @@ class player extends partisan{
     generateSpritesInstant(type){
         switch(type){
             case 0:
-                this.hair.sprites={front:[[],[],[],[],[],[]],back:[[],[],[],[],[],[]]}
+                this.hair.sprites={front:[[],[],[],[],[],[],[],[],[],[],[]],back:[[],[],[],[],[],[],[],[],[],[],[]]}
                 for(let b=0,lb=2;b<lb;b++){
                     for(let c=0,lc=this.hair.sprites[['front','back'][b]].length;c<lc;c++){
                         this.hair.sprites[['front','back'][b]][c].push(createGraphics(200,300))
                         setupLayer(this.hair.sprites[['front','back'][b]][c][0])
                         this.hair.sprites[['front','back'][b]][c][0].translate(100,100)
                         this.hair.sprites[['front','back'][b]][c][0].scale(5)
-                        this.generateSprite(this.hair.sprites[['front','back'][b]][c][0],b+1,this.direction.main,c/(lc-1))
+                        this.generateSprite(this.hair.sprites[['front','back'][b]][c][0],b+1,this.direction.main,2*c/(lc-1))
                     }
                 }
             break
@@ -786,18 +804,17 @@ class player extends partisan{
                 switch(type){
                     case 1:
                         controlSpin(this.hair.pieces.inside,direction,0)
-                        displayTrianglesFront(layer,this.hair.pieces.inside,direction,0,30,1,0.05,mergeColor(this.hair.color[0].insideFront,this.hair.color[1].insideFront,key),1)
+                        displayTrianglesFront(layer,this.hair.pieces.inside,direction,0,30,1,0.05,tripletColor(this.hair.color[0].insideFront,this.hair.color[1].insideFront,this.hair.color[2].insideFront,key),1)
                         controlSpin(this.hair.pieces.main,direction,0)
-                        displayTrianglesFront(layer,this.hair.pieces.main,direction,0,32,1,0.1,mergeColor(this.hair.color[0].front,this.hair.color[1].front,key),1)
+                        displayTrianglesFront(layer,this.hair.pieces.main,direction,0,32,1,0.1,tripletColor(this.hair.color[0].front,this.hair.color[1].front,this.hair.color[2].front,key),1)
                         layer.arc(0,0,32,32,-180,0)
                         layer.line(-16,0,16,0)
                         controlSpin(this.hair.pieces.reverse,direction,0)
                         displayTrianglesFront(layer,this.hair.pieces.reverse,direction,1,32,0.1,0.1,-1,1)
                     break
                     case 2:
-                        displayTrianglesBack(layer,this.hair.pieces.main,direction,0,32,1,0.1,mergeColor(this.hair.color[0].back,this.hair.color[1].back,key),1)
-                        displayTrianglesFront(layer,this.hair.pieces.reverse,direction,1,32,0.1,0.1,mergeColor(this.hair.color[0].back,this.hair.color[1].back,key),1)
-                        displayTrianglesBack(layer,this.hair.pieces.inside,direction,0,30,1,0.05,mergeColor(this.hair.color[0].insideBack,this.hair.color[1].insideBack,key),1)
+                        displayTrianglesBack(layer,this.hair.pieces.main,direction,0,32,1,0.1,tripletColor(this.hair.color[0].back,this.hair.color[1].back,this.hair.color[2].back,key),1)
+                        displayTrianglesBack(layer,this.hair.pieces.inside,direction,0,30,1,0.05,tripletColor(this.hair.color[0].insideBack,this.hair.color[1].insideBack,this.hair.color[2].back,key),1)
                     break
                     case 3:
                         controlSpin(this.kimono.pieces.main[0],direction,1)
@@ -867,18 +884,17 @@ class player extends partisan{
                 switch(type){
                     case 1:
                         controlSpin(this.hair.pieces.inside,direction,0)
-                        displayTrianglesFront(layer,this.hair.pieces.inside,direction,0,30,1,-0.15,mergeColor(this.hair.color[0].insideFront,this.hair.color[1].insideFront,key),1)
+                        displayTrianglesFront(layer,this.hair.pieces.inside,direction,0,30,1,-0.15,tripletColor(this.hair.color[0].insideFront,this.hair.color[1].insideFront,this.hair.color[2].insideFront,key),1)
                         controlSpin(this.hair.pieces.main,direction,0)
-                        displayTrianglesFront(layer,this.hair.pieces.main,direction,0,32,1,-0.1,mergeColor(this.hair.color[0].front,this.hair.color[1].front,key),1)
+                        displayTrianglesFront(layer,this.hair.pieces.main,direction,0,32,1,-0.1,tripletColor(this.hair.color[0].front,this.hair.color[1].front,this.hair.color[2].front,key),1)
                         layer.arc(0,0,32,32,-180,0)
                         layer.line(-16,0,16,0)
                         controlSpin(this.hair.pieces.reverse,direction,0)
                         displayTrianglesFront(layer,this.hair.pieces.reverse,direction,1,32,0.1,0.1,-1,1)
                     break
                     case 2:
-                        displayTrianglesBack(layer,this.hair.pieces.main,direction,0,32,1,-0.1,mergeColor(this.hair.color[0].back,this.hair.color[1].back,key),1)
-                        displayTrianglesFront(layer,this.hair.pieces.reverse,direction,1,32,0.1,0.1,mergeColor(this.hair.color[0].back,this.hair.color[1].back,key),1)
-                        displayTrianglesBack(layer,this.hair.pieces.inside,direction,0,30,1,-0.15,mergeColor(this.hair.color[0].insideBack,this.hair.color[1].insideBack,key),1)
+                        displayTrianglesBack(layer,this.hair.pieces.main,direction,0,32,1,-0.1,tripletColor(this.hair.color[0].back,this.hair.color[1].back,this.hair.color[2].back,key),1)
+                        displayTrianglesBack(layer,this.hair.pieces.inside,direction,0,30,1,-0.15,tripletColor(this.hair.color[0].insideBack,this.hair.color[1].insideBack,this.hair.color[2].insideBack,key),1)
                     break
                     case 3:
                         controlSpin(this.kimono.pieces.main,direction,1)
@@ -1038,7 +1054,7 @@ class player extends partisan{
         this.layer.push()
         this.layer.translate(this.position.x+this.offset.position.x,this.position.y+this.offset.position.y)
         this.layer.scale(this.size)
-        if(this.fade>0){
+        if(this.fade>0&&!dev.noplayer){
             this.calculateParts()
             switch(this.type){
                 case 0:
@@ -1451,7 +1467,7 @@ class player extends partisan{
                     }
                     if(this.hair.display.glow){
                         this.layer.noFill()
-                        let a=mergeColor(this.hair.color[0].glow,this.hair.color[1].glow,this.anim.dash/5)
+                        let a=tripletColor(this.hair.color[0].glow,this.hair.color[1].glow,this.hair.color[2].glow,this.anim.dash/5)
                         this.layer.stroke(a[0],a[1],a[2],this.fade*0.05)
                         for(let a=0,la=6;a<la;a++){
                             this.layer.strokeWeight((3-a/la*3)*this.fade)
@@ -1473,7 +1489,7 @@ class player extends partisan{
                             this.layer.fill(this.hair.color[0].pin[1],this.fade)
                             this.layer.ellipse(sin(this.hair.pieces.bun.spin+this.direction.main)*18+cos(this.hair.pieces.bun.spin+this.direction.main)*7,this.skin.head.level+11,2,2)
                         }
-                        let a=mergeColor(mergeColor(this.hair.color[0].front,this.hair.color[1].front,this.anim.dash/5),mergeColor(this.hair.color[0].bun,this.hair.color[1].bun,this.anim.dash/5),cos(this.hair.pieces.bun.spin+this.direction.main))
+                        let a=mergeColor(tripletColor(this.hair.color[0].front,this.hair.color[1].front,this.hair.color[2].front,this.anim.dash/5),tripletColor(this.hair.color[0].bun,this.hair.color[1].bun,this.hair.color[2].bun,this.anim.dash/5),cos(this.hair.pieces.bun.spin+this.direction.main))
                         this.layer.fill(a[0],a[1],a[2],this.fade)
                         this.layer.ellipse(sin(this.hair.pieces.bun.spin+this.direction.main)*18,this.skin.head.level+12,14,14)
                         if(sin(this.hair.pieces.bun.spin+this.direction.main)>0){
@@ -1490,7 +1506,7 @@ class player extends partisan{
                     }
                     if(this.hair.display.bunGlow&&cos(this.hair.pieces.bun.spin+this.direction.main)<=0){
                         this.layer.noFill()
-                        let a=mergeColor(this.hair.color[0].bunGlow,this.hair.color[1].bunGlow,this.anim.dash/5)
+                        let a=tripletColor(this.hair.color[0].bunGlow,this.hair.color[1].bunGlow,this.hair.color[2].bunGlow,this.anim.dash/5)
                         this.layer.stroke(a[0],a[1],a[2],this.fade*0.05)
                         for(let a=0,la=3;a<la;a++){
                             this.layer.strokeWeight((2-a/2)*this.fade)
@@ -1875,7 +1891,7 @@ class player extends partisan{
                     }
                     if(this.hair.display.glow){
                         this.layer.noFill()
-                        let a=mergeColor(this.hair.color[0].glow,this.hair.color[1].glow,this.anim.dash/5)
+                        let a=tripletColor(this.hair.color[0].glow,this.hair.color[1].glow,this.hair.color[2].glow,this.anim.dash/5)
                         this.layer.stroke(a[0],a[1],a[2],this.fade*0.05)
                         for(let a=0,la=6;a<la;a++){
                             this.layer.strokeWeight((3-a/la*3)*this.fade)
@@ -1895,7 +1911,7 @@ class player extends partisan{
                             this.layer.fill(this.hair.color[0].pin[1],this.fade)
                             this.layer.ellipse(sin(this.hair.pieces.bun.spin+this.direction.main)*18+cos(this.hair.pieces.bun.spin+this.direction.main)*7,this.skin.level+11,2,2)
                         }
-                        let a=mergeColor(this.hair.color.front,this.hair.color.bun,cos(this.hair.pieces.bun.spin+this.direction.main))
+                        let a=mergeColor(tripletColor(this.hair.color.front[0],is.hair.color.front[1],is.hair.color.front[2],this.anim.dash/5),tripletColor(this.hair.color.bun[0],this.hair.color.bun[1],this.hair.color.bun[2],this.anim.dash/5),cos(this.hair.pieces.bun.spin+this.direction.main))
                         this.layer.fill(a[0],a[1],a[2],this.fade)
                         this.layer.ellipse(sin(this.hair.pieces.bun.spin+this.direction.main)*18,this.skin.head.level+12,14,14)
                         if(sin(this.hair.pieces.bun.spin+this.direction.main)>0){
@@ -2010,14 +2026,16 @@ class player extends partisan{
                 this.velocity.y=0
             }
         }else{
-            if(!inputs.keys[this.id][2]&&!inputs.keys[this.id][3]){
-                this.velocity.x*=physics.resistance.x
+            if(!this.bubble.active){
+                if(!inputs.keys[this.id][2]&&!inputs.keys[this.id][3]){
+                    this.velocity.x*=physics.resistance.x
+                }
+                this.velocity.y*=physics.resistance.y
             }
-            this.velocity.y*=physics.resistance.y
             if(dev.nograv){
                 this.velocity.y*=0.96
                 this.jumpTime=5
-            }else if(!this.climb&&this.dash.active==0){
+            }else if(!this.climb&&this.dash.active==0&&!this.bubble.active){
                 this.velocity.y+=physics.gravity
             }
             if(this.crush[0]&&this.crush[1]||this.crush[2]&&this.crush[3]){
@@ -2182,10 +2200,15 @@ class player extends partisan{
                                     this.dash.direction=atan2(b.y,b.x)
                                     if(!dev.infinitedash){
                                         this.dash.timer=this.base.dash.timer
-                                        this.dash.available=false
+                                        if(this.dash.second.available){
+                                            this.dash.second.available=false
+                                        }else{
+                                            this.dash.available=false
+                                        }
                                     }
                                     this.weakTime=this.physics.weaken.dash
                                     this.dashPhase=true
+                                    this.dashPush=true
                                     for(let a=0,la=entities.walls.length;a<la;a++){
                                         for(let b=0,lb=entities.walls[a].length;b<lb;b++){
 										    entities.walls[a][b].onDash()
@@ -2226,6 +2249,15 @@ class player extends partisan{
                 this.dash.active--
                 this.velocity.x=this.physics.dashPower.x*cos(this.dash.direction)
                 this.velocity.y=(abs(cos(this.dash.direction))>0.1?this.physics.dashPower.x:this.physics.dashPower.y)*sin(this.dash.direction)
+                if(entities.players.length>1&&this.dashPush){
+                    for(let a=0,la=entities.players.length;a<la;a++){
+                        if(entities.players[a].id!=this.id&&inBoxBox(this,entities.players[a])){
+                            this.dashPush=false
+                            entities.players[a].velocity.x+=this.physics.dashPower.x*cos(this.dash.direction)
+                            entities.players[a].velocity.y+=(abs(cos(this.dash.direction))>0.1?this.physics.dashPower.x:this.physics.dashPower.y)*sin(this.dash.direction)
+                        }
+                    }
+                }
                 if(this.dash.active==0){
                     vectorMultScalar(this.velocity,0.5)
                     this.dashPhase=false
@@ -2290,9 +2322,9 @@ class player extends partisan{
                     }
                 }
             }
-            if(this.position.y>game.edge.y+this.height/2&&!this.goal.dead){
+            if(this.position.y>(dev.debound?game.edge.y:game.edge.y+this.height/2)&&!this.goal.dead){
                 if(dev.debound){
-                    this.position.y=game.edge.y+this.height/2
+                    this.position.y=game.edge.y
                     this.dash.available=true
                     this.jumpTime=this.base.jumpTime
                 }else{
@@ -2351,17 +2383,29 @@ class player extends partisan{
                 entities.particles.push(new particle(this.layer,this.position.x,this.position.y,1,0,1.5,[this.kimono.color.main.end]))
             }
         }
-        this.anim.dash=smoothAnim(this.anim.dash,!this.dash.available,0,5,1)
+        this.goal.anim.dash=this.dash.available?this.dash.second.available?2:1:0
+        if(abs(this.anim.dash-this.goal.anim.dash*5)<1){
+            this.anim.dash=this.goal.anim.dash*5
+        }else if(this.anim.dash<this.goal.anim.dash*5){
+            this.anim.dash++
+        }else if(this.anim.dash>this.goal.anim.dash*5){
+            this.anim.dash--
+        }
         this.anim.staminaActive=smoothAnim(this.anim.staminaActive,this.stamina<this.base.stamina||this.climb>0,0,1,5)
         this.anim.crouch=smoothAnim(this.anim.crouch,this.crouch,0,1,5)
         this.anim.climb=smoothAnim(this.anim.climb,this.climb>0,0,1,5)
         this.anim.orb=smoothAnim(this.anim.orb,this.orb.active,0,1,30)
-        this.height=(50-this.anim.crouch*6)*game.player.size
+        this.height=(this.base.height-this.anim.crouch*6)*game.player.size
         this.offset.position.y=this.anim.crouch*game.player.size
         if(this.anim.stamina>this.stamina/this.base.stamina*20+0.2){
             this.anim.stamina-=0.2
         }else if(this.anim.stamina<this.stamina/this.base.stamina*20-0.2){
             this.anim.stamina+=0.2
+        }
+        if(this.bubble.active&&this.bubble.shiftTime>0){
+            this.bubble.shiftTime--
+            this.position.x+=this.bubble.shift.x/5
+            this.position.y+=this.bubble.shift.y/5
         }
         if(this.goal.dead&&(dev.invincible||!dev.freecam&&view.scroll.anim<10)){
             this.goal.dead=false
@@ -2403,7 +2447,7 @@ class player extends partisan{
                 }
             }
             this.safe++
-            this.fade=smoothAnim(this.fade,!this.orb.active,0,1,5)
+            this.fade=smoothAnim(this.fade,!this.orb.active&&!this.bubble.active,0,1,5)
         }
     }
 }

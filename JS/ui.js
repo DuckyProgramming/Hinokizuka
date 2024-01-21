@@ -58,7 +58,7 @@ class ui{
                         }
                     break
                     case 3:
-                        let options=['hitbox','edge','connection','markspawn','freecam','infinitedash','invincible','nograv','debound','clear']
+                        let options=['hitbox','edge','connection','markspawn','freecam','infinitedash','invincible','nograv','debound','noplayer','clear']
                         for(let b=0,lb=options.length;b<lb;b++){
                             this.layer.fill(dev[options[b]]?125:150,dev[options[b]]?255:150,dev[options[b]]?125:150)
                             this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,20+b*35,80,30,5)
@@ -133,7 +133,7 @@ class ui{
                         }
                     break
                     case 3:
-                        let options=['Hitbox','Edge','Connection','Spawn Point','Freecam','Infinite Dash','Invincible','No Gravity','No Bounds','Clear']
+                        let options=['Hitbox','Edge','Connection','Spawn Point','Freecam','Infinite Dash','Invincible','No Gravity','No Bounds','No Player','Clear']
                         for(let b=0,lb=options.length;b<lb;b++){
                             this.layer.text(options[b],this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,20+b*35)
                         }
@@ -239,14 +239,14 @@ class ui{
                 `
                                 }
                                 total++
-                                wallForm+=`{x:${round(entities.walls[a][b].position.x)},y:${round(entities.walls[a][b].position.y)},width:${entities.walls[a][b].base.width},height:${entities.walls[a][b].base.height},type:${entities.walls[a][b].type}},`
+                                wallForm+=`{x:${round(entities.walls[a][b].base.position.x)},y:${round(entities.walls[a][b].base.position.y)},width:${entities.walls[a][b].base.width},height:${entities.walls[a][b].base.height},type:${entities.walls[a][b].type}},`
                             }
                         }
                         print(
 `
         {
-            spawn:{x:${game.spawn.x},y:${game.spawn.y}},
-            edge:{x:${game.edge.x},y:${game.edge.y}},
+            spawn:{x:${round(game.spawn.x/5)*5},y:${round(game.spawn.y/5)*5}},
+            edge:{x:${round(game.edge.x/5)*5},y:${round(game.edge.y/5)*5}},
             connections:[
                 ${connectionForm}
             ],walls:[
@@ -263,6 +263,8 @@ class ui{
                             if(entities.walls[a][b].select){
                                 entities.walls[a][b].position.x=round((entities.walls[a][b].position.x-entities.walls[a][b].interval.x[1])/entities.walls[a][b].interval.x[0])*entities.walls[a][b].interval.x[0]+entities.walls[a][b].interval.x[1]
                                 entities.walls[a][b].position.y=round((entities.walls[a][b].position.y-entities.walls[a][b].interval.y[1])/entities.walls[a][b].interval.y[0])*entities.walls[a][b].interval.y[0]+entities.walls[a][b].interval.y[1]
+                                entities.walls[a][b].base.position.x=entities.walls[a][b].position.x
+                                entities.walls[a][b].base.position.y=entities.walls[a][b].position.y
                             }
                         }
                     }
@@ -355,7 +357,7 @@ class ui{
                     }
                 break
                 case 3:
-                    let options=['hitbox','edge','connection','markspawn','freecam','infinitedash','invincible','nograv','debound']
+                    let options=['hitbox','edge','connection','markspawn','freecam','infinitedash','invincible','nograv','debound','noplayer']
                     for(let b=0,lb=options.length;b<lb;b++){
                         if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:20+b*35},width:80,height:30})){
                             dev[options[b]]=!dev[options[b]]
@@ -495,6 +497,8 @@ class ui{
                         if(entities.walls[a][b].select){
                             entities.walls[a][b].position.x+=mouse.x-pMouse.x
                             entities.walls[a][b].position.y+=mouse.y-pMouse.y
+                            entities.walls[a][b].base.position.x=entities.walls[a][b].position.x
+                            entities.walls[a][b].base.position.y=entities.walls[a][b].position.y
                         }
                     }
                 }
