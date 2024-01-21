@@ -12,7 +12,7 @@ class wall extends physical{
         this.velocity={x:0,y:0}
         this.base={position:{x:this.position.x,y:this.position.y},width:this.width,height:this.height}
         this.deprecate=false
-        this.downsize={trigger:false,value:0}
+        this.downsize={trigger:[false,false],value:0}
         this.interval=types.wall[this.type].interval
         this.slice=types.wall[this.type].slice
         this.time=0
@@ -166,6 +166,25 @@ class wall extends physical{
                 this.boundary[a][b][1].x+=x
                 this.boundary[a][b][1].y+=y
             }
+        }
+    }
+    execute(args){
+        switch(this.type){
+            case 23:
+                if(this.active){
+                    this.recharge=60
+                    this.hold.width=this.hold.base.base.width
+                    this.hold.height=this.hold.base.base.height
+                    this.hold.base.width=this.hold.base.base.width
+                    this.hold.base.height=this.hold.base.base.height
+                    this.hold.bubble.active=false
+                    this.hold.dash.available=true
+                    this.active=false
+                    if(args[0]==1){
+                        this.anim=0
+                    }
+                }
+            break
         }
     }
     checkRedundant(){
@@ -475,7 +494,7 @@ class wall extends physical{
             break
             case 23:
                 this.layer.strokeWeight(3)
-                if(this.anim<1){
+                if(this.anim<1||this.timer>15){
                     this.layer.noFill()
                     this.layer.stroke(255,this.fade)
                     for(let a=0,la=8;a<la;a++){
@@ -636,25 +655,46 @@ class wall extends physical{
                 this.anim=smoothAnim(this.anim,this.recharge==0,0,1,5)
                 if(this.active){
                     this.timer++
-                    let a=numericalDirection(this.direction)
-                    this.shift(a.x*6,a.y*6)
-                    this.hold.velocity.x=a.x*6
-                    this.hold.velocity.y=a.y*6
-                    if(this.timer>=30){
-                        this.recharge=120
-                        this.hold.width=this.hold.base.base.width
-                        this.hold.height=this.hold.base.base.height
-                        this.hold.base.width=this.hold.base.base.width
-                        this.hold.base.height=this.hold.base.base.height
-                        this.hold.bubble.active=false
-                        this.hold.dash.available=true
-                        this.active=false
+                    if(this.timer<15){
+                        this.hold.velocity.x=0
+                        this.hold.velocity.y=0
+                    }else if(this.timer==15){
+                        this.hold.velocity.x=0
+                        this.hold.velocity.y=0
+                        let a={x:0,y:0}
+                        if(inputs.keys[this.hold.id][0]){
+                            a.y--
+                        }
+                        if(inputs.keys[this.hold.id][1]){
+                            a.y++
+                        }
+                        if(inputs.keys[this.hold.id][2]){
+                            a.x--
+                        }
+                        if(inputs.keys[this.hold.id][3]){
+                            a.x++
+                        }
+                        if(a.x==0&&a.y==0){
+                            this.execute([0])
+                        }else{
+                            this.direction=deNumericalDirection(a.x,a.y)
+                            this.hold.width=this.width
+                            this.hold.height=this.height
+                            this.hold.base.width=this.width
+                            this.hold.base.height=this.height
+                        }
+                    }else if(this.timer>15){
+                        this.shift(sin(this.direction*45)*6,cos(this.direction*45)*-6)
+                        this.hold.velocity.x=sin(this.direction*45)*6
+                        this.hold.velocity.y=cos(this.direction*45)*-6
+                        if(this.timer>=45||this.hold.dash.active>0||this.hold.contact[0]||this.hold.contact[1]||this.hold.contact[2]||this.hold.contact[3]){
+                            this.execute([0])
+                        }
                     }
                 }else if(this.recharge>0){
                     this.recharge--
                     if(this.recharge==0){
-                        this.position.x=this.base.position.x
-                        this.position.y=this.base.position.y
+                        this.shift(this.base.position.x-this.position.x,this.base.position.y-this.position.y)
                     }
                 }
             break
@@ -826,38 +866,27 @@ class wall extends physical{
                                     }
                                 break
                                 case 23:
-                                    if(!this.active&&this.recharge==0&&!c.bubble.active){
-                                        let e={x:0,y:0}
-                                        if(inputs.keys[c.id][0]){
-                                            e.y--
+                                    if(!this.active&&this.recharge==0&&!(c.bubble.active&&!inBoxBox({position:this.position,width:3,height:3},{position:c.position,width:3,height:3}))){
+                                        if(c.bubble.active){
+                                            for(let e=0,le=entities.walls.length;e<le;e++){
+                                                for(let f=0,lf=entities.walls[e].length;f<lf;f++){
+                                                    if(entities.walls[e][f].type==23){
+                                                        entities.walls[e][f].execute([1])
+                                                    }
+                                                }
+                                            }
                                         }
-                                        if(inputs.keys[c.id][1]){
-                                            e.y++
-                                        }
-                                        if(inputs.keys[c.id][2]){
-                                            e.x--
-                                        }
-                                        if(inputs.keys[c.id][3]){
-                                            e.x++
-                                        }
-                                        if(e.x==0&&e.y==0){
-                                            this.recharge=60                                            
-                                        }else{
-                                            this.direction=deNumericalDirection(e.x,e.y)
-                                            this.active=true
-                                            c.width=this.width
-                                            c.height=this.height
-                                            c.base.width=this.width
-                                            c.base.height=this.height
-                                            c.bubble.active=true
-                                            c.bubble.shiftTime=5
-                                            c.bubble.shift.x=this.position.x-c.position.x
-                                            c.bubble.shift.y=this.position.y-c.position.y
-                                            c.velocity.x=0
-                                            c.velocity.y=0
-                                            this.timer=0
-                                            this.hold=c
-                                        }
+                                        this.timer=0
+                                        this.hold=c
+                                        this.active=true
+                                        c.bubble.active=true
+                                        c.bubble.shiftTime=5
+                                        c.bubble.shift.x=this.position.x-c.position.x
+                                        c.bubble.shift.y=this.position.y-c.position.y
+                                        c.velocity.x=0
+                                        c.velocity.y=0
+                                        c.dash.active=0
+                                        c.dashPhase=false
                                     }
                                 break
                                 case 24:

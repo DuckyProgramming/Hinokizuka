@@ -651,6 +651,10 @@ function generateLevel(level,layer,context){
                                 entities.walls[a][b].position.y+=level.edge.y/2
                                 entities.walls[a][b].height+=level.edge.y
                                 entities.walls[a][b].base.height+=level.edge.y
+                            }else if(!entities.walls[a][b].deprecate&&entities.walls[a][b].position.y-entities.walls[a][b].base.height/2<=0){
+                                entities.walls[a][b].position.y-=level.edge.y/2
+                                entities.walls[a][b].height+=level.edge.y
+                                entities.walls[a][b].base.height+=level.edge.y
                             }
                         }
                     }
@@ -662,7 +666,13 @@ function generateLevel(level,layer,context){
                                 entities.walls[a][b].position.y+=old.edge.y/2
                                 entities.walls[a][b].height+=old.edge.y
                                 entities.walls[a][b].base.height+=old.edge.y
-                                entities.walls[a][b].downsize.trigger=true
+                                entities.walls[a][b].downsize.trigger[0]=true
+                                entities.walls[a][b].downsize.value=old.edge.y
+                            }else if(entities.walls[a][b].deprecate&&entities.walls[a][b].position.y-entities.walls[a][b].base.height/2+nudge.y<=0){
+                                entities.walls[a][b].position.y-=old.edge.y/2
+                                entities.walls[a][b].height+=old.edge.y
+                                entities.walls[a][b].base.height+=old.edge.y
+                                entities.walls[a][b].downsize.trigger[1]=true
                                 entities.walls[a][b].downsize.value=old.edge.y
                             }
                         }
@@ -696,11 +706,6 @@ function updateView(){
             for(let b=0,lb=entities.walls[a].length;b<lb;b++){
                 if(entities.walls[a][b].deprecate){
                     entities.walls[a][b].remove=true
-                }else if(entities.walls[a][b].downsize.trigger){
-                    entities.walls[a][b].downsize.trigger=false
-                    entities.walls[a][b].position.y-=entities.walls[a][b].downsize.value/2
-                    entities.walls[a][b].height-=entities.walls[a][b].downsize.value
-                    entities.walls[a][b].base.height-=entities.walls[a][b].downsize.value
                 }
             }
         }
@@ -712,9 +717,14 @@ function updateView(){
                 for(let b=0,lb=entities.walls[a].length;b<lb;b++){
                     if(entities.walls[a][b].deprecate){
                         entities.walls[a][b].remove=true
-                    }else if(entities.walls[a][b].downsize.trigger){
-                        entities.walls[a][b].downsize.trigger=false
+                    }else if(entities.walls[a][b].downsize.trigger[0]){
+                        entities.walls[a][b].downsize.trigger[0]=false
                         entities.walls[a][b].position.y-=entities.walls[a][b].downsize.value/2
+                        entities.walls[a][b].height-=entities.walls[a][b].downsize.value
+                        entities.walls[a][b].base.height-=entities.walls[a][b].downsize.value
+                    }else if(entities.walls[a][b].downsize.trigger[1]){
+                        entities.walls[a][b].downsize.trigger[1]=false
+                        entities.walls[a][b].position.y+=entities.walls[a][b].downsize.value/2
                         entities.walls[a][b].height-=entities.walls[a][b].downsize.value
                         entities.walls[a][b].base.height-=entities.walls[a][b].downsize.value
                     }

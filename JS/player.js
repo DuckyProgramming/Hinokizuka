@@ -325,6 +325,7 @@ class player extends partisan{
                 this.goal.dead=false
                 this.dash.available=true
                 this.dash.timer=0
+                this.bubble.active=false
             break
             case 1:
                 this.dash.available=true
@@ -2087,7 +2088,7 @@ class player extends partisan{
         if(!this.orb.active){
             let resolveOrder=[7,6,1,2,3,4,5]
             for(let a=0,la=resolveOrder.length;a<la;a++){
-                if(inputs.keys[this.id][resolveOrder[a]]){
+                if(inputs.keys[this.id][resolveOrder[a]]&&!(resolveOrder[a]!=5&&this.bubble.active)){
                     switch(resolveOrder[a]){
                         case 1:
                             if(this.climb==0){
@@ -2183,6 +2184,9 @@ class player extends partisan{
                                 }
                                 if(inputs.keys[this.id][3]){
                                     b.x++
+                                }
+                                if(this.bubble.active){
+                                    this.bubble.active=true
                                 }
                                 let trigger=false
                                 if(b.x==0&&b.y==0&&options.defaultDash){
