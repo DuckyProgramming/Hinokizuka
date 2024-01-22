@@ -178,7 +178,6 @@ class wall extends physical{
                     this.hold.base.width=this.hold.base.base.width
                     this.hold.base.height=this.hold.base.base.height
                     this.hold.bubble.active=false
-                    this.hold.dash.available=true
                     this.active=false
                     if(args[0]==1){
                         this.anim=0
@@ -655,6 +654,9 @@ class wall extends physical{
                 this.anim=smoothAnim(this.anim,this.recharge==0,0,1,5)
                 if(this.active){
                     this.timer++
+                    if(this.hold.dash.active<=0){
+                        this.hold.dash.available=true
+                    }
                     if(this.timer<15){
                         this.hold.velocity.x=0
                         this.hold.velocity.y=0
@@ -687,7 +689,7 @@ class wall extends physical{
                         this.shift(sin(this.direction*45)*6,cos(this.direction*45)*-6)
                         this.hold.velocity.x=sin(this.direction*45)*6
                         this.hold.velocity.y=cos(this.direction*45)*-6
-                        if(this.timer>=45||this.hold.dash.active>0||this.hold.contact[0]||this.hold.contact[1]||this.hold.contact[2]||this.hold.contact[3]){
+                        if(this.timer>=45||this.hold.dash.active>0||this.hold.bonk>0){
                             this.execute([0])
                         }
                     }
@@ -921,6 +923,7 @@ class wall extends physical{
                                 break
                                 default:
                                     if(d>=0&&!this.redundant[d]){
+                                        c.bonk=2
                                         switch(d){
                                             case 0:
                                                 if(c.velocity.y<0){

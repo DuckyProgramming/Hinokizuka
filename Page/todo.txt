@@ -1,23 +1,13 @@
 world 2[
     flowers[
-        10
-        11
         12
     ]
     levels[
-        17
-        18
-        19
-        20
         21
         22
         23
         24
     ]
-
-    //
-    key collectathons
-    //
 
     menu presence
 ]

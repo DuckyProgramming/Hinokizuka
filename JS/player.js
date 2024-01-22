@@ -21,6 +21,7 @@ class player extends partisan{
         this.setSpawn=false
         this.dashPush=false
         this.stageSpawn=1
+        this.bonk=0
         this.safe=0
         this.offset={position:{x:0,y:0}}
         this.anim={dash:5,stamina:0,staminaActive:0,climb:0,crouch:0,move:0,jump:0,orb:0}
@@ -2410,6 +2411,9 @@ class player extends partisan{
             this.bubble.shiftTime--
             this.position.x+=this.bubble.shift.x/5
             this.position.y+=this.bubble.shift.y/5
+        }
+        if(this.bonk>0){
+            this.bonk--
         }
         if(this.goal.dead&&(dev.invincible||!dev.freecam&&view.scroll.anim<10)){
             this.goal.dead=false

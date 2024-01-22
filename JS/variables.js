@@ -36,7 +36,7 @@ types={
 }
 stage={scene:'menu',scale:0}
 menu={scene:0,transition:0,sceneAnim:[0,0],select:-1,selectAnim:[0,0],levelPos:[[600,540],[360,420]],playerAnim:[0,0]}
-game={level:2,zone:16,progress:{zone:0},time:0,player:{size:1},edge:{x:0,y:0},spawn:{x:0,y:0},connections:[],previous:{zone:0},scroll:{x:0,y:0},players:[0],flowers:0,deaths:0,running:{flowers:0,deaths:0},loadPlan:0,levelData:[]}
+game={level:2,zone:20,progress:{zone:0},time:0,player:{size:1},edge:{x:0,y:0},spawn:{x:0,y:0},connections:[],previous:{zone:0},scroll:{x:0,y:0},players:[0],flowers:0,deaths:0,running:{flowers:0,deaths:0},loadPlan:0,levelData:[]}
 physics={gravity:0.5,friction:{x:0.96,y:0.995},resistance:{x:0.84,y:0.99}}
 view={scroll:{x:0,y:0,anim:0},zoom:1,goal:{scroll:{x:0,y:0}},previous:{scroll:{x:0,y:0}}}
 elements={flower:{anim:0,timer:0}}
