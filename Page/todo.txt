@@ -1,11 +1,5 @@
 world 2[
-    flowers[
-        12
-    ]
     levels[
-        21
-        22
-        23
         24
     ]
 
@@ -16,6 +10,5 @@ forward[
     ice spawners
     airway
 ]
-
 
 life of a doublo?

@@ -327,6 +327,10 @@ class player extends partisan{
                 this.dash.available=true
                 this.dash.timer=0
                 this.bubble.active=false
+                this.width=this.base.base.width
+                this.height=this.base.base.height
+                this.base.width=this.base.base.width
+                this.base.height=this.base.base.height
             break
             case 1:
                 this.dash.available=true
