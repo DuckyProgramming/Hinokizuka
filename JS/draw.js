@@ -25,6 +25,10 @@ function mainloop(layer){
                     layer.image(graphics.backgrounds[2],900-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
                     layer.image(graphics.backgrounds[2],2700-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
                 break
+                case 3:
+                    layer.image(graphics.backgrounds[4],900-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
+                    layer.image(graphics.backgrounds[4],2700-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
+                break
             }
             layer.push()
             layer.translate(-view.scroll.x,-view.scroll.y)
@@ -63,14 +67,6 @@ function mainloop(layer){
                 }
             }
             operateOuter(layer)
-            switch(game.level){
-                case 2:
-                    layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
-                    layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
-                    layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
-                    layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
-                break
-            }
         break
     }
     runTransition(layer)

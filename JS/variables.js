@@ -31,17 +31,22 @@ types={
         {name:'Lock Block',interval:{x:[10,0],y:[10,0]},slice:1,clump:2},
         {name:'Stone - 2 - Back',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
         {name:'Downward Winged Flower',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
-        {name:'Airway',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
+        {name:'Airway',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
 
-        {name:'Shifter',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},//30
+        {name:'Shifter',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},//30
         {name:'Ice Crystal',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
         {name:'Ice Spawner',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
+        {name:'Stone - 3',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
+        {name:'Stone - 3 - Snow',interval:{x:[10,0],y:[10,0]},slice:1,clump:1},
+        {name:'Stone - 3 - Back',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
 
     ]
 }
 stage={scene:'menu',scale:0}
 menu={scene:0,transition:0,sceneAnim:[0,0],select:-1,selectAnim:[0,0,0],levelPos:[[600,540],[360,420],[780,300]],playerAnim:[0,0]}
-game={level:2,zone:0,progress:{zone:0},time:0,player:{size:1},edge:{x:0,y:0},spawn:{x:0,y:0},connections:[],previous:{zone:0},scroll:{x:0,y:0},players:[0],flowers:0,deaths:0,running:{flowers:0,deaths:0},loadPlan:0,levelData:[]}
+game={level:3,zone:0,progress:{zone:0},time:0,player:{size:1},
+edge:{x:0,y:0},spawn:{x:0,y:0},scroll:{x:0,y:0},wind:{x:0,y:0},
+connections:[],previous:{zone:0},players:[0],flowers:0,deaths:0,running:{flowers:0,deaths:0},loadPlan:0,levelData:[]}
 physics={gravity:0.5,friction:{x:0.96,y:0.995},resistance:{x:0.84,y:0.99}}
 view={scroll:{x:0,y:0,anim:0},zoom:1,goal:{scroll:{x:0,y:0}},previous:{scroll:{x:0,y:0}}}
 elements={flower:{anim:0,timer:0}}

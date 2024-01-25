@@ -7,6 +7,8 @@ world 3[
     gimmicks[
         airway
         wind
+        moonfall
+        penta sine wave
     ]
     flowers[
         1
@@ -19,7 +21,7 @@ world 3[
         8
         9
         10
-        12
+        11
         12
     ]
     levels[

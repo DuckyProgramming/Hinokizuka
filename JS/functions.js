@@ -436,6 +436,9 @@ function initialLevels(){
             for(let c=0,lc=levels[a][b].walls.length;c<lc;c++){
                 levels[a][b].spawnRule.push(0)
             }
+            if(!levels[a][b].hasOwnProperty('wind')){
+                levels[a][b].wind={x:0,y:0}
+            }
         }
     }
 }
@@ -540,6 +543,8 @@ function generateLevel(level,layer,context){
     game.connections=level.connections
     game.edge.x=level.edge.x
     game.edge.y=level.edge.y
+    game.wind.x=level.wind.x
+    game.wind.y=level.wind.y
     for(let a=0,la=entities.players.length;a<la;a++){
         switch(context){
             case 0:
@@ -782,6 +787,24 @@ function operateOuter(layer){
         view.goal.scroll.y=game.edge.y<layer.height?game.edge.y/2:mid.y
     }
     displayComponent(layer,4)
+    switch(game.level){
+        case 2:
+            layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
+            layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
+            layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
+            layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
+        break
+        case 3:
+            layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
+            layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
+            layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
+            layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
+            layer.image(graphics.backgrounds[5],900-(view.scroll.x+game.scroll.x+game.time*game.wind.x/10+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(2+game.wind.y)/100)%900,1800,900)
+            layer.image(graphics.backgrounds[5],2700-(view.scroll.x+game.scroll.x+game.time*game.wind.x/10+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(2+game.wind.y)/100)%900,1800,900)
+            layer.image(graphics.backgrounds[5],900-(view.scroll.x+game.scroll.x+game.time*game.wind.x/10+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(2+game.wind.y)/100)%900,1800,900)
+            layer.image(graphics.backgrounds[5],2700-(view.scroll.x+game.scroll.x+game.time*game.wind.x/10+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(2+game.wind.y)/100)%900,1800,900)
+        break
+    }
 }
 function operateMenu(layer){
     menu.transition=smoothAnim(menu.transition,menu.scene==1,0,1,60)

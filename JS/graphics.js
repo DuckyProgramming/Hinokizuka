@@ -4,7 +4,7 @@ function setupGraphics(){
     setupLayer(graphics.main)
     graphics.players.push(new player(this.layer,0,0,0,0,true))
     graphics.players.push(new player(this.layer,0,0,1,0,true))
-    for(let a=0,la=4;a<la;a++){
+    for(let a=0,la=6;a<la;a++){
         graphics.backgrounds.push(createGraphics(1800,900))
         setupLayer(graphics.backgrounds[a])
         displayBack(graphics.backgrounds[a],a)
@@ -157,6 +157,24 @@ function displayBack(layer,type){
             for(let a=0,la=20;a<la;a++){
                 for(let b=0,lb=10;b<lb;b++){
                     layer.ellipse((a+random(0.1,0.9))/la*layer.width,(b+random(0.1,0.9))/lb*layer.height,random(2,3))
+                }
+            }
+        break
+        case 4:
+            layer.background(0)
+            for(let a=0,la=layer.height;a<la;a++){
+                layer.fill(mergeColor([240,220,170],[200,180,120],a/la))
+                layer.rect(layer.width/2,a+0.5,layer.width,2)
+            }
+        break
+        case 5:
+            layer.stroke(240,230,200)
+            for(let a=0,la=20;a<la;a++){
+                for(let b=0,lb=10;b<lb;b++){
+                    layer.strokeWeight(random(2,4))
+                    let c=(a+random(0.1,0.9))/la*layer.width
+                    let d=(b+random(0.1,0.9))/lb*layer.height
+                    layer.line(c-random(3,6),d,c+random(3,6),d)
                 }
             }
         break
