@@ -624,7 +624,7 @@ function generateLevel(level,layer,context){
                 entities.walls[a][b].expel()
             }
         }
-        if(nudge.x!=0&&nudge.y!=0){
+        if(abs(nudge.x)>5&&abs(nudge.y)>5){
             let top=0
             switch(context){
                 case 2:
@@ -651,10 +651,14 @@ function generateLevel(level,layer,context){
                                 entities.walls[a][b].position.y+=level.edge.y/2
                                 entities.walls[a][b].height+=level.edge.y
                                 entities.walls[a][b].base.height+=level.edge.y
+                                entities.walls[a][b].downsize.trigger[0]=true
+                                entities.walls[a][b].downsize.value=level.edge.y
                             }else if(!entities.walls[a][b].deprecate&&entities.walls[a][b].position.y-entities.walls[a][b].base.height/2<=0){
                                 entities.walls[a][b].position.y-=level.edge.y/2
                                 entities.walls[a][b].height+=level.edge.y
                                 entities.walls[a][b].base.height+=level.edge.y
+                                entities.walls[a][b].downsize.trigger[1]=true
+                                entities.walls[a][b].downsize.value=level.edge.y
                             }
                         }
                     }

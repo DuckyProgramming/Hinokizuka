@@ -2013,23 +2013,28 @@ class player extends partisan{
         }
         if(this.orb.active){
             this.orb.speed=max(this.orb.speed+this.physics.orbSpeed,this.physics.orbSpeed*30)
-            let direction=atan2(game.spawn.x-this.position.x,game.spawn.y-this.position.y)
-            let bound=this.position.x<0||this.position.x>game.edge.x||this.position.y<0||this.position.y>game.edge.y
-            this.velocity.x=sin(direction)*this.orb.speed*(bound?5:1)
-            this.velocity.y=cos(direction)*this.orb.speed*(bound?5:1)
-            if(this.position.x<-150||this.position.x>game.edge.x+150||this.position.y<-150||this.position.y>game.edge.y+150){
-                this.velocity.x=sin(direction)*this.orb.speed*(bound?5:1)*2
-                this.velocity.y=cos(direction)*this.orb.speed*(bound?5:1)*2
-            }
-            this.goal.direction.main=sin(direction)>0?54:-54
             this.dash.active=0
             this.dashPhase=false
-            if(dist(this.position.x,this.position.y,game.spawn.x,game.spawn.y)<=this.orb.speed&&this.orb.safe){
-                this.orb.active=false
+            if(dist(this.position.x,this.position.y,game.spawn.x,game.spawn.y)<=this.orb.speed){
                 this.position.x=game.spawn.x
                 this.position.y=game.spawn.y
-                this.velocity.x=this.position.x>game.edge.x/2?-3:3
-                this.velocity.y=0
+                if(this.orb.safe){
+                    this.orb.active=false
+                    this.position.x=game.spawn.x
+                    this.position.y=game.spawn.y
+                    this.velocity.x=this.position.x>game.edge.x/2?-3:3
+                    this.velocity.y=0
+                }
+            }else{
+                let direction=atan2(game.spawn.x-this.position.x,game.spawn.y-this.position.y)
+                let bound=this.position.x<0||this.position.x>game.edge.x||this.position.y<0||this.position.y>game.edge.y
+                this.goal.direction.main=sin(direction)>0?54:-54
+                this.velocity.x=sin(direction)*this.orb.speed*(bound?5:1)
+                this.velocity.y=cos(direction)*this.orb.speed*(bound?5:1)
+                if(this.position.x<-150||this.position.x>game.edge.x+150||this.position.y<-150||this.position.y>game.edge.y+150){
+                    this.velocity.x=sin(direction)*this.orb.speed*(bound?5:1)*2
+                    this.velocity.y=cos(direction)*this.orb.speed*(bound?5:1)*2
+                }
             }
         }else{
             if(!this.bubble.active){
@@ -2045,7 +2050,7 @@ class player extends partisan{
                 this.velocity.y+=physics.gravity
             }
             if(this.crush[0]&&this.crush[1]||this.crush[2]&&this.crush[3]){
-                this.dead=true
+                this.goal.dead=true
             }
             if(this.jumpTime>0){
                 this.jumpTime--
@@ -2388,7 +2393,7 @@ class player extends partisan{
                     }
                 }
             }
-            if(this.dashPhase&&game.time%2==0&&!this.dead){
+            if(this.dashPhase&&game.time%2==0&&!this.goal.dead){
                 entities.particles.push(new particle(this.layer,this.position.x,this.position.y,1,0,1.5,[this.kimono.color.main.end]))
             }
         }
@@ -2420,6 +2425,7 @@ class player extends partisan{
             this.bonk--
         }
         if(this.goal.dead&&(dev.invincible||!dev.freecam&&view.scroll.anim<10)){
+            this.dead=false
             this.goal.dead=false
         }
         if(this.goal.dead){

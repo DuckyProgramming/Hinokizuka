@@ -55,7 +55,7 @@ class wall extends physical{
                 let total7=0
                 for(let a=0,la=entities.walls.length;a<la;a++){
                     for(let b=0,lb=entities.walls[a].length;b<lb;b++){
-                        if(!entities.walls[a][b].deprecated&&(entities.walls[a][b].type==7||entities.walls[a][b].type==14||entities.walls[a][b].type==28)){
+                        if(!entities.walls[a][b].deprecated&&(entities.walls[a][b].type==7||entities.walls[a][b].type==14||entities.walls[a][b].type==28)&&entities.walls[a][b].index>this.index){
                             total7++
                         }
                     }
@@ -503,6 +503,9 @@ class wall extends physical{
 				this.layer.fill(50,200,200,this.fade*this.anim)
                 this.layer.stroke(30,120,120,this.fade*this.anim)
                 this.layer.ellipse(0,0,this.width*1.2,this.height*1.2)
+                this.layer.noFill()
+                this.layer.stroke(60,240,240,this.fade*this.anim)
+                this.layer.arc(0,0,this.width*0.8,this.height*0.8,-75,-15)
             break
             case 24:
                 this.layer.fill(200,255,255,this.fade)
@@ -628,8 +631,8 @@ class wall extends physical{
                 if(this.timer>0){
                     this.timer--
                 }
-                this.trigger.fade=this.timer<=0||this.timer>120
-                this.standard=this.timer<=0||this.timer>120
+                this.trigger.fade=this.timer<=0||this.timer>90
+                this.standard=this.timer<=0||this.timer>90
             break
             case 9: case 24:
                 if(this.timer>0){
@@ -689,7 +692,7 @@ class wall extends physical{
                         this.shift(sin(this.direction*45)*6,cos(this.direction*45)*-6)
                         this.hold.velocity.x=sin(this.direction*45)*6
                         this.hold.velocity.y=cos(this.direction*45)*-6
-                        if(this.timer>=45||this.hold.dash.active>0||this.hold.bonk>0){
+                        if(this.timer>=45||this.hold.dash.active>0||this.hold.bonk>0||this.hold.goal.dead){
                             this.execute([0])
                         }
                     }
@@ -732,14 +735,16 @@ class wall extends physical{
                         }
                         if(inBoxBox(this,c)){
                             let d=collideBoxBox(this,c)
-                            c.crush[d]=true
+                            if(this.standard&&d>=0&&d<=3){
+                                c.crush[d]=true
+                            }
                             switch(this.type){
                                 case 8:
                                     if(this.timer==1){
                                         c.goal.dead=true
                                     }
                                     if(this.timer==0){
-                                        this.timer=180
+                                        this.timer=150
                                     }
                                 break
                             }
