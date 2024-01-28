@@ -33,7 +33,8 @@ types={
         {name:'Downward Winged Flower',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
         {name:'Airway',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
 
-        {name:'Shifter',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},//30
+        {name:'Pushable',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},//30
+        {name:'Switcher',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
         {name:'Ice Crystal',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
         {name:'Ice Spawner',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
         {name:'Stone - 3',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},

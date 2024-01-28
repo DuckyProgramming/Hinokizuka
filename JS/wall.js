@@ -11,6 +11,7 @@ class wall extends physical{
         this.collide={box:[entities.players]}
         this.velocity={x:0,y:0}
         this.base={position:{x:this.position.x,y:this.position.y},width:this.width,height:this.height}
+        this.previous={position:{x:0,y:0}}
         this.deprecate=false
         this.downsize={trigger:[false,false],value:0}
         this.interval=types.wall[this.type].interval
@@ -21,8 +22,6 @@ class wall extends physical{
         this.set()
     }
     set(){
-        this.standard=this.type==0||this.type==1||this.type==6||this.type==21||this.type==22||this.type==26
-        this.safe=this.type==1||this.type==6||this.type==21||this.type==22
         switch(this.type){
             case 2:
                 this.base.height=4
@@ -147,11 +146,52 @@ class wall extends physical{
                 this.activeAnim=0
                 this.move=0
             break
+            case 29:
+                this.active=false
+                this.direction=0
+                this.rate=0
+                this.anim=0
+                this.break=false
+                this.timer=0
+            break
+            case 30:
+                this.break=false
+                this.timer=0
+                this.subVelocity={x:0,y:0}
+            break
+            case 31:
+                this.switch=this.args[4]
+                this.anim=0
+                this.break=false
+                this.timer=0
+                this.subVelocity={x:0,y:0}
+            break
+            case 32:
+                this.base.width=30
+                this.base.height=30
+                this.width=30
+                this.height=30
+                this.active=true
+                this.anim=0
+            break
+            case 33:
+                this.base.width=0
+                this.base.height=0
+                this.width=0
+                this.height=0
+            break
         }
+        this.standard=this.type==0||this.type==1||this.type==6||this.type==21||this.type==22||this.type==26||this.type==29||this.type==30||this.type==31||this.type==34||this.type==35||this.type==36
+        this.safe=this.type==1||this.type==6||this.type==21||this.type==22||this.type==34||this.type==35||this.type==36
     }
     onDash(){
-        if(this.type==14||this.type==28){
-            this.fly=true
+        switch(this.type){
+            case 14: case 28:
+                this.fly=true
+            break
+            case 31:
+                this.switch=1-this.switch
+            break
         }
     }
     shift(x,y){
@@ -543,6 +583,127 @@ class wall extends physical{
                 this.layer.fill(90,100,110,this.fade)
                 this.layer.rect(0,0,this.width-8,this.height+1)
             break
+            case 29:
+                this.layer.fill(140,160,180,this.fade)
+                this.layer.stroke(110,130,150,this.fade)
+                this.layer.strokeWeight(6)
+                this.layer.beginShape()
+                for(let a=0,la=this.width/20;a<la;a++){
+                    this.layer.vertex(-this.width/2+a*20+(a==0&&this.index%2==1?3:0),-this.height/2+(a+this.index)%2*3)
+                }
+                for(let a=0,la=this.height/20;a<la;a++){
+                    this.layer.vertex(this.width/2-(a+this.index)%2*3,-this.height/2+a*20+(a==0&&floor(this.width/20+this.index)%2==1?3:0))
+                }
+                for(let a=0,la=this.width/20;a<la;a++){
+                    this.layer.vertex(this.width/2-a*20-(a==0&&this.index%2==1?3:0),this.height/2-(a+this.index)%2*3)
+                }
+                for(let a=0,la=this.height/20;a<la;a++){
+                    this.layer.vertex(-this.width/2+(a+this.index)%2*3,this.height/2-a*20-(a==0&&floor(this.width/20+this.index)%2==1?3:0))
+                }
+                this.layer.endShape(CLOSE)
+                this.layer.rotate(this.rate)
+                this.layer.fill(90,110,130,this.fade)
+                this.layer.stroke(70,100,110,this.fade)
+                this.layer.strokeWeight(3)
+                this.layer.rect(0,-12,7,10)
+                this.layer.rect(0,12,7,10)
+                this.layer.rect(-12,0,10,7)
+                this.layer.rect(12,0,10,7)
+                this.layer.ellipse(0,0,18)
+                this.layer.noStroke()
+                this.layer.fill(this.anim*250,this.fade)
+                this.layer.ellipse(0,0,7)
+            break
+            case 30: case 31:
+                this.layer.fill(200,this.fade)
+                if(this.type==31){
+                    for(let a=0,la=this.base.width/20*3;a<la;a++){
+                        this.layer.triangle(-this.base.width/2+a*20/3,-this.height/2+10-this.anim*10,-this.base.width/2+a*20/3+20/3,-this.height/2+10-this.anim*10,-this.base.width/2+a*20/3+10/3,-this.height/2-this.anim*10)
+                        this.layer.triangle(-this.base.width/2+a*20/3,this.height/2-10+this.anim*10,-this.base.width/2+a*20/3+20/3,this.height/2-10+this.anim*10,-this.base.width/2+a*20/3+10/3,this.height/2+this.anim*10)
+                    }
+                    for(let a=0,la=this.base.height/20*3;a<la;a++){
+                        this.layer.triangle(-this.width/2+10-this.anim*10,-this.base.height/2+a*20/3,-this.width/2+10-this.anim*10,-this.base.height/2+a*20/3+20/3,-this.width/2-this.anim*10,-this.base.height/2+a*20/3+10/3)
+                        this.layer.triangle(this.width/2-10+this.anim*10,-this.base.height/2+a*20/3,this.width/2-10+this.anim*10,-this.base.height/2+a*20/3+20/3,this.width/2+this.anim*10,-this.base.height/2+a*20/3+10/3)
+                    }
+                }
+                this.layer.fill(140,160,180,this.fade)
+                this.layer.stroke(110,130,150,this.fade)
+                this.layer.strokeWeight(6)
+                this.layer.beginShape()
+                for(let a=0,la=this.width/20;a<la;a++){
+                    this.layer.vertex(-this.width/2+a*20+(a==0&&this.index%2==1?3:0),-this.height/2+(a+this.index)%2*3)
+                }
+                for(let a=0,la=this.height/20;a<la;a++){
+                    this.layer.vertex(this.width/2-(a+this.index)%2*3,-this.height/2+a*20+(a==0&&floor(this.width/20+this.index)%2==1?3:0))
+                }
+                for(let a=0,la=this.width/20;a<la;a++){
+                    this.layer.vertex(this.width/2-a*20-(a==0&&this.index%2==1?3:0),this.height/2-(a+this.index)%2*3)
+                }
+                for(let a=0,la=this.height/20;a<la;a++){
+                    this.layer.vertex(-this.width/2+(a+this.index)%2*3,this.height/2-a*20-(a==0&&floor(this.width/20+this.index)%2==1?3:0))
+                }
+                this.layer.endShape(CLOSE)
+                if(this.type==31){
+                    this.layer.fill(this.anim*500,0,500-this.anim*500,this.fade)
+                }else{
+                    this.layer.fill(50,200,50,this.fade)
+                }
+                this.layer.stroke(70,100,110,this.fade)
+                this.layer.strokeWeight(3)
+                this.layer.ellipse(0,0,18)
+                this.layer.strokeWeight(2)
+                if(this.args[0]==1){
+                    this.layer.rect(0,this.height/2-10,12,4,1)
+                }
+                if(this.args[1]==1){
+                    this.layer.rect(0,-this.height/2+10,12,4,1)
+                }
+                if(this.args[2]==1){
+                    this.layer.rect(this.width/2-10,0,4,12,1)
+                }
+                if(this.args[3]==1){
+                    this.layer.rect(-this.width/2+10,0,4,12,1)
+                }
+            break
+            case 32:
+                this.layer.scale(1+this.anim)
+                this.layer.noStroke()
+                this.layer.fill(45,105,210,this.fade)
+                this.layer.rotate(-60)
+                this.layer.triangle(-3,12,3,12,0,21)
+                this.layer.rotate(30)
+                this.layer.triangle(-3,12,3,12,0,24)
+                this.layer.rotate(30)
+                this.layer.triangle(-3,12,3,12,0,27)
+                this.layer.rotate(30)
+                this.layer.triangle(-3,12,3,12,0,24)
+                this.layer.rotate(30)
+                this.layer.triangle(-3,12,3,12,0,21)
+                this.layer.rotate(-60)
+                this.layer.fill(60,135,225,this.fade)
+                this.layer.ellipse(0,0,32,32)
+                this.layer.stroke(75,150,240,this.fade)
+                this.layer.strokeWeight(2)
+                for(let a=0,la=5;a<la;a++){
+                    this.layer.arc(a%2*3,0,28-a*6,28-a*6,-180+a*180,a*180)
+                }
+            break
+            case 34:
+                this.layer.fill(210,120,90,this.fade)
+                this.layer.rect(0,0,this.width+1,this.height+1)
+            break
+            case 35:
+                this.layer.fill(210,120,90,this.fade)
+                this.layer.rect(0,0,this.width+1,this.height+1)
+                this.layer.stroke(250,this.fade)
+                this.layer.strokeWeight(5)
+                this.layer.line(-this.width/2+1,-this.height/2+1,this.width/2-1,-this.height/2+1)
+            break
+            case 36:
+                this.layer.fill(180,90,60,this.fade)
+                this.layer.rect(0,0,this.width-8,this.height+1)
+            break
+
         }
         this.layer.pop()
         if(dev.hitbox){
@@ -593,6 +754,7 @@ class wall extends physical{
         this.fade=smoothAnim(this.fade,this.trigger.fade,0,1,5)
         this.velocity.x=0
         this.velocity.y=0
+        vectorSet(this.previous.position,this.position)
         switch(this.type){
             case 7: case 14: case 28:
                 if(this.grabbed[0]>=0&&!this.active){
@@ -714,9 +876,112 @@ class wall extends physical{
                     this.shift(a.x*4,a.y*4)
                 }
             break
+            case 29:
+                if(this.break){
+                    if(this.fade<=0){
+                        this.timer--
+                        if(this.timer<=0){
+                            this.trigger.fade=true
+                            this.break=false
+                            this.position.x=this.base.position.x
+                            this.position.y=this.base.position.y
+                            this.active=false
+                            this.anim=0
+                        }
+                    }
+                }else{
+                    this.anim=smoothAnim(this.anim,this.active,0,1,15)
+                    if(this.anim>0){
+                        this.rate+=this.anim
+                        this.shift(sin(this.direction*45)*2*this.anim,cos(this.direction*45)*2*-this.anim)
+                    }
+                    if(this.position.x<0||this.position.x>game.edge.x||this.position.y<0||this.position.y>game.edge.y){
+                        this.break=true
+                        this.trigger.fade=false
+                        this.timer=120
+                    }
+                }
+            break
+            case 30:
+                if(this.break){
+                    if(this.fade<=0){
+                        this.timer--
+                        if(this.timer<=0){
+                            this.trigger.fade=true
+                            this.break=false
+                            this.position.x=this.base.position.x
+                            this.position.y=this.base.position.y
+                        }
+                    }
+                }else{
+                    this.shift(this.subVelocity.x,this.subVelocity.y)
+                    this.subVelocity.x*=physics.resistance.x
+                    this.subVelocity.y*=physics.resistance.x
+                    if(this.position.x<0||this.position.x>game.edge.x||this.position.y<0||this.position.y>game.edge.y){
+                        this.break=true
+                        this.trigger.fade=false
+                        this.timer=120
+                        this.subVelocity.x=0
+                        this.subVelocity.y=0
+                    }
+                }
+            break
+            case 31:
+                if(this.break){
+                    if(this.fade<=0){
+                        this.timer--
+                        if(this.timer<=0){
+                            this.trigger.fade=true
+                            this.break=false
+                            this.position.x=this.base.position.x
+                            this.position.y=this.base.position.y
+                        }
+                    }
+                }else{
+                    this.anim=smoothAnim(this.anim,this.switch==1,0,1,15)
+                    this.shift(this.subVelocity.x,this.subVelocity.y)
+                    this.subVelocity.x*=physics.resistance.x
+                    this.subVelocity.y*=physics.resistance.x
+                    if(this.position.x<0||this.position.x>game.edge.x||this.position.y<0||this.position.y>game.edge.y){
+                        this.break=true
+                        this.trigger.fade=false
+                        this.timer=120
+                        this.subVelocity.x=0
+                        this.subVelocity.y=0
+                    }
+                }
+            break
+            case 32:
+                this.anim=smoothAnim(this.anim,!this.active,0,1,5)
+                this.trigger.fade=this.active
+                switch(this.args[0]){
+                    case 1:
+                        this.shift(this.args[1],0)
+                        if(this.position.x>game.edge.x+50){
+                            this.remove=true
+                        }
+                    break
+                    case 2:
+                        this.shift(-this.args[1],0)
+                        if(this.position.x<-50){
+                            this.remove=true
+                        }
+                    break
+                }
+            break
+            case 33:
+                switch(this.args[0]){
+                    case 1:
+                        if(this.time%this.args[2]==0){
+                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,-50,this.position.y,0,0,this.type-1,-1,-1,[1,this.args[1]]))
+                            entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
+                        }
+                    break
+                }
+            break
         }
         if(this.fade>0.2&&!this.deprecate&&
-            this.type!=17&&this.type!=27
+            this.type!=17&&this.type!=27&&this.type!=33
         ){
             for(let a=0,la=this.collide.box.length;a<la;a++){
                 for(let b=0,lb=this.collide.box[a].length;b<lb;b++){
@@ -724,7 +989,7 @@ class wall extends physical{
                     if(!c.orb.active&&!c.goal.dead&&
                         !((this.type==15||this.type==18||this.type==19)&&(c.velocity.y<=0||c.previous.position.y>this.position.y-this.height/2-c.height/2+6))
                     ){
-                        if(inBoxBox({position:this.position,width:this.width+2,height:this.height+2},c)&&this.standard){
+                        if(inBoxBox({position:this.previous.position,width:this.width+2,height:this.height+2},c)&&this.standard){
                             let d=collideBoxBox(this,c)
                             c.contact[d]=true
                             if(d==1){
@@ -745,6 +1010,86 @@ class wall extends physical{
                                     }
                                     if(this.timer==0){
                                         this.timer=150
+                                    }
+                                break
+                                case 29:
+                                    if(this.timer==0){
+                                        this.timer=150
+                                    }
+                                    switch(d){
+                                        case 0:
+                                            if(!this.active){
+                                                this.active=true
+                                                this.direction=0
+                                            }
+                                        break
+                                        case 1:
+                                            if(!this.active){
+                                                this.active=true
+                                                this.direction=4
+                                            }
+                                        break
+                                        case 2:
+                                            if(!this.active){
+                                                this.active=true
+                                                this.direction=6
+                                            }
+                                        break
+                                        case 3:
+                                            if(!this.active){
+                                                this.active=true
+                                                this.direction=2
+                                            }
+                                        break
+                                    }
+                                break
+                                case 30: case 31:
+                                    if(this.timer==1||this.type==31&&this.switch==1){
+                                        c.goal.dead=true
+                                    }
+                                    if(this.args[d]==1){
+                                        switch(d){
+                                            case 0:
+                                                this.subVelocity.y=-16
+                                                c.velocity.y=10
+                                                c.dash.available=true
+                                                c.stamina=c.base.stamina
+                                                if(c.dash.active>0){
+                                                    c.dash.active=0
+                                                    inputs.keys[c.id][5]=false
+                                                }
+                                            break
+                                            case 1:
+                                                this.subVelocity.y=16
+                                                c.velocity.y=-10
+                                                c.dash.available=true
+                                                c.stamina=c.base.stamina
+                                                if(c.dash.active>0){
+                                                    c.dash.active=0
+                                                    inputs.keys[c.id][5]=false
+                                                }
+                                            break
+                                            case 2:
+                                                this.subVelocity.x=-16
+                                                c.velocity.x=10
+                                                c.dash.available=true
+                                                c.stamina=c.base.stamina
+                                                if(c.dash.active>0){
+                                                    c.dash.active=0
+                                                    inputs.keys[c.id][5]=false
+                                                }
+                                            break
+                                            case 3:
+                                                this.subVelocity.x=16
+                                                c.velocity.x=-10
+                                                c.dash.available=true
+                                                c.stamina=c.base.stamina
+                                                if(c.dash.active>0){
+                                                    c.dash.active=0
+                                                    inputs.keys[c.id][5]=false
+                                                }
+                                            break
+                                        }
                                     }
                                 break
                             }
@@ -923,6 +1268,18 @@ class wall extends physical{
                                                     }
                                                 }
                                             }
+                                        }
+                                    }
+                                break
+                                case 32:
+                                    if(this.active){
+                                        if(c.position.y>this.position.y-10&&c.velocity.y<=0){
+                                            c.goal.dead=true
+                                        }else{
+                                            this.active=false
+                                            c.velocity.y=-10
+                                            c.dash.available=true
+                                            c.stamina=c.base.stamina
                                         }
                                     }
                                 break

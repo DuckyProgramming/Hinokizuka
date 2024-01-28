@@ -234,12 +234,14 @@ class ui{
                         let total=0
                         for(let a=0,la=entities.walls.length;a<la;a++){
                             for(let b=0,lb=entities.walls[a].length;b<lb;b++){
-                                if(total>=1){
-                                    wallForm+=`
-                `
+                                if(entities.walls[a][b].type!=32){
+                                    if(total>=1){
+                                        wallForm+=`
+                    `
+                                    }
+                                    total++
+                                    wallForm+=`{x:${round(entities.walls[a][b].base.position.x)},y:${round(entities.walls[a][b].base.position.y)},width:${entities.walls[a][b].base.width},height:${entities.walls[a][b].base.height},type:${entities.walls[a][b].type}},`
                                 }
-                                total++
-                                wallForm+=`{x:${round(entities.walls[a][b].base.position.x)},y:${round(entities.walls[a][b].base.position.y)},width:${entities.walls[a][b].base.width},height:${entities.walls[a][b].base.height},type:${entities.walls[a][b].type}},`
                             }
                         }
                         print(

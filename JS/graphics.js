@@ -163,15 +163,15 @@ function displayBack(layer,type){
         case 4:
             layer.background(0)
             for(let a=0,la=layer.height;a<la;a++){
-                layer.fill(mergeColor([240,220,170],[200,180,120],a/la))
+                layer.fill(mergeColor([250,160,100],[250,200,160],a/la))
                 layer.rect(layer.width/2,a+0.5,layer.width,2)
             }
         break
         case 5:
-            layer.stroke(240,230,200)
+            layer.stroke(240,230-random(0,20),200-random(0,40))
             for(let a=0,la=20;a<la;a++){
                 for(let b=0,lb=10;b<lb;b++){
-                    layer.strokeWeight(random(2,4))
+                    layer.strokeWeight(random(1,4))
                     let c=(a+random(0.1,0.9))/la*layer.width
                     let d=(b+random(0.1,0.9))/lb*layer.height
                     layer.line(c-random(3,6),d,c+random(3,6),d)

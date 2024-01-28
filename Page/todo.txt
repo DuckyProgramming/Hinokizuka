@@ -2,14 +2,7 @@ bugs[
     spawning issues still
 ]
 world 3[
-    tileset
     background
-    gimmicks[
-        airway
-        wind
-        moonfall
-        penta sine wave
-    ]
     flowers[
         1
         2
@@ -55,6 +48,9 @@ world 3[
 forward[
     ice crystal
     ice spawners
+
+    moonfall
+    penta sine wave
 ]
 
 life of a doublo?

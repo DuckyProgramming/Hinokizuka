@@ -799,10 +799,10 @@ function operateOuter(layer){
             layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
             layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
             layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
-            layer.image(graphics.backgrounds[5],900-(view.scroll.x+game.scroll.x+game.time*game.wind.x/10+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(2+game.wind.y)/100)%900,1800,900)
-            layer.image(graphics.backgrounds[5],2700-(view.scroll.x+game.scroll.x+game.time*game.wind.x/10+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(2+game.wind.y)/100)%900,1800,900)
-            layer.image(graphics.backgrounds[5],900-(view.scroll.x+game.scroll.x+game.time*game.wind.x/10+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(2+game.wind.y)/100)%900,1800,900)
-            layer.image(graphics.backgrounds[5],2700-(view.scroll.x+game.scroll.x+game.time*game.wind.x/10+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(2+game.wind.y)/100)%900,1800,900)
+            layer.image(graphics.backgrounds[5],900-(view.scroll.x+game.scroll.x+game.time*game.wind.x+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
+            layer.image(graphics.backgrounds[5],2700-(view.scroll.x+game.scroll.x+game.time*game.wind.x+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
+            layer.image(graphics.backgrounds[5],900-(view.scroll.x+game.scroll.x+game.time*game.wind.x+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
+            layer.image(graphics.backgrounds[5],2700-(view.scroll.x+game.scroll.x+game.time*game.wind.x+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
         break
     }
 }

@@ -2094,6 +2094,12 @@ class player extends partisan{
             this.velocity.x=0
             this.velocity.y=0
         }
+        if(!this.contact[1]&&game.wind.x!=0&&abs(this.velocity.x)<10){
+            this.velocity.x-=game.wind.x/400
+        }
+        if(this.climb&&game.wind.y!=0&&abs(this.velocity.y)<10){
+            this.velocity.y-=game.wind.y/400
+        }
         super.update()
         if(!this.orb.active){
             let resolveOrder=[7,6,1,2,3,4,5]

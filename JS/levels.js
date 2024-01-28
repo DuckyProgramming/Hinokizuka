@@ -2959,7 +2959,8 @@ levels=[
             connections:[
                 {id:1,side:1,region:[0,600]},
             ],walls:[
-                {x:50,y:570,width:100,height:60,type:34},
+                {x:50,y:570,width:100,height:60,type:35},
+                {x:200,y:500,width:0,height:0,type:33,args:[1,2,60]},
             ],
         },
     ],
