@@ -77,7 +77,7 @@ class ui{
                     case 7: case 9:
                         this.layer.fill(150)
                         for(let b=0,lb=types.wall.length;b<lb;b++){
-                            this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,10+b*15,80,10,5)
+                            this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,8+b*12,80,8,5)
                         }
                     break
                     case 8:
@@ -168,9 +168,9 @@ class ui{
                         this.layer.text('Cancel',this.layer.width+50-this.tabAnim[a]*100,20)
                     break
                     case 7: case 9:
-                        this.layer.textSize(10)
+                        this.layer.textSize(8)
                         for(let b=0,lb=types.wall.length;b<lb;b++){
-                            this.layer.text(types.wall[b].name,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,10+b*15)
+                            this.layer.text(types.wall[b].name,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,8+b*12)
                         }
                     break
                     case 8:
@@ -237,7 +237,7 @@ class ui{
                                 if(entities.walls[a][b].type!=32){
                                     if(total>=1){
                                         wallForm+=`
-                    `
+                `
                                     }
                                     total++
                                     wallForm+=`{x:${round(entities.walls[a][b].base.position.x)},y:${round(entities.walls[a][b].base.position.y)},width:${entities.walls[a][b].base.width},height:${entities.walls[a][b].base.height},type:${entities.walls[a][b].type}},`
@@ -248,7 +248,8 @@ class ui{
 `
         {
             spawn:{x:${round(game.spawn.x/5)*5},y:${round(game.spawn.y/5)*5}},
-            edge:{x:${round(game.edge.x/5)*5},y:${round(game.edge.y/5)*5}},
+            edge:{x:${round(game.edge.x/5)*5},y:${round(game.edge.y/5)*5}},${game.wind.x!=0||game.wind.y!=0?`
+            wind:{x:${round(game.wind.x)},y:${round(game.wind.y)}},`:``}
             connections:[
                 ${connectionForm}
             ],walls:[
@@ -414,7 +415,7 @@ class ui{
                 break
                 case 7:
                     for(let a=0,la=types.wall.length;a<la;a++){
-                        if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:10+a*15},width:80,height:10})){
+                        if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:8+a*12},width:80,height:8})){
                             this.edit.wall.type=a
                             for(let b=0,lb=entities.walls.length;b<lb;b++){
                                 for(let c=0,lc=entities.walls[b].length;c<lc;c++){
@@ -449,7 +450,7 @@ class ui{
                 break
                 case 9:
                     for(let a=0,la=types.wall.length;a<la;a++){
-                        if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:10+a*15},width:80,height:10})){
+                        if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:8+a*12},width:80,height:8})){
                             this.edit.add.wall.type=a
                             this.tab=8
                         }

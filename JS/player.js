@@ -352,6 +352,13 @@ class player extends partisan{
             break
         }
     }
+    dashCut(){
+        if(this.dash.active>0){
+            this.dash.active=0
+            this.dashPhase=false
+            inputs.keys[this.id][5]=false
+        }
+    }
     displaySymbol(layer,type,key){
         switch(this.type){
             case 0:
@@ -2094,10 +2101,10 @@ class player extends partisan{
             this.velocity.x=0
             this.velocity.y=0
         }
-        if(!this.contact[1]&&game.wind.x!=0&&abs(this.velocity.x)<10){
+        if(!this.contact[1]&&this.climb==0&&!dev.nograv&&game.wind.x!=0&&abs(this.velocity.x)<10){
             this.velocity.x-=game.wind.x/400
         }
-        if(this.climb&&game.wind.y!=0&&abs(this.velocity.y)<10){
+        if(this.climb==0&&!dev.nograv&&game.wind.y!=0&&abs(this.velocity.y)<10){
             this.velocity.y-=game.wind.y/400
         }
         super.update()
@@ -2245,12 +2252,12 @@ class player extends partisan{
                                     this.velocity.y=0
                                     this.stamina--
                                     if(inputs.keys[this.id][0]){
-                                        this.velocity.y=-2.5
+                                        this.velocity.y=-2.75
                                         this.stamina-=2
                                         this.anim.move+=12
                                     }
                                     if(inputs.keys[this.id][1]){
-                                        this.velocity.y=2.5
+                                        this.velocity.y=2.75
                                         this.anim.move+=12
                                     }
                                 }

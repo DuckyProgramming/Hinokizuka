@@ -2,12 +2,7 @@ bugs[
     spawning issues still
 ]
 world 3[
-    background
     flowers[
-        1
-        2
-        3
-        4
         5
         6
         7
@@ -18,12 +13,6 @@ world 3[
         12
     ]
     levels[
-        1
-        2
-        3
-        4
-        5
-        6
         7
         8
         9
@@ -46,9 +35,6 @@ world 3[
     menu presence
 ]
 forward[
-    ice crystal
-    ice spawners
-
     moonfall
     penta sine wave
 ]

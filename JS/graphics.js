@@ -166,6 +166,31 @@ function displayBack(layer,type){
                 layer.fill(mergeColor([250,160,100],[250,200,160],a/la))
                 layer.rect(layer.width/2,a+0.5,layer.width,2)
             }
+            for(let a=0,la=80;a<la;a++){
+                for(let b=0,lb=floor(sin((-50+a*71%(layer.width+100))/layer.width*360*6)*50+sin((-50+a*71%(layer.width+100))/layer.width*360*10)*50+200)/20+1;b<lb;b++){
+                    let c=-50+a*71%(layer.width+100)-20+(a+b)*9%40
+                    let d=layer.height-sin(c/layer.width*360*6)*50-200+b*20-sin(c/layer.width*360*10)*50
+                    let e=random(50,80)
+                    let f=random(0,1)
+                    layer.fill(150+f*15,60+f*15,30+f*15)
+                    regPoly(layer,c,d,8,e/2,e/2,0)
+                    if(c<0||c>layer.width){
+                        c=layer.width-c
+                        regPoly(layer,c,d,8,e/2,e/2,0)
+                    }
+                }
+            }
+            for(let a=0,la=8;a<la;a++){
+                let c=layer.width*(0.0625+a*0.125)
+                let d=layer.height*random(0.2,0.4)
+                layer.fill(240,0.2)
+                for(let b=0,lb=100;b<lb;b++){
+                    let e=random(0,360)
+                    let f=random(0,1500)**0.6
+                    let g=random(20,40)
+                    layer.ellipse(c+sin(e)*f,d+cos(e)*f*0.5,g,g*0.5)
+                }
+            }
         break
         case 5:
             layer.stroke(240,230-random(0,20),200-random(0,40))

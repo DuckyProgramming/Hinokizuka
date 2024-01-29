@@ -2,10 +2,10 @@ types={
     wall:[
         {name:'Empty',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},//0
         {name:'Stone - 0',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
-        {name:'Spikes - Up',interval:{x:[10,0],y:[10,-2]},slice:1,clump:0},
-        {name:'Spikes - Down',interval:{x:[10,0],y:[10,2]},slice:1,clump:0},
-        {name:'Spikes - Left',interval:{x:[10,-2],y:[10,0]},slice:1,clump:0},
-        {name:'Spikes - Right',interval:{x:[10,2],y:[10,0]},slice:1,clump:0},
+        {name:'Spikes - Up - 1',interval:{x:[10,0],y:[10,-2]},slice:1,clump:0},
+        {name:'Spikes - Down - 1',interval:{x:[10,0],y:[10,2]},slice:1,clump:0},
+        {name:'Spikes - Left - 1',interval:{x:[10,-2],y:[10,0]},slice:1,clump:0},
+        {name:'Spikes - Right - 1',interval:{x:[10,2],y:[10,0]},slice:1,clump:0},
         {name:'Stone - 1',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
         {name:'Flower',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
         {name:'Collapsing - 0',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
@@ -40,12 +40,17 @@ types={
         {name:'Stone - 3',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
         {name:'Stone - 3 - Snow',interval:{x:[10,0],y:[10,0]},slice:1,clump:1},
         {name:'Stone - 3 - Back',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
+        {name:'Spikes - Up - 2',interval:{x:[10,0],y:[10,-2]},slice:1,clump:0},
+        {name:'Spikes - Down - 2',interval:{x:[10,0],y:[10,2]},slice:1,clump:0},
+        {name:'Spikes - Left - 2',interval:{x:[10,-2],y:[10,0]},slice:1,clump:0},
+
+        {name:'Spikes - Right - 2',interval:{x:[10,2],y:[10,0]},slice:1,clump:0},//40
 
     ]
 }
 stage={scene:'menu',scale:0}
 menu={scene:0,transition:0,sceneAnim:[0,0],select:-1,selectAnim:[0,0,0],levelPos:[[600,540],[360,420],[780,300]],playerAnim:[0,0]}
-game={level:3,zone:0,progress:{zone:0},time:0,player:{size:1},
+game={level:3,zone:7,progress:{zone:0},time:0,player:{size:1},
 edge:{x:0,y:0},spawn:{x:0,y:0},scroll:{x:0,y:0},wind:{x:0,y:0},
 connections:[],previous:{zone:0},players:[0],flowers:0,deaths:0,running:{flowers:0,deaths:0},loadPlan:0,levelData:[]}
 physics={gravity:0.5,friction:{x:0.96,y:0.995},resistance:{x:0.84,y:0.99}}
