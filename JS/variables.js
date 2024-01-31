@@ -45,12 +45,13 @@ types={
         {name:'Spikes - Left - 2',interval:{x:[10,-2],y:[10,0]},slice:1,clump:0},
 
         {name:'Spikes - Right - 2',interval:{x:[10,2],y:[10,0]},slice:1,clump:0},//40
+        {name:'Red Bumper',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
 
     ]
 }
 stage={scene:'menu',scale:0}
 menu={scene:0,transition:0,sceneAnim:[0,0],select:-1,selectAnim:[0,0,0],levelPos:[[600,540],[360,420],[780,300]],playerAnim:[0,0]}
-game={level:3,zone:7,progress:{zone:0},time:0,player:{size:1},
+game={level:3,zone:12,progress:{zone:0},time:0,player:{size:1},
 edge:{x:0,y:0},spawn:{x:0,y:0},scroll:{x:0,y:0},wind:{x:0,y:0},
 connections:[],previous:{zone:0},players:[0],flowers:0,deaths:0,running:{flowers:0,deaths:0},loadPlan:0,levelData:[]}
 physics={gravity:0.5,friction:{x:0.96,y:0.995},resistance:{x:0.84,y:0.99}}

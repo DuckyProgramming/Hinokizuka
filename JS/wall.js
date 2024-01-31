@@ -107,7 +107,7 @@ class wall extends physical{
                 this.width=this.base.width-10
                 this.height=this.base.height-10
             break
-            case 20:
+            case 20: case 41:
                 this.base.width=40
                 this.base.height=40
                 this.width=40
@@ -739,28 +739,46 @@ class wall extends physical{
                 this.layer.rect(0,0,this.width-8,this.height+1)
             break
             case 37:
-                this.layer.fill(140,100,60,this.fade)
+                this.layer.fill(180,120,60,this.fade)
                 for(let a=0,la=this.base.width/20*3;a<la;a++){
                     this.layer.triangle(-this.base.width/2+a*20/3,this.height/2,-this.base.width/2+a*20/3+20/3,this.height/2,-this.base.width/2+a*20/3+10/3,-this.height*3/2)
                 }
             break
             case 38:
-                this.layer.fill(140,100,60,this.fade)
+                this.layer.fill(180,120,60,this.fade)
                 for(let a=0,la=this.base.width/20*3;a<la;a++){
                     this.layer.triangle(-this.base.width/2+a*20/3,-this.height/2,-this.base.width/2+a*20/3+20/3,-this.height/2,-this.base.width/2+a*20/3+10/3,this.height*3/2)
                 }
             break
             case 39:
-                this.layer.fill(140,100,60,this.fade)
+                this.layer.fill(180,120,60,this.fade)
                 for(let a=0,la=this.base.height/20*3;a<la;a++){
                     this.layer.triangle(this.width/2,-this.base.height/2+a*20/3,this.width/2,-this.base.height/2+a*20/3+20/3,-this.width*3/2,-this.base.height/2+a*20/3+10/3)
                 }
             break
             case 40:
-                this.layer.fill(140,100,60,this.fade)
+                this.layer.fill(180,120,60,this.fade)
                 for(let a=0,la=this.base.height/20*3;a<la;a++){
                     this.layer.triangle(-this.width/2,-this.base.height/2+a*20/3,-this.width/2,-this.base.height/2+a*20/3+20/3,this.width*3/2,-this.base.height/2+a*20/3+10/3)
                 }
+            break
+            case 41:
+                this.layer.fill(145+sin(this.time*8)*10,65+sin(this.time*8)*20,40+sin(this.time*8)*20)
+                for(a=0,la=10;a<la;a++){
+                    this.layer.triangle(0,-13,0,13,26,0)
+                    this.layer.rotate(360/la)
+                }
+                this.layer.fill(205+sin(this.time*8)*60,25+sin(this.time*8)*55,20+sin(this.time*8)*50)
+                for(a=0,la=10;a<la;a++){
+                    this.layer.triangle(0,-9,0,9,18,0)
+                    this.layer.rotate(360/la)
+                }
+                this.layer.fill(215+sin(this.time*8)*20,135+sin(this.time*8)*20,130+sin(this.time*8)*20)
+                this.layer.ellipse(0,0,24,24)
+                this.layer.fill(215+sin(this.time*8)*10,35+sin(this.time*8)*30,30+sin(this.time*8)*30)
+                this.layer.ellipse(0,4,8,4)
+                this.layer.arc(-4,-3,6,6,45,225)
+                this.layer.arc(4,-3,6,6,-45,135)
             break
 
         }
@@ -869,7 +887,7 @@ class wall extends physical{
                     this.anim=round(this.anim*20-1)/20
                 }
             break
-            case 20:
+            case 20: case 41:
                 if(this.timer>0){
                     this.timer--
                 }
@@ -974,8 +992,8 @@ class wall extends physical{
                     }
                 }else{
                     this.shift(this.subVelocity.x,this.subVelocity.y)
-                    this.subVelocity.x*=physics.resistance.x
-                    this.subVelocity.y*=physics.resistance.x
+                    this.subVelocity.x*=0.94
+                    this.subVelocity.y*=0.94
                     if(this.position.x<0||this.position.x>game.edge.x||this.position.y<0||this.position.y>game.edge.y){
                         this.break=true
                         this.trigger.fade=false
@@ -999,8 +1017,8 @@ class wall extends physical{
                 }else{
                     this.anim=smoothAnim(this.anim,this.switch==1,0,1,15)
                     this.shift(this.subVelocity.x,this.subVelocity.y)
-                    this.subVelocity.x*=physics.resistance.x
-                    this.subVelocity.y*=physics.resistance.x
+                    this.subVelocity.x*=0.94
+                    this.subVelocity.y*=0.94
                     if(this.position.x<0||this.position.x>game.edge.x||this.position.y<0||this.position.y>game.edge.y){
                         this.break=true
                         this.trigger.fade=false
@@ -1270,14 +1288,14 @@ class wall extends physical{
                                 case 16:
                                     c.goal.dead=true
                                 break
-                                case 20:
+                                case 20: case 41:
                                     if(this.timer==0){
                                         this.timer=5
                                         c.dash.available=true
                                         c.dashPhase=true
                                         c.dashCut()
                                         c.stamina=c.base.stamina
-                                        entities.particles.push(new particle(this.layer,this.position.x,this.position.y,2,0,2,[[125,200,255]]))
+                                        entities.particles.push(new particle(this.layer,this.position.x,this.position.y,2,0,2,[this.type==20?[125,200,255]:this.type==41?[255,180,125]:[0,0,0,]]))
                                         let direction=atan2(c.position.x-this.position.x,c.position.y-this.position.y)
                                         c.velocity.x=sin(direction)*15
                                         c.velocity.y=cos(direction)*15
