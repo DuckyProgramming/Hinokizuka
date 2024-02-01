@@ -8,7 +8,7 @@ function mainloop(layer){
             operateMenu(layer)
         break
         case 'ending':
-            layer.image(graphics.backgrounds[game.level],600,300,1200,600)
+            layer.image(graphics.backgrounds[[0,1,2,4][game.level]],600,300,1200,600)
             operateEnding(layer)
         break
         case 'main':

@@ -614,7 +614,7 @@ function generateLevel(level,layer,context){
     for(let a=0,la=3;a<la;a++){
         for(let b=0,lb=level.walls.length;b<lb;b++){
             if((level.spawnRule[b]==0||level.spawnRule[b]==2)&&types.wall[level.walls[b].type].clump==a){
-                entities.walls[types.wall[level.walls[b].type].slice].push(new wall(layer,level.walls[b].x,level.walls[b].y,level.walls[b].width,level.walls[b].height,level.walls[b].type,b,level.spawnRule[b],level.walls[b].args))
+                entities.walls[types.wall[level.walls[b].type].slice].push(new wall(layer,level.walls[b].x,level.walls[b].y,level.walls[b].width,level.walls[b].height,level.walls[b].type,b,level.spawnRule[b],game.zone,level.walls[b].args))
             }
         }
     }
@@ -713,7 +713,7 @@ function updateView(){
         }
         for(let a=0,la=entities.walls.length;a<la;a++){
             for(let b=0,lb=entities.walls[a].length;b<lb;b++){
-                if(entities.walls[a][b].deprecate){
+                if(entities.walls[a][b].deprecate&&!((entities.walls[a][b].type==7||entities.walls[a][b].type==14||entities.walls[a][b].type==28)&&entities.walls[a][b].grabbed[0]>=0&&!entities.walls[a][b].active)){
                     entities.walls[a][b].remove=true
                 }
             }
@@ -724,7 +724,7 @@ function updateView(){
             view.scroll.anim=10
             for(let a=0,la=entities.walls.length;a<la;a++){
                 for(let b=0,lb=entities.walls[a].length;b<lb;b++){
-                    if(entities.walls[a][b].deprecate){
+                    if(entities.walls[a][b].deprecate&&!((entities.walls[a][b].type==7||entities.walls[a][b].type==14||entities.walls[a][b].type==28)&&entities.walls[a][b].grabbed[0]>=0&&!entities.walls[a][b].active)){
                         entities.walls[a][b].remove=true
                     }else if(entities.walls[a][b].downsize.trigger[0]){
                         entities.walls[a][b].downsize.trigger[0]=false

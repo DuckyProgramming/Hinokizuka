@@ -1,9 +1,10 @@
 class wall extends physical{
-    constructor(layer,x,y,width,height,type,index,spawnRule,args){
+    constructor(layer,x,y,width,height,type,index,spawnRule,zone,args){
         super(layer,x,y,width,height)
         this.type=type
         this.index=index
         this.spawnRule=spawnRule
+        this.zone=zone
         this.args=args||[]
         this.fade=1
         this.kill=0
@@ -182,25 +183,25 @@ class wall extends physical{
                 switch(this.args[0]){
                     case 1:
                         for(let a=0,la=floor((game.edge.x+100)/(this.args[1]*this.args[2]));a<la;a++){
-                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,-50+this.args[1]*this.args[2]*a,this.position.y,0,0,this.type-1,-1,-1,[1,this.args[1]]))
+                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,-50+this.args[1]*this.args[2]*a,this.position.y,0,0,this.type-1,-1,0,this.zone,[1,this.args[1]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         }
                     break
                     case 2:
                         for(let a=0,la=floor((game.edge.x+100)/(this.args[1]*this.args[2]));a<la;a++){
-                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,game.edge.x+50-this.args[1]*this.args[2]*a,this.position.y,0,0,this.type-1,-1,-1,[2,this.args[1]]))
+                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,game.edge.x+50-this.args[1]*this.args[2]*a,this.position.y,0,0,this.type-1,-1,0,this.zone,[2,this.args[1]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         }
                     break
                     case 3:
                         for(let a=0,la=floor((game.edge.y+100)/(this.args[1]*this.args[2]));a<la;a++){
-                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,-50+this.args[1]*this.args[2]*a,0,0,this.type-1,-1,-1,[3,this.args[1]]))
+                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,-50+this.args[1]*this.args[2]*a,0,0,this.type-1,-1,0,this.zone,[3,this.args[1]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         }
                     break
                     case 4:
                         for(let a=0,la=floor((game.edge.y+100)/(this.args[1]*this.args[2]));a<la;a++){
-                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,game.edge.y+50-this.args[1]*this.args[2]*a,0,0,this.type-1,-1,-1,[4,this.args[1]]))
+                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,game.edge.y+50-this.args[1]*this.args[2]*a,0,0,this.type-1,-1,0,this.zone,[4,this.args[1]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         }
                     break
@@ -209,7 +210,7 @@ class wall extends physical{
                             entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,
                                 this.position.x+cos(this.args[3])*this.args[1]*360/this.args[4]/TWO_PI-cos(this.args[3]+a*this.args[2]*this.args[4])*this.args[1]*360/this.args[4]/TWO_PI,
                                 this.position.y-sin(this.args[3])*this.args[1]*360/this.args[4]/TWO_PI+sin(this.args[3]+a*this.args[2]*this.args[4])*this.args[1]*360/this.args[4]/TWO_PI,
-                            0,0,this.type-1,-1,-1,[5,this.args[1],this.args[3],this.args[4],a*this.args[2]*this.args[4]]))
+                            0,0,this.type-1,-1,0,this.zone,[5,this.args[1],this.args[3],this.args[4],a*this.args[2]*this.args[4]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         }
                     break
@@ -355,16 +356,16 @@ class wall extends physical{
                 for(let b=0,lb=this.boundary[a].length;b<lb;b++){
                     switch(a){
                         case 0:
-                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2+2,abs(this.boundary[a][b][0].x-this.boundary[a][b][1].x),4,3+(game.level==3?35:0),entities.walls.length,game.zone))
+                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2+2,abs(this.boundary[a][b][0].x-this.boundary[a][b][1].x),4,3+(game.level==3?35:0),entities.walls.length,0,this.zone))
                         break
                         case 1:
-                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2-2,abs(this.boundary[a][b][0].x-this.boundary[a][b][1].x),4,2+(game.level==3?35:0),entities.walls.length,game.zone))
+                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2-2,abs(this.boundary[a][b][0].x-this.boundary[a][b][1].x),4,2+(game.level==3?35:0),entities.walls.length,0,this.zone))
                         break
                         case 2:
-                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2+2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2,4,abs(this.boundary[a][b][0].y-this.boundary[a][b][1].y),5+(game.level==3?35:0),entities.walls.length,game.zone))
+                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2+2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2,4,abs(this.boundary[a][b][0].y-this.boundary[a][b][1].y),5+(game.level==3?35:0),entities.walls.length,0,this.zone))
                         break
                         case 3:
-                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2-2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2,4,abs(this.boundary[a][b][0].y-this.boundary[a][b][1].y),4+(game.level==3?35:0),entities.walls.length,game.zone))
+                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2-2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2,4,abs(this.boundary[a][b][0].y-this.boundary[a][b][1].y),4+(game.level==3?35:0),entities.walls.length,0,this.zone))
                         break
                     }
                 }
@@ -853,7 +854,7 @@ class wall extends physical{
                                 entities.particles.push(new particle(this.layer,this.position.x,this.position.y,0,360*a/la,2,[[158,193,251]]))
                             }
                         }
-                        levels[game.level][game.zone].spawnRule[this.index]=1
+                        levels[game.level][this.zone].spawnRule[this.index]=1
                     }
                     if(this.collide.box[this.grabbed[0]][this.grabbed[1]].goal.dead||this.collide.box[this.grabbed[0]][this.grabbed[1]].orb.active){
                         this.grabbed=[-1,-1]
@@ -1068,23 +1069,23 @@ class wall extends physical{
                 if(this.time%this.args[2]==0){
                     switch(this.args[0]){
                         case 1:
-                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,-50,this.position.y,0,0,this.type-1,-1,-1,[1,this.args[1]]))
+                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,-50,this.position.y,0,0,this.type-1,-1,0,this.zone,[1,this.args[1]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         break
                         case 2:
-                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,game.edge.x+50,this.position.y,0,0,this.type-1,-1,-1,[2,this.args[1]]))
+                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,game.edge.x+50,this.position.y,0,0,this.type-1,-1,0,this.zone,[2,this.args[1]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         break
                         case 3:
-                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,-50,0,0,this.type-1,-1,-1,[3,this.args[1]]))
+                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,-50,0,0,this.type-1,-1,0,this.zone,[3,this.args[1]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         break
                         case 4:
-                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,game.edge.y+50,0,0,this.type-1,-1,-1,[4,this.args[1]]))
+                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,game.edge.y+50,0,0,this.type-1,-1,0,this.zone,[4,this.args[1]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         break
                         case 5:
-                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,this.position.y,0,0,this.type-1,-1,-1,[5,this.args[1],this.args[3],this.args[4],0]))
+                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,this.position.y,0,0,this.type-1,-1,0,this.zone,[5,this.args[1],this.args[3],this.args[4],0]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         break
                     }
@@ -1106,8 +1107,10 @@ class wall extends physical{
                             if(d==1){
                                 c.stamina=c.base.stamina
                             }
-                            c.position.x+=this.velocity.x
-                            c.position.y+=this.velocity.y
+                            if(d==1||c.climb>0){
+                                c.temp.velocity.x+=this.velocity.x
+                                c.temp.velocity.y+=this.velocity.y
+                            }
                         }
                         if(inBoxBox(this,c)){
                             let d=collideBoxBox(this,c)
@@ -1374,14 +1377,14 @@ class wall extends physical{
                                         c.bonk=2
                                         switch(d){
                                             case 0:
-                                                if(c.velocity.y<0){
+                                                if(c.velocity.y+c.temp.velocity.y-this.velocity.y<0){
                                                     c.position.y=this.position.y+this.height/2+c.height/2
                                                     c.velocity.y=0
                                                     c.velocity.x*=physics.friction.x
                                                 }
                                             break
                                             case 1:
-                                                if(c.velocity.y>0){
+                                                if(c.velocity.y+c.temp.velocity.y-this.velocity.y>0){
                                                     c.position.y=this.position.y-this.height/2-c.height/2
                                                     c.velocity.y=0
                                                     c.jumpTime=c.base.jumpTime
@@ -1402,14 +1405,14 @@ class wall extends physical{
                                                 }
                                             break
                                             case 2:
-                                                if(c.velocity.x<0){
+                                                if(c.velocity.x+c.temp.velocity.x-this.velocity.x<0){
                                                     c.position.x=this.position.x+this.width/2+c.width/2
                                                     c.velocity.x=0
                                                     c.velocity.y*=physics.friction.y
                                                 }
                                             break
                                             case 3:
-                                                if(c.velocity.x>0){
+                                                if(c.velocity.x+c.temp.velocity.x-this.velocity.x>0){
                                                     c.position.x=this.position.x-this.width/2-c.width/2
                                                     c.velocity.x=0
                                                     c.velocity.y*=physics.friction.y
