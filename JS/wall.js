@@ -104,7 +104,7 @@ class wall extends physical{
                 this.base.height=4
                 this.height=4
             break
-            case 16:
+            case 16: case 45:
                 this.width=this.base.width-10
                 this.height=this.base.height-10
             break
@@ -167,15 +167,16 @@ class wall extends physical{
                 this.timer=0
                 this.subVelocity={x:0,y:0}
             break
-            case 32:
+            case 32: case 49:
                 this.base.width=30
                 this.base.height=30
                 this.width=30
                 this.height=30
                 this.active=true
                 this.anim=0
+                this.offset=0
             break
-            case 33:
+            case 33: case 50:
                 this.base.width=0
                 this.base.height=0
                 this.width=0
@@ -216,9 +217,32 @@ class wall extends physical{
                     break
                 }
             break
+            case 46:
+                this.timer=0
+                this.anim=0
+            break
+            case 47:
+                this.base.width=20
+                this.base.height=20
+                this.width=20
+                this.height=20
+                this.timer=0
+                this.anim=0
+            break
+            case 48:
+                this.base.width=20
+                this.base.height=20
+                this.width=20
+                this.height=20
+                this.timer=0
+            break
+            case 51:
+                this.anim=0
+                this.move=0
+            break
         }
-        this.standard=this.type==0||this.type==1||this.type==6||this.type==15||this.type==18||this.type==19||this.type==21||this.type==22||this.type==26||this.type==29||this.type==30||this.type==31||this.type==34||this.type==35
-        this.safe=this.type==1||this.type==6||this.type==21||this.type==22||this.type==34||this.type==35
+        this.standard=this.type==0||this.type==1||this.type==6||this.type==15||this.type==18||this.type==19||this.type==21||this.type==22||this.type==26||this.type==29||this.type==30||this.type==31||this.type==34||this.type==35||this.type==42||this.type==43||this.type==46||this.type==51
+        this.safe=this.type==1||this.type==6||this.type==21||this.type==22||this.type==34||this.type==35||this.type==42||this.type==43
     }
     onDash(){
         switch(this.type){
@@ -227,6 +251,32 @@ class wall extends physical{
             break
             case 31:
                 this.switch=1-this.switch
+            break
+        }
+    }
+    onSwitch(){
+        switch(this.type){
+            case 32:
+                this.type=49
+                this.offset=180
+            break
+            case 33:
+                this.type=50
+            break
+            case 49:
+                this.type=32
+                this.offset=180
+            break
+            case 50:
+                this.type=33
+            break
+            case 46:
+                if(this.timer>0){
+                    this.timer=61
+                }
+            break
+            case 47:
+                this.timer=60
             break
         }
     }
@@ -701,7 +751,8 @@ class wall extends physical{
                     this.layer.rect(-this.width/2+10,0,4,12,1)
                 }
             break
-            case 32:
+            case 32: case 49:
+                this.layer.rotate(-this.offset+(this.type==49?180:0))
                 this.layer.scale(1+this.anim*0.5)
                 this.layer.noStroke()
                 this.layer.fill(45,105,210,this.fade)
@@ -780,6 +831,114 @@ class wall extends physical{
                 this.layer.ellipse(0,4,8,4)
                 this.layer.arc(-4,-3,6,6,45,225)
                 this.layer.arc(4,-3,6,6,-45,135)
+            break
+            case 42:
+                this.layer.fill(140,200,180,this.fade)
+                this.layer.rect(0,0,this.width+1,this.height+1)
+            break
+            case 43:
+                this.layer.fill(140,200,180,this.fade)
+                this.layer.rect(0,0,this.width+1,this.height+1)
+                this.layer.stroke(250,this.fade)
+                this.layer.strokeWeight(5)
+                this.layer.line(-this.width/2+1,-this.height/2+1,this.width/2-1,-this.height/2+1)
+            break
+            case 44:
+                this.layer.fill(100,160,140,this.fade)
+                this.layer.rect(0,0,this.width-8,this.height+1)
+            break
+            case 45:
+                this.layer.fill(80,200,200,this.fade)
+                this.layer.rect(0,0,this.width-10,this.height-10)
+                for(let a=0,la=this.base.width/20;a<la;a++){
+                    for(let b=0,lb=this.base.height/20;b<lb;b++){
+                        this.layer.image(graphics.walls[(a+b)%4+4],-this.base.width/2+10+a*20,-this.base.height/2+10+b*20,40,40)
+                    }
+                }
+            break
+            case 46:
+                this.layer.noStroke()
+				this.layer.fill(60,135,215,this.fade)
+				for(let a=0,la=this.width/10-1;a<la;a++){
+					this.layer.triangle(5+a*10-this.width/2,this.height/2-1,15+a*10-this.width/2,this.height/2-1,10+a*10-this.width/2,this.height/2+3)
+				}
+				this.layer.fill(70,145,225,this.fade)
+				for(let a=0,la=this.width/10;a<la;a++){
+					this.layer.triangle(a*10-this.width/2,this.height/2-1,10+a*10-this.width/2,this.height/2-1,5+a*10-this.width/2,this.height/2+4)
+				}
+				this.layer.fill(70,145,245,this.fade)
+				this.layer.rect(0,0,this.width+4,this.height+4,4)
+				this.layer.fill(60,135,235,this.fade)
+				this.layer.rect(0,0,this.width+2,this.height+2,4)
+				this.layer.fill(50,125,225,this.fade)
+				this.layer.rect(0,0,this.width,this.height,3)
+				this.layer.fill(55,130,230,this.fade)
+				this.layer.rect(0,0,this.width-20,this.height-20,3)
+				this.layer.fill(30,105,205,this.fade)
+				this.layer.stroke(0,55,155,this.fade)
+				this.layer.strokeWeight(1)
+				for(let a=0,la=this.width/10;a<la;a++){
+					for(let b=0,lb=this.height/10;b<lb;b++){
+						this.layer.quad(5+a*10-this.width/2,b*10-this.height/2,a*10-this.width/2,5+b*10-this.height/2,5+a*10-this.width/2,10+b*10-this.height/2,10+a*10-this.width/2,5+b*10-this.height/2)
+					}
+				}
+                this.layer.noStroke()
+                this.layer.fill(200,255,255,this.fade)
+				regStar(this.layer,0,0,6,8,8,2,2,30)
+				this.layer.fill(80,200,255,this.fade)
+				regStar(this.layer,0,0,6,6,6,1.5,1.5,30)
+				this.layer.fill(40,160,255,this.fade)
+				regStar(this.layer,0,0,6,4,4,1,1,30)
+            break
+            case 47:
+                for(let a=0,la=24;a<la;a++){
+                    this.layer.fill(150+a%2*50,250,250,this.fade)
+                    this.layer.triangle(-1,-11,1,-11,0,-16-a%2*2)
+                    this.layer.rotate(15)
+                }
+                this.layer.fill(160,200,240,this.fade)
+                this.layer.ellipse(0,0,24)
+                this.layer.fill(120,160,200,this.fade)
+                for(let a=0,la=12;a<la;a++){
+                    this.layer.arc(0,0,20,20,a*30+6,a*30+24)
+                }
+                this.layer.fill(160,200,240,this.fade)
+                this.layer.ellipse(0,0,16)
+                this.layer.rotate(-45+this.anim*90)
+                this.layer.fill(40,80,120,this.fade)
+                this.layer.rect(0,0,4,32)
+                this.layer.fill(40,60,80,this.fade)
+                this.layer.rect(0,0,4,28)
+                this.layer.fill(80,120,160,this.fade)
+                this.layer.ellipse(0,0,12)
+                this.layer.fill(80,100,120,this.fade)
+                this.layer.rect(0,0,7)
+                this.layer.fill(120,180,240,this.fade)
+                this.layer.rect(0,0,4)
+            break
+            case 48:
+                this.layer.fill(255,255,180,this.fade)
+                this.layer.quad(0,-12,-12,0,0,12,12,0)
+                this.layer.fill(255,255,150,this.fade)
+                this.layer.quad(0,-10,-10,0,0,10,10,0)
+            break
+            case 51:
+                this.layer.fill(100,140,180,this.fade)
+                this.layer.stroke(80,120,160,this.fade)
+                this.layer.strokeWeight(4)
+                this.layer.rect(0,0,this.width-4,this.height-4,3)
+                this.layer.ellipse(0,0,26)
+                this.layer.line(-this.width/2+2,-this.height/2+14,-this.width/2+14,-this.height/2+2)
+                this.layer.line(this.width/2-2,-this.height/2+14,this.width/2-14,-this.height/2+2)
+                this.layer.line(-this.width/2+2,this.height/2-14,-this.width/2+14,this.height/2-2)
+                this.layer.line(this.width/2-2,this.height/2-14,this.width/2-14,this.height/2-2)
+                this.layer.noStroke()
+                this.layer.fill(200,255,255,this.fade)
+				regStar(this.layer,0,0,6,8,8,2,2,30)
+				this.layer.fill(80,200,255,this.fade)
+				regStar(this.layer,0,0,6,6,6,1.5,1.5,30)
+				this.layer.fill(40,160,255,this.fade)
+				regStar(this.layer,0,0,6,4,4,1,1,30)
             break
 
         }
@@ -874,7 +1033,7 @@ class wall extends physical{
                 this.trigger.fade=this.timer<=0||this.timer>90
                 this.standard=this.timer<=0||this.timer>90
             break
-            case 9: case 24:
+            case 9: case 24: case 48:
                 if(this.timer>0){
                     this.timer--
                 }
@@ -1029,9 +1188,12 @@ class wall extends physical{
                     }
                 }
             break
-            case 32:
+            case 32: case 49:
                 this.anim=smoothAnim(this.anim,!this.active,0,1,5)
                 this.trigger.fade=this.active
+                if(this.offset>0){
+                    this.offset-=12
+                }
                 switch(this.args[0]){
                     case 1:
                         this.shift(this.args[1],0)
@@ -1065,7 +1227,7 @@ class wall extends physical{
                     break
                 }
             break
-            case 33:
+            case 33: case 50:
                 if(this.time%this.args[2]==0){
                     switch(this.args[0]){
                         case 1:
@@ -1091,9 +1253,49 @@ class wall extends physical{
                     }
                 }
             break
+            case 46:
+                if(this.timer>0&&this.timer<30){
+                    this.timer++
+                    if(this.timer>=30){
+                        this.trigger.fade=false
+                        this.timer=30
+                    }
+                }else if(this.timer>30){
+                    this.trigger.fade=true
+                    if(this.fade>=1){
+                        this.timer=0
+                    }else if(this.fade>=0.8){
+                        this.timer=60
+                    }
+                }else if(this.timer==30){
+                    this.trigger.fade=false
+                }else{
+                    this.trigger.fade=true
+                }
+                this.anim=2-this.fade
+                this.standard=this.fade>0.8
+            break
+            case 47:
+                if(this.timer>0){
+                    this.timer--
+                }
+                this.anim=smoothAnim(this.anim,game.iceSwitch,0,1,5)
+            break
+            case 51:
+                this.anim=smoothAnim(this.anim,game.iceSwitch,0,1,5)
+                if(game.iceSwitch&&this.args.length>0&&this.move<this.args[0]){
+                    this.move+=4
+                    let a=numericalDirection(this.args[1])
+                    this.shift(a.x*4,a.y*4)
+                }else if(!game.iceSwitch&&this.args.length>0&&this.move>0){
+                    this.move-=4
+                    let a=numericalDirection(this.args[1])
+                    this.shift(a.x*-4,a.y*-4)
+                }
+            break
         }
         if(this.fade>0.2&&!this.deprecate&&
-            this.type!=17&&this.type!=27&&this.type!=33&&this.type!=36
+            this.type!=17&&this.type!=27&&this.type!=33&&this.type!=36&&this.type!=44
         ){
             for(let a=0,la=this.collide.box.length;a<la;a++){
                 for(let b=0,lb=this.collide.box[a].length;b<lb;b++){
@@ -1194,6 +1396,13 @@ class wall extends physical{
                                         }
                                     }
                                 break
+                                case 46:
+                                    if(this.timer==60){
+                                        c.goal.dead=true
+                                    }else if(this.timer==0){
+                                        this.timer=1
+                                    }
+                                break
                             }
                             switch(this.type){
                                 case 2: case 37:
@@ -1288,7 +1497,7 @@ class wall extends physical{
                                         c.dashCut()
                                     }
                                 break
-                                case 16:
+                                case 16: case 45:
                                     c.goal.dead=true
                                 break
                                 case 20: case 41:
@@ -1360,7 +1569,7 @@ class wall extends physical{
                                 break
                                 case 32:
                                     if(this.active){
-                                        if(c.position.y>this.position.y-15&&c.velocity.y<=0){
+                                        if(c.position.y>this.position.y-15&&c.velocity.y<=2){
                                             c.goal.dead=true
                                         }else{
                                             this.active=false
@@ -1372,7 +1581,43 @@ class wall extends physical{
                                         }
                                     }
                                 break
+                                case 47:
+                                    if(this.timer==0){
+                                        for(let a=0,la=entities.walls.length;a<la;a++){
+                                            for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                                                entities.walls[a][b].onSwitch()
+                                            }
+                                        }
+                                        game.iceSwitch=1-game.iceSwitch
+                                    }
+                                break
+                                case 48:
+                                    if(this.timer==0&&c.dash.golden.timer<=0){
+                                        c.dash.golden.timer=120
+                                        c.dash.golden.direction=c.velocity.x>0?{x:1,y:0}:c.velocity.x<0?{x:-1,y:0}:{x:0,y:-1}
+                                        c.stamina=c.base.stamina
+                                        c.velocity.x=0
+                                        c.velocity.y=0
+                                        this.timer=240
+                                    }
+                                break
+                                case 49:
+                                    if(this.active){
+                                        if(c.position.y<this.position.y-15&&c.velocity.y>=-2){
+                                            c.goal.dead=true
+                                        }else{
+                                            this.active=false
+                                            c.velocity.y=6
+                                            c.dash.available=true
+                                            c.stamina=c.base.stamina
+                                            c.dashCut()
+                                        }
+                                    }
+                                break
                                 default:
+                                    if(c.dash.golden.timer>0){
+                                        c.dash.golden.timer=0
+                                    }
                                     if(d>=0&&!this.redundant[d]){
                                         c.bonk=2
                                         switch(d){

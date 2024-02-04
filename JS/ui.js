@@ -11,7 +11,7 @@ class ui{
             this.tabAnim.push(0)
         }
         this.editing=0
-        this.edit={edge:{x:0,y:0},wall:{width:0,height:0,type:-1},add:{connection:{id:0,side:0,region:[0,0]},wall:{width:0,height:0,type:0}}}
+        this.edit={edge:{x:0,y:0},wall:{width:0,height:0,type:-1,folder:-1},add:{connection:{id:0,side:0,region:[0,0]},wall:{width:0,height:0,type:0,folder:-1}}}
         this.drag={start:{x:0,y:0},end:{x:0,y:0}}
         this.select=0
         this.selectKey=[]
@@ -74,10 +74,16 @@ class ui{
                         this.layer.fill(150)
                         this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,20,80,30,5)
                     break
-                    case 7: case 9:
+                    case 7:
                         this.layer.fill(150)
-                        for(let b=0,lb=types.wall.length;b<lb;b++){
-                            this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,8+b*12,80,8,5)
+                        if(this.edit.wall.folder==-1){
+                            for(let b=0,lb=types.wallList.length;b<lb;b++){
+                                this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,10+b*15,80,10,5)
+                            }
+                        }else{
+                            for(let b=0,lb=types.wallList[this.edit.wall.folder].elements.length;b<lb;b++){
+                                this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,10+b*15,80,10,5)
+                            }
                         }
                     break
                     case 8:
@@ -96,6 +102,18 @@ class ui{
                         let de={x:this.drag.end.x-view.scroll.x+this.layer.width/2,y:this.drag.end.y-view.scroll.y+this.layer.height/2}
                         this.layer.rect(ds.x/2+de.x/2,ds.y/2+de.y/2,abs(ds.x-de.x),abs(ds.y-de.y))
                         this.layer.noStroke()
+                    break
+                    case 9:
+                        this.layer.fill(150)
+                        if(this.edit.add.wall.folder==-1){
+                            for(let b=0,lb=types.wallList.length;b<lb;b++){
+                                this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,10+b*15,80,10,5)
+                            }
+                        }else{
+                            for(let b=0,lb=types.wallList[this.edit.add.wall.folder].elements.length;b<lb;b++){
+                                this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,10+b*15,80,10,5)
+                            }
+                        }
                     break
                 }
                 this.layer.fill(0)
@@ -126,7 +144,7 @@ class ui{
                         }
                     break
                     case 2:
-                        this.layer.text('New',this.layer.width+50-this.tabAnim[a]*100,20)
+                        this.layer.text('New',this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,20)
                         this.layer.textSize(10)
                         for(let b=0,lb=game.connections.length;b<lb;b++){
                             this.layer.text(game.connections[b].id+' '+game.connections[b].side+'\n'+game.connections[b].region[0]+'-'+game.connections[b].region[1],this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,55+b*35)
@@ -165,12 +183,19 @@ class ui{
                         }
                     break
                     case 6: case 10: case 11:
-                        this.layer.text('Cancel',this.layer.width+50-this.tabAnim[a]*100,20)
+                        this.layer.text('Cancel',this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,20)
                     break
-                    case 7: case 9:
-                        this.layer.textSize(8)
-                        for(let b=0,lb=types.wall.length;b<lb;b++){
-                            this.layer.text(types.wall[b].name,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,8+b*12)
+                    case 7:
+                        if(this.edit.wall.folder==-1){
+                            this.layer.textSize(8)
+                            for(let b=0,lb=types.wallList.length;b<lb;b++){
+                                this.layer.text(types.wallList[b].name,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,10+b*15)
+                            }
+                        }else{
+                            this.layer.textSize(8)
+                            for(let b=0,lb=types.wallList[this.edit.wall.folder].length;b<lb;b++){
+                                this.layer.text(types.wall[types.wallList[this.edit.wall.folder].elements[b]].name,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,10+b*15)
+                            }
                         }
                     break
                     case 8:
@@ -183,6 +208,19 @@ class ui{
                         this.layer.text(this.edit.add.wall.width,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,40)
                         this.layer.text(this.edit.add.wall.height,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,95)
                         this.layer.text(types.wall[this.edit.add.wall.type].name,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,150)
+                    break
+                    case 9:
+                        if(this.edit.add.wall.folder==-1){
+                            this.layer.textSize(8)
+                            for(let b=0,lb=types.wallList.length;b<lb;b++){
+                                this.layer.text(types.wallList[b].name,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,10+b*15)
+                            }
+                        }else{
+                            this.layer.textSize(8)
+                            for(let b=0,lb=types.wallList[this.edit.add.wall.folder].elements.length;b<lb;b++){
+                                this.layer.text(types.wall[types.wallList[this.edit.add.wall.folder].elements[b]].name,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,10+b*15)
+                            }
+                        }
                     break
                 }
             }
@@ -282,6 +320,7 @@ class ui{
                         this.editing=2
                     }else if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:150},width:80,height:30})){
                         this.tab=7
+                        this.edit.wall.folder=-1
                     }else if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:185},width:80,height:30})){
                         for(let a=0,la=entities.walls.length;a<la;a++){
                             for(let b=0,lb=entities.walls[a].length;b<lb;b++){
@@ -414,18 +453,26 @@ class ui{
                     }
                 break
                 case 7:
-                    for(let a=0,la=types.wall.length;a<la;a++){
-                        if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:8+a*12},width:80,height:8})){
-                            this.edit.wall.type=a
-                            for(let b=0,lb=entities.walls.length;b<lb;b++){
-                                for(let c=0,lc=entities.walls[b].length;c<lc;c++){
-                                    if(entities.walls[b][c].select){
-                                        entities.walls[b][c].type=a
-                                        entities.walls[b][c].set()
+                    if(this.edit.wall.folder==-1){
+                        for(let a=0,la=types.wallList.length;a<la;a++){
+                            if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:10+a*15},width:80,height:10})){
+                                this.edit.wall.folder=a
+                            }
+                        }
+                    }else{
+                        for(let a=0,la=types.wallList[this.edit.wall.folder].elements.length;a<la;a++){
+                            if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:10+a*15},width:80,height:10})){
+                                this.edit.wall.type=types.wallList[this.edit.wall.folder].elements[a]
+                                for(let b=0,lb=entities.walls.length;b<lb;b++){
+                                    for(let c=0,lc=entities.walls[b].length;c<lc;c++){
+                                        if(entities.walls[b][c].select){
+                                            entities.walls[b][c].type=a
+                                            entities.walls[b][c].set()
+                                        }
                                     }
                                 }
+                                this.tab=1
                             }
-                            this.tab=1
                         }
                     }
                 break
@@ -436,6 +483,7 @@ class ui{
                         this.editing=2
                     }else if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:150},width:80,height:30})){
                         this.tab=9
+                        this.edit.add.wall.folder=-1
                     }else if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:185},width:80,height:30})){
                         this.tab=10
                     }else if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:220},width:80,height:30})){
@@ -449,10 +497,18 @@ class ui{
                     }
                 break
                 case 9:
-                    for(let a=0,la=types.wall.length;a<la;a++){
-                        if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:8+a*12},width:80,height:8})){
-                            this.edit.add.wall.type=a
-                            this.tab=8
+                    if(this.edit.add.wall.folder==-1){
+                        for(let a=0,la=types.wallList.length;a<la;a++){
+                            if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:10+a*15},width:80,height:10})){
+                                this.edit.add.wall.folder=a
+                            }
+                        }
+                    }else{
+                        for(let a=0,la=types.wallList[this.edit.add.wall.folder].elements.length;a<la;a++){
+                            if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:10+a*15},width:80,height:10})){
+                                this.edit.add.wall.type=types.wallList[this.edit.add.wall.folder].elements[a]
+                                this.tab=8
+                            }
                         }
                     }
                 break

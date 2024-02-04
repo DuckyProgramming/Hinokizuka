@@ -7,6 +7,7 @@ class player extends partisan{
         this.fade=1
         this.size=0.6*game.player.size
         this.direction={main:54}
+        this.time=0
         this.jumpTime=5
         this.weakTime=0
         this.safeTime=0
@@ -24,8 +25,8 @@ class player extends partisan{
         this.bonk=0
         this.safe=0
         this.offset={position:{x:0,y:0}}
-        this.anim={dash:5,stamina:0,staminaActive:0,climb:0,crouch:0,move:0,jump:0,orb:0}
-        this.dash={active:0,timer:0,available:true,direction:0,second:{available:false}}
+        this.anim={dash:5,golden:0,goldenStop:0,stamina:0,staminaActive:0,climb:0,crouch:0,move:0,jump:0,orb:0}
+        this.dash={active:0,timer:0,available:true,direction:0,second:{available:false},golden:{timer:0,direction:{x:0,y:0}}}
         this.physics={moveSpeed:0.6,moveCap:4,jumpPower:-8.75,wallJumpPower:{x:5,y:-6},dashPower:{x:12,y:10},orbSpeed:0.1,weaken:{dash:18,wallJump:12}}
         this.orb={active:false,speed:0,safe:false}
         this.bubble={active:false,shift:{x:0,y:0},shiftTime:0}
@@ -1958,8 +1959,8 @@ class player extends partisan{
                 
             }
         }
+        this.layer.noStroke()
         if(this.anim.staminaActive>0){
-            this.layer.noStroke()
             this.layer.fill(200,255,255,this.fade*this.anim.staminaActive)
             if(this.anim.stamina>10){
                 this.layer.beginShape()
@@ -1974,7 +1975,6 @@ class player extends partisan{
             }
         }
         if(this.anim.orb>0){
-            this.layer.noStroke()
             this.layer.fill(this.face.eye.color.back[0],this.face.eye.color.back[1],this.face.eye.color.back[2],this.anim.orb*0.1)
             for(let a=0,la=10;a<la;a++){
                 this.layer.ellipse(0,0,80-a*3)
@@ -1984,12 +1984,19 @@ class player extends partisan{
                 this.layer.ellipse(0,0,50-a*3)
             }
         }
+        if(this.anim.golden>0){
+            for(let a=0,la=15;a<la;a++){
+                this.layer.fill(255,255-100*this.anim.goldenStop,100-100*this.anim.goldenStop+a/la*150,this.anim.golden*0.2)
+                regStar(this.layer,0,0,6,50*(1-a/la),50*(1-a/la),20*(1-a/la),20*(1-a/la),a*6+this.time)
+            }
+        }
         this.layer.pop()
         if(dev.hitbox&&!this.graphical){
             super.display()
         }
     }
     update(){
+        this.time++
         if(
             this.direction.main==this.goal.direction.main-900||
             this.direction.main==this.goal.direction.main-540||
@@ -2043,8 +2050,35 @@ class player extends partisan{
                     this.velocity.y=cos(direction)*this.orb.speed*(bound?5:1)*2
                 }
             }
+        }else if(this.dash.golden.timer>0){
+            this.dash.golden.timer--
+            this.dash.available=true
+            let goal={x:0,y:0}
+            if(inputs.keys[this.id][0]){
+                goal.y--
+            }
+            if(inputs.keys[this.id][1]){
+                goal.y++
+            }
+            if(inputs.keys[this.id][2]){
+                goal.x--
+            }
+            if(inputs.keys[this.id][3]){
+                goal.x++
+            }
+            if(goal.x!=0||goal.y!=0){
+                this.dash.golden.direction.x=goal.x
+                this.dash.golden.direction.y=goal.y
+            }
+            let norm=sqrt(this.dash.golden.direction.x**2+this.dash.golden.direction.y**2)
+            let unitary={x:this.dash.golden.direction.x/norm*6,y:this.dash.golden.direction.y/norm*6}
+            this.velocity.x=this.velocity.x*0.9+unitary.x*0.1
+            this.velocity.y=this.velocity.y*0.9+unitary.y*0.1
+            if(game.time%2==0&&!this.goal.dead){
+                entities.particles.push(new particle(this.layer,this.position.x,this.position.y,1,0,1.5,[[200,255,255]]))
+            }
         }else{
-            if(!this.bubble.active){
+            if(!this.bubble.active&&this.dash.golden.timer<=0){
                 if(!inputs.keys[this.id][2]&&!inputs.keys[this.id][3]){
                     this.velocity.x*=physics.resistance.x
                 }
@@ -2053,7 +2087,7 @@ class player extends partisan{
             if(dev.nograv){
                 this.velocity.y*=0.96
                 this.jumpTime=5
-            }else if(!this.climb&&this.dash.active==0&&!this.bubble.active){
+            }else if(this.climb<=0&&this.dash.active==0&&!this.bubble.active&&this.dash.golden.timer<=0){
                 this.velocity.y+=physics.gravity
             }
             if(this.crush[0]&&this.crush[1]||this.crush[2]&&this.crush[3]){
@@ -2111,7 +2145,7 @@ class player extends partisan{
         if(!this.orb.active){
             let resolveOrder=[7,6,1,2,3,4,5]
             for(let a=0,la=resolveOrder.length;a<la;a++){
-                if(inputs.keys[this.id][resolveOrder[a]]&&!(resolveOrder[a]!=5&&this.bubble.active)){
+                if(inputs.keys[this.id][resolveOrder[a]]&&!(resolveOrder[a]!=5&&(this.bubble.active||this.dash.golden.timer>0))){
                     switch(resolveOrder[a]){
                         case 1:
                             if(this.climb==0){
@@ -2209,7 +2243,10 @@ class player extends partisan{
                                     b.x++
                                 }
                                 if(this.bubble.active){
-                                    this.bubble.active=true
+                                    this.bubble.active=false
+                                }
+                                if(this.dash.golden.timer>0){
+                                    this.dash.golden.timer=0
                                 }
                                 let trigger=false
                                 if(b.x==0&&b.y==0&&options.defaultDash){
@@ -2233,6 +2270,7 @@ class player extends partisan{
                                             this.dash.available=false
                                         }
                                     }
+                                    this.dash.golden.time=0
                                     this.weakTime=this.physics.weaken.dash
                                     this.dashPhase=true
                                     this.dashPush=true
@@ -2421,8 +2459,11 @@ class player extends partisan{
         this.anim.staminaActive=smoothAnim(this.anim.staminaActive,this.stamina<this.base.stamina||this.climb>0,0,1,5)
         this.anim.crouch=smoothAnim(this.anim.crouch,this.crouch,0,1,5)
         this.anim.climb=smoothAnim(this.anim.climb,this.climb>0,0,1,5)
-        this.anim.orb=smoothAnim(this.anim.orb,this.orb.active,0,1,30)
-        this.height=(this.base.height-this.anim.crouch*6)*game.player.size
+        this.anim.orb=smoothAnim(this.anim.orb,this.orb.active,0,1,15)
+        this.anim.golden=smoothAnim(this.anim.golden,this.dash.golden.timer>0,0,1,5)
+        this.anim.goldenStop=smoothAnim(this.anim.goldenStop,this.dash.golden.timer>0&&this.dash.golden.timer<30,0,1,5)
+        this.width=map(this.anim.golden,0,1,this.base.width,24)
+        this.height=map(this.anim.golden,0,1,(this.base.height-this.anim.crouch*6)*game.player.size,24)
         this.offset.position.y=this.anim.crouch*game.player.size
         if(this.anim.stamina>this.stamina/this.base.stamina*20+0.2){
             this.anim.stamina-=0.2
@@ -2478,7 +2519,7 @@ class player extends partisan{
                 }
             }
             this.safe++
-            this.fade=smoothAnim(this.fade,!this.orb.active&&!this.bubble.active,0,1,5)
+            this.fade=smoothAnim(this.fade,this.dash.golden.timer<=0&&!this.orb.active&&!this.bubble.active,0,1,5)
         }
     }
 }

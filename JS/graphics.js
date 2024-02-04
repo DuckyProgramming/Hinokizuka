@@ -4,7 +4,12 @@ function setupGraphics(){
     setupLayer(graphics.main)
     graphics.players.push(new player(this.layer,0,0,0,0,true))
     graphics.players.push(new player(this.layer,0,0,1,0,true))
-    for(let a=0,la=6;a<la;a++){
+    for(let a=0,la=12;a<la;a++){
+        graphics.walls.push(createGraphics(40,40))
+        setupLayer(graphics.walls[a])
+        displayWallGraphic(graphics.walls[a],a)
+    }
+    for(let a=0,la=7;a<la;a++){
         graphics.backgrounds.push(createGraphics(1800,900))
         setupLayer(graphics.backgrounds[a])
         displayBack(graphics.backgrounds[a],a)
@@ -13,11 +18,6 @@ function setupGraphics(){
         graphics.scenes.push(createGraphics(1800,600))
         setupLayer(graphics.scenes[a])
         displayScene(graphics.scenes[a],a)
-    }
-    for(let a=0,la=4;a<la;a++){
-        graphics.walls.push(createGraphics(40,40))
-        setupLayer(graphics.walls[a])
-        displayWallGraphic(graphics.walls[a],a)
     }
 }
 function poseCharacter(character,type){
@@ -203,6 +203,41 @@ function displayBack(layer,type){
                 }
             }
         break
+        case 6:
+            layer.background(0)
+            for(let a=0,la=layer.height;a<la;a++){
+                layer.fill(mergeColor([30,100,80],[60,200,160],a/la))
+                layer.rect(layer.width/2,a+0.5,layer.width,2)
+            }
+            for(let a=0,la=4;a<la;a++){
+                layer.fill(mergeColor([120,200,200],[200,250,250],a/la*0.5+a%2*0.5))
+                layer.beginShape()
+                layer.vertex(0,layer.height)
+                let c=random(0.6,0.7)
+                let d=0
+                let e=[]
+                for(let b=0,lb=21-a*2;b<lb;b++){
+                    d=((b==0||b==lb-1?c:random(0.6,0.7))+a/la*0.2)
+                    layer.vertex(layer.width*b/(lb-1),layer.height*d)
+                    e.push(d)
+                }
+                layer.vertex(layer.width,layer.height)
+                layer.endShape()
+                for(let b=0,lb=e.length-1;b<lb;b++){
+                    if(floor(random(0,2))==0){
+                        let c=random(0,1)
+                        let d=random(32,50)
+                        layer.image(graphics.walls[floor(random(8,12))],layer.width*constrain(map(c,0,1,b/lb,(b+1)/lb),0.01,0.99),layer.height*map(c,0,1,e[b],e[b+1]),d,d)
+                    }
+                }
+            }
+            for(let a=0,la=3;a<la;a++){
+                layer.fill(100,255-a*100,100+a*155,0.05)
+                for(let b=-3,lb=200;b<lb+3;b++){
+                    layer.ellipse(b/lb*layer.width+random(-5,5),sin(b/lb*720+a*100)*60+layer.height*0.3+random(-5,5),random(30,60))
+                }
+            }
+        break
     }
 }
 function displayScene(layer,type){
@@ -299,6 +334,30 @@ function displayWallGraphic(layer,type){
                 layer.fill(100,140,200)
                 layer.rotate(180/la)
                 layer.triangle(0,0,8,8,5,20)
+            }
+        break
+        case 4: case 5: case 6: case 7:
+            layer.noStroke()
+            layer.rotate(45*type)
+            for(a=0,la=6;a<la;a++){
+                layer.fill(120,240,200)
+                layer.rotate(180/la)
+                layer.triangle(0,0,8,8,5,20)
+                layer.fill(80,200,240)
+                layer.rotate(180/la)
+                layer.triangle(0,0,8,8,5,20)
+            }
+        break
+        case 8: case 9: case 10: case 11:
+            layer.noStroke()
+            layer.rotate(45*type)
+            for(a=0,la=6;a<la;a++){
+                layer.fill(160,240,240)
+                layer.rotate(180/la)
+                layer.triangle(0,0,4,4,5,20)
+                layer.fill(120,200,240)
+                layer.rotate(180/la)
+                layer.triangle(0,0,4,4,5,20)
             }
         break
     }

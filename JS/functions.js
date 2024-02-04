@@ -545,6 +545,7 @@ function generateLevel(level,layer,context){
     game.edge.y=level.edge.y
     game.wind.x=level.wind.x
     game.wind.y=level.wind.y
+    game.iceSwitch=1
     for(let a=0,la=entities.players.length;a<la;a++){
         switch(context){
             case 0:
@@ -803,6 +804,12 @@ function operateOuter(layer){
             layer.image(graphics.backgrounds[5],2700-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
             layer.image(graphics.backgrounds[5],900-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
             layer.image(graphics.backgrounds[5],2700-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
+        break
+        case 4:
+            layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
+            layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
+            layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
+            layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
         break
     }
 }

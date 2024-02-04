@@ -12,24 +12,8 @@ function mainloop(layer){
             operateEnding(layer)
         break
         case 'main':
-            switch(game.level){
-                case 0:
-                    layer.image(graphics.backgrounds[0],900-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
-                    layer.image(graphics.backgrounds[0],2700-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
-                break
-                case 1:
-                    layer.image(graphics.backgrounds[1],900-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
-                    layer.image(graphics.backgrounds[1],2700-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
-                break
-                case 2:
-                    layer.image(graphics.backgrounds[2],900-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
-                    layer.image(graphics.backgrounds[2],2700-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
-                break
-                case 3:
-                    layer.image(graphics.backgrounds[4],900-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
-                    layer.image(graphics.backgrounds[4],2700-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
-                break
-            }
+            layer.image(graphics.backgrounds[[0,1,2,4,6][game.level]],900-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
+            layer.image(graphics.backgrounds[[0,1,2,4,6][game.level]],2700-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
             layer.push()
             layer.translate(-view.scroll.x,-view.scroll.y)
             layer.scale(view.zoom)
