@@ -24,22 +24,22 @@ class wall extends physical{
     }
     set(){
         switch(this.type){
-            case 2: case 37:
+            case 2: case 37: case 52:
                 this.base.height=4
                 this.height=4
                 this.width=this.base.width-4
             break
-            case 3: case 38:
+            case 3: case 38: case 53:
                 this.base.height=4
                 this.height=4
                 this.width=this.base.width-4
             break
-            case 4: case 39:
+            case 4: case 39: case 54:
                 this.base.width=4
                 this.width=4
                 this.height=this.base.height-4
             break
-            case 5: case 40:
+            case 5: case 40: case 55:
                 this.base.width=4
                 this.width=4
                 this.height=this.base.height-4
@@ -406,16 +406,16 @@ class wall extends physical{
                 for(let b=0,lb=this.boundary[a].length;b<lb;b++){
                     switch(a){
                         case 0:
-                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2+2,abs(this.boundary[a][b][0].x-this.boundary[a][b][1].x),4,3+(game.level==3?35:0),entities.walls.length,0,this.zone))
+                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2+2,abs(this.boundary[a][b][0].x-this.boundary[a][b][1].x),4,3+(game.level==3?35:0)+(game.level==4?50:0),entities.walls.length,0,this.zone))
                         break
                         case 1:
-                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2-2,abs(this.boundary[a][b][0].x-this.boundary[a][b][1].x),4,2+(game.level==3?35:0),entities.walls.length,0,this.zone))
+                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2-2,abs(this.boundary[a][b][0].x-this.boundary[a][b][1].x),4,2+(game.level==3?35:0)+(game.level==4?50:0),entities.walls.length,0,this.zone))
                         break
                         case 2:
-                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2+2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2,4,abs(this.boundary[a][b][0].y-this.boundary[a][b][1].y),5+(game.level==3?35:0),entities.walls.length,0,this.zone))
+                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2+2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2,4,abs(this.boundary[a][b][0].y-this.boundary[a][b][1].y),5+(game.level==3?35:0)+(game.level==4?50:0),entities.walls.length,0,this.zone))
                         break
                         case 3:
-                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2-2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2,4,abs(this.boundary[a][b][0].y-this.boundary[a][b][1].y),4+(game.level==3?35:0),entities.walls.length,0,this.zone))
+                            entities.walls[1].push(new wall(this.layer,this.boundary[a][b][0].x/2+this.boundary[a][b][1].x/2-2,this.boundary[a][b][0].y/2+this.boundary[a][b][1].y/2,4,abs(this.boundary[a][b][0].y-this.boundary[a][b][1].y),4+(game.level==3?35:0)+(game.level==4?50:0),entities.walls.length,0,this.zone))
                         break
                     }
                 }
@@ -940,6 +940,30 @@ class wall extends physical{
 				this.layer.fill(40,160,255,this.fade)
 				regStar(this.layer,0,0,6,4,4,1,1,30)
             break
+            case 52:
+                for(let a=0,la=this.base.width/10;a<la;a++){
+                    this.layer.fill(120+a%2*80,180+a%2*60,240+a%2*10,this.fade)
+                    this.layer.triangle(-this.base.width/2+a*10+2,this.height/2,-this.base.width/2+a*10+8,this.height/2,-this.base.width/2+a*10+5,-this.height*2)
+                }
+            break
+            case 53:
+                for(let a=0,la=this.base.width/10;a<la;a++){
+                    this.layer.fill(120+a%2*80,180+a%2*60,240+a%2*10,this.fade)
+                    this.layer.triangle(-this.base.width/2+a*10+2,-this.height/2,-this.base.width/2+a*10+8,-this.height/2,-this.base.width/2+a*10+5,this.height*2)
+                }
+            break
+            case 54:
+                for(let a=0,la=this.base.height/10;a<la;a++){
+                    this.layer.fill(120+a%2*80,180+a%2*60,240+a%2*10,this.fade)
+                    this.layer.triangle(this.width/2,-this.base.height/2+a*10+2,this.width/2,-this.base.height/2+a*10+8,-this.width*2,-this.base.height/2+a*10+5)
+                }
+            break
+            case 55:
+                for(let a=0,la=this.base.height/10;a<la;a++){
+                    this.layer.fill(120+a%2*80,180+a%2*60,240+a%2*10,this.fade)
+                    this.layer.triangle(-this.width/2,-this.base.height/2+a*10+2,-this.width/2,-this.base.height/2+a*10+8,this.width*2,-this.base.height/2+a*10+5)
+                }
+            break
 
         }
         this.layer.pop()
@@ -1405,7 +1429,7 @@ class wall extends physical{
                                 break
                             }
                             switch(this.type){
-                                case 2: case 37:
+                                case 2: case 37: case 52:
                                     if(c.velocity.y>=0){
                                         this.kill++
                                         c.safe=0
@@ -1414,7 +1438,7 @@ class wall extends physical{
                                         }
                                     }
                                 break
-                                case 3: case 38:
+                                case 3: case 38: case 53:
                                     if(c.velocity.y<=0){
                                         this.kill++
                                         c.safe=0
@@ -1423,7 +1447,7 @@ class wall extends physical{
                                         }
                                     }
                                 break
-                                case 4: case 39:
+                                case 4: case 39: case 54:
                                     if(c.velocity.x>=0){
                                         this.kill++
                                         c.safe=0
@@ -1432,7 +1456,7 @@ class wall extends physical{
                                         }
                                     }
                                 break
-                                case 5: case 40:
+                                case 5: case 40: case 55:
                                     if(c.velocity.x<=0){
                                         this.kill++
                                         c.safe=0

@@ -2290,12 +2290,12 @@ class player extends partisan{
                                     this.velocity.y=0
                                     this.stamina--
                                     if(inputs.keys[this.id][0]){
-                                        this.velocity.y=-2.75
+                                        this.velocity.y=-3
                                         this.stamina-=2
                                         this.anim.move+=12
                                     }
                                     if(inputs.keys[this.id][1]){
-                                        this.velocity.y=2.75
+                                        this.velocity.y=3
                                         this.anim.move+=12
                                     }
                                 }

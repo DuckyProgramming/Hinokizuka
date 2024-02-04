@@ -46,7 +46,7 @@ class ui{
                         }
                     break
                     case 1:
-                        for(let b=0,lb=6;b<lb;b++){
+                        for(let b=0,lb=7;b<lb;b++){
                             this.layer.fill(this.editing==b+1?125:150,this.editing==b+1?255:150,this.editing==b+1?125:150)
                             this.layer.rect(this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,40+b*55-max(0,(b-2))*20,80,30,5)
                         }
@@ -136,6 +136,7 @@ class ui{
                         this.layer.text('Delete',this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,185)
                         this.layer.text('New',this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,220)
                         this.layer.text('Spikify',this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,255)
+                        this.layer.text('Repeat',this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,290)
                         this.layer.textSize(10)
                         this.layer.text(this.edit.wall.width,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,40)
                         this.layer.text(this.edit.wall.height,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,95)
@@ -342,6 +343,15 @@ class ui{
                         for(let a=0,la=entities.walls.length;a<la;a++){
                             for(let b=0,lb=entities.walls[a].length;b<lb;b++){
                                 entities.walls[a][b].checkRedundant()
+                            }
+                        }
+                    }else if(inPointBox({position:mouse},{position:{x:this.layer.width+50-this.tabAnim[this.tab]*100+this.closeAnim*100,y:290},width:80,height:30})){
+                        this.tab=8
+                        for(let a=0,la=entities.walls.length;a<la;a++){
+                            for(let b=0,lb=entities.walls[a].length;b<lb;b++){
+                                if(entities.walls[a][b].select){
+                                    this.edit.add.wall.type=entities.walls[a][b].type
+                                }
                             }
                         }
                     }else{
