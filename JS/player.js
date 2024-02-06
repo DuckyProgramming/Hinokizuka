@@ -2105,9 +2105,6 @@ class player extends partisan{
             }else{
                 this.staySafeTime=0
             }
-            if(this.dash.timer>0){
-                this.dash.timer--
-            }
             if(this.climb>0){
                 this.climb--
             }
@@ -2130,6 +2127,9 @@ class player extends partisan{
                 }
             }
             this.crouch=false
+        }
+        if(this.dash.timer>0){
+            this.dash.timer--
         }
         if(this.goal.dead&&!(dev.invincible||!dev.freecam&&view.scroll.anim<10)){
             this.velocity.x=0
@@ -2337,7 +2337,7 @@ class player extends partisan{
             if(this.anim.crouch<1&&this.crouch){
                 this.position.y-=0.2
             }
-            if(this.position.y<0&&view.scroll.anim>=1&&!this.goal.dead){
+            if(this.position.y<0&&view.scroll.anim>=1&&!this.goal.dead&&!this.bubble.active){
                 if(dev.debound){
                     this.position.y=0
                 }else{
@@ -2362,7 +2362,7 @@ class player extends partisan{
                     }
                 }
             }
-            if(this.position.x>game.edge.x&&view.scroll.anim>=1&&!this.goal.dead){
+            if(this.position.x>game.edge.x&&view.scroll.anim>=1&&!this.goal.dead&&!this.bubble.active){
                 if(dev.debound){
                     this.position.x=game.edge.x
                 }else{
@@ -2387,7 +2387,7 @@ class player extends partisan{
                     }
                 }
             }
-            if(this.position.y>(dev.debound?game.edge.y:game.edge.y+this.height/2)&&!this.goal.dead){
+            if(this.position.y>(dev.debound?game.edge.y:game.edge.y+this.height/2)&&!this.goal.dead&&!this.bubble.active){
                 if(dev.debound){
                     this.position.y=game.edge.y
                     this.dash.available=true
@@ -2419,7 +2419,7 @@ class player extends partisan{
                     }
                 }
             }
-            if(this.position.x<0&&view.scroll.anim>=1&&!this.goal.dead){
+            if(this.position.x<0&&view.scroll.anim>=1&&!this.goal.dead&&!this.bubble.active){
                 if(dev.debound){
                     this.position.x=0
                 }else{

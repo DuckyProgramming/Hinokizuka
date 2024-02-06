@@ -175,12 +175,13 @@ class wall extends physical{
                 this.active=true
                 this.anim=0
                 this.offset=0
+                this.timer=0
             break
             case 33: case 50:
-                this.base.width=0
-                this.base.height=0
-                this.width=0
-                this.height=0
+                this.base.width=10
+                this.base.height=10
+                this.width=10
+                this.height=10
                 switch(this.args[0]){
                     case 1:
                         for(let a=0,la=floor((game.edge.x+100)/(this.args[1]*this.args[2]));a<la;a++){
@@ -297,7 +298,7 @@ class wall extends physical{
     execute(args){
         switch(this.type){
             case 23:
-                if(this.active){
+                if(this.active&&!(this.args[0]==1&&this.hold!=args[1])){
                     this.recharge=60
                     this.hold.width=this.hold.base.base.width
                     this.hold.height=this.hold.base.base.height
@@ -1115,6 +1116,10 @@ class wall extends physical{
                         this.shift(sin(this.direction*45)*6,cos(this.direction*45)*-6)
                         this.hold.velocity.x=sin(this.direction*45)*6
                         this.hold.velocity.y=cos(this.direction*45)*-6
+                        if(this.hold.bubble.shiftTime==0){
+                            this.hold.position.x=this.position.x
+                            this.hold.position.y=this.position.y
+                        }
                         if(this.timer>=45||this.hold.dash.active>0||this.hold.bonk>0||this.hold.goal.dead){
                             this.execute([0])
                         }
@@ -1219,6 +1224,16 @@ class wall extends physical{
                     this.offset-=12
                 }
                 switch(this.args[0]){
+                    case 0:
+                        if(!this.active){
+                            this.timer++
+                            if(this.timer>120){
+                                this.active=true
+                                this.anim=0
+                                this.timer=0
+                            }
+                        }
+                    break
                     case 1:
                         this.shift(this.args[1],0)
                         if(this.position.x>game.edge.x+50){
@@ -1543,7 +1558,7 @@ class wall extends physical{
                                             for(let e=0,le=entities.walls.length;e<le;e++){
                                                 for(let f=0,lf=entities.walls[e].length;f<lf;f++){
                                                     if(entities.walls[e][f].type==23){
-                                                        entities.walls[e][f].execute([1])
+                                                        entities.walls[e][f].execute([1,c])
                                                     }
                                                 }
                                             }
@@ -1593,11 +1608,11 @@ class wall extends physical{
                                 break
                                 case 32:
                                     if(this.active){
-                                        if(c.position.y>this.position.y-15&&c.velocity.y<=2){
+                                        if(c.position.y>this.position.y-15||this.timer==120){
                                             c.goal.dead=true
                                         }else{
                                             this.active=false
-                                            c.velocity.y=-6
+                                            c.velocity.y=-8
                                             c.jumpTime=c.base.jumpTime
                                             c.dash.available=true
                                             c.stamina=c.base.stamina
@@ -1627,11 +1642,11 @@ class wall extends physical{
                                 break
                                 case 49:
                                     if(this.active){
-                                        if(c.position.y<this.position.y-15&&c.velocity.y>=-2){
+                                        if(c.position.y<this.position.y-15||this.timer==120){
                                             c.goal.dead=true
                                         }else{
                                             this.active=false
-                                            c.velocity.y=6
+                                            c.velocity.y=8
                                             c.dash.available=true
                                             c.stamina=c.base.stamina
                                             c.dashCut()

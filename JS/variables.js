@@ -11,7 +11,7 @@ types={
         {name:'Semisolid',elements:[15,18,19]},
         {name:'Flower',elements:[7,14,28]},
         {name:'Dash Crystal',elements:[9,24,48]},
-        {name:'Deadly Crystal',elements:[16,44]},
+        {name:'Deadly Crystal',elements:[16,45]},
         {name:'Collapsing',elements:[8]},
         {name:'Spring',elements:[10,11,12,13]},
         {name:'Bumper',elements:[20,41]},
@@ -86,8 +86,8 @@ types={
     ]
 }
 stage={scene:'menu',scale:0}
-menu={scene:0,transition:0,sceneAnim:[0,0],select:-1,selectAnim:[0,0,0,0],levelPos:[[600,540],[300,450],[810,360],[480,270]],playerAnim:[0,0]}
-game={level:4,zone:4,progress:{zone:0},time:0,player:{size:1},
+menu={scene:0,transition:0,sceneAnim:[0,0],select:-1,selectAnim:[0,0,0,0,0],levelPos:[[600,540],[300,450],[810,360],[480,270],[660,180]],playerAnim:[0,0]}
+game={level:4,zone:12,progress:{zone:0},time:0,player:{size:1},
 edge:{x:0,y:0},spawn:{x:0,y:0},scroll:{x:0,y:0},wind:{x:0,y:0},iceSwitch:0,
 connections:[],previous:{zone:0},players:[0],flowers:0,deaths:0,running:{flowers:0,deaths:0},loadPlan:0,levelData:[]}
 physics={gravity:0.5,friction:{x:0.96,y:0.995},resistance:{x:0.84,y:0.99}}

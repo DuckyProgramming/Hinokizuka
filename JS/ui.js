@@ -273,7 +273,7 @@ class ui{
                         let total=0
                         for(let a=0,la=entities.walls.length;a<la;a++){
                             for(let b=0,lb=entities.walls[a].length;b<lb;b++){
-                                if(entities.walls[a][b].type!=32){
+                                if(entities.walls[a][b].type!=32&&entities.walls[a][b].type!=49||entities.walls[a][b].args[0]==0){
                                     if(total>=1){
                                         wallForm+=`
                 `
