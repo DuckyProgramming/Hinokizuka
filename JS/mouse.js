@@ -28,6 +28,10 @@ function mouseClicked(){
                             transition.scene='main'
                             game.level=a
                             game.zone=0
+                            view.scroll.x=0
+                            view.scroll.y=0
+                            game.scroll.x=0
+                            game.scroll.y=0
                             game.running.flowers=0
                             game.running.deaths=0
                             reformLevels()

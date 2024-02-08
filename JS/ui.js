@@ -194,7 +194,7 @@ class ui{
                             }
                         }else{
                             this.layer.textSize(8)
-                            for(let b=0,lb=types.wallList[this.edit.wall.folder].length;b<lb;b++){
+                            for(let b=0,lb=types.wallList[this.edit.wall.folder].elements.length;b<lb;b++){
                                 this.layer.text(types.wall[types.wallList[this.edit.wall.folder].elements[b]].name,this.layer.width+50-this.tabAnim[a]*100+this.closeAnim*100,10+b*15)
                             }
                         }

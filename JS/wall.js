@@ -184,35 +184,50 @@ class wall extends physical{
                 this.height=10
                 switch(this.args[0]){
                     case 1:
-                        for(let a=0,la=floor((game.edge.x+100)/(this.args[1]*this.args[2]));a<la;a++){
-                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,-50+this.args[1]*this.args[2]*a,this.position.y,0,0,this.type-1,-1,0,this.zone,[1,this.args[1]]))
+                        if(this.args.length<=3){
+                            this.args[3]=0
+                        }
+                        for(let a=0,la=floor((game.edge.x+100)/(this.args[1]*this.args[2])-this.args[3]);a<la;a++){
+                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,-50+this.args[1]*this.args[2]*(a+this.args[3]),this.position.y,0,0,this.type-1,-1,0,this.zone,[1,this.args[1]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         }
                     break
                     case 2:
-                        for(let a=0,la=floor((game.edge.x+100)/(this.args[1]*this.args[2]));a<la;a++){
-                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,game.edge.x+50-this.args[1]*this.args[2]*a,this.position.y,0,0,this.type-1,-1,0,this.zone,[2,this.args[1]]))
+                        if(this.args.length<=3){
+                            this.args[3]=0
+                        }
+                        for(let a=0,la=floor((game.edge.x+100)/(this.args[1]*this.args[2])-this.args[3]);a<la;a++){
+                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,game.edge.x+50-this.args[1]*this.args[2]*(a+this.args[3]),this.position.y,0,0,this.type-1,-1,0,this.zone,[2,this.args[1]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         }
                     break
                     case 3:
-                        for(let a=0,la=floor((game.edge.y+100)/(this.args[1]*this.args[2]));a<la;a++){
-                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,-50+this.args[1]*this.args[2]*a,0,0,this.type-1,-1,0,this.zone,[3,this.args[1]]))
+                        if(this.args.length<=3){
+                            this.args[3]=0
+                        }
+                        for(let a=0,la=floor((game.edge.y+100)/(this.args[1]*this.args[2])-this.args[3]);a<la;a++){
+                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,-50+this.args[1]*this.args[2]*(a+this.args[3]),0,0,this.type-1,-1,0,this.zone,[3,this.args[1]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         }
                     break
                     case 4:
-                        for(let a=0,la=floor((game.edge.y+100)/(this.args[1]*this.args[2]));a<la;a++){
-                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,game.edge.y+50-this.args[1]*this.args[2]*a,0,0,this.type-1,-1,0,this.zone,[4,this.args[1]]))
+                        if(this.args.length<=3){
+                            this.args[3]=0
+                        }
+                        for(let a=0,la=floor((game.edge.y+100)/(this.args[1]*this.args[2])-this.args[3]);a<la;a++){
+                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,game.edge.y+50-this.args[1]*this.args[2]*(a+this.args[3]),0,0,this.type-1,-1,0,this.zone,[4,this.args[1]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         }
                     break
                     case 5:
-                        for(let a=0,la=floor(360/(this.args[2]*this.args[4]));a<la;a++){
+                        if(this.args.length<=5){
+                            this.args[5]=0
+                        }
+                        for(let a=0,la=floor(360/(this.args[2]*this.args[4])-this.args[5]);a<la;a++){
                             entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,
-                                this.position.x+cos(this.args[3])*this.args[1]*360/this.args[4]/TWO_PI-cos(this.args[3]+a*this.args[2]*this.args[4])*this.args[1]*360/this.args[4]/TWO_PI,
-                                this.position.y-sin(this.args[3])*this.args[1]*360/this.args[4]/TWO_PI+sin(this.args[3]+a*this.args[2]*this.args[4])*this.args[1]*360/this.args[4]/TWO_PI,
-                            0,0,this.type-1,-1,0,this.zone,[5,this.args[1],this.args[3],this.args[4],a*this.args[2]*this.args[4]]))
+                                this.position.x+cos(this.args[3])*this.args[1]*360/this.args[4]/TWO_PI-cos(this.args[3]+a*this.args[2]*this.args[4]+this.args[5]*this.args[2]*this.args[4])*this.args[1]*360/this.args[4]/TWO_PI,
+                                this.position.y-sin(this.args[3])*this.args[1]*360/this.args[4]/TWO_PI+sin(this.args[3]+a*this.args[2]*this.args[4]+this.args[5]*this.args[2]*this.args[4])*this.args[1]*360/this.args[4]/TWO_PI,
+                            0,0,this.type-1,-1,0,this.zone,[5,this.args[1],this.args[3],this.args[4],a*this.args[2]*this.args[4]+this.args[5]*this.args[2]*this.args[4]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         }
                     break
@@ -248,7 +263,9 @@ class wall extends physical{
     onDash(){
         switch(this.type){
             case 14: case 28:
-                this.fly=true
+                if(!dev.freecam){
+                    this.fly=true
+                }
             break
             case 31:
                 this.switch=1-this.switch
@@ -272,7 +289,7 @@ class wall extends physical{
                 this.type=33
             break
             case 46:
-                if(this.timer>0){
+                if(this.timer>=30){
                     this.timer=61
                 }
             break
@@ -1267,7 +1284,7 @@ class wall extends physical{
                 }
             break
             case 33: case 50:
-                if(this.time%this.args[2]==0){
+                if(this.args[0]!=5&&(this.time+round(this.args[3]*this.args[2]))%this.args[2]==0){
                     switch(this.args[0]){
                         case 1:
                             entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,-50,this.position.y,0,0,this.type-1,-1,0,this.zone,[1,this.args[1]]))
@@ -1285,11 +1302,10 @@ class wall extends physical{
                             entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,game.edge.y+50,0,0,this.type-1,-1,0,this.zone,[4,this.args[1]]))
                             entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                         break
-                        case 5:
-                            entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,this.position.y,0,0,this.type-1,-1,0,this.zone,[5,this.args[1],this.args[3],this.args[4],0]))
-                            entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
-                        break
                     }
+                }else if(this.args[0]==5&&(this.time+round(this.args[5]*this.args[2]))%this.args[2]==0){
+                    entities.walls[types.wall[this.type-1].slice].push(new wall(this.layer,this.position.x,this.position.y,0,0,this.type-1,-1,0,this.zone,[5,this.args[1],this.args[3],this.args[4],0]))
+                    entities.walls[types.wall[this.type-1].slice][entities.walls[types.wall[this.type-1].slice].length-1].checkRedundant()
                 }
             break
             case 46:
@@ -1334,7 +1350,7 @@ class wall extends physical{
             break
         }
         if(this.fade>0.2&&!this.deprecate&&
-            this.type!=17&&this.type!=27&&this.type!=33&&this.type!=36&&this.type!=44
+            this.type!=17&&this.type!=27&&this.type!=33&&this.type!=36&&this.type!=44&&this.type!=50
         ){
             for(let a=0,la=this.collide.box.length;a<la;a++){
                 for(let b=0,lb=this.collide.box[a].length;b<lb;b++){
@@ -1642,7 +1658,7 @@ class wall extends physical{
                                 break
                                 case 49:
                                     if(this.active){
-                                        if(c.position.y<this.position.y-15||this.timer==120){
+                                        if(c.position.y<this.position.y-15||c.velocity.y>0||this.timer==120){
                                             c.goal.dead=true
                                         }else{
                                             this.active=false
