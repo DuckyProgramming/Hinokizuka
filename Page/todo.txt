@@ -1,16 +1,7 @@
 bugs[
 ]
 world 4[
-    flowers[
-        12
-    ]
     levels[
-        16
-        17
-        18
-        19
-        20
-        21
         22
         23
         24
@@ -24,6 +15,7 @@ world 5[
     ]
     gimmicks[
         (double dash crystal)
+        golden crystal
         cloud?
     ]
     flowers[

@@ -545,7 +545,7 @@ function generateLevel(level,layer,context){
     game.edge.y=level.edge.y
     game.wind.x=level.wind.x
     game.wind.y=level.wind.y
-    game.iceSwitch=1
+    game.iceSwitch=0
     for(let a=0,la=entities.players.length;a<la;a++){
         switch(context){
             case 0:

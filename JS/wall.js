@@ -1338,11 +1338,11 @@ class wall extends physical{
             break
             case 51:
                 this.anim=smoothAnim(this.anim,game.iceSwitch,0,1,5)
-                if(game.iceSwitch&&this.args.length>0&&this.move<this.args[0]){
+                if(game.iceSwitch==1&&this.args.length>0&&this.move<this.args[0]){
                     this.move+=4
                     let a=numericalDirection(this.args[1])
                     this.shift(a.x*4,a.y*4)
-                }else if(!game.iceSwitch&&this.args.length>0&&this.move>0){
+                }else if(game.iceSwitch==0&&this.args.length>0&&this.move>0){
                     this.move-=4
                     let a=numericalDirection(this.args[1])
                     this.shift(a.x*-4,a.y*-4)
