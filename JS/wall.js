@@ -1464,7 +1464,7 @@ class wall extends physical{
                                     if(c.velocity.y>=0){
                                         this.kill++
                                         c.safe=0
-                                        if(this.kill>=2||c.previous.velocity.y>=2&&abs(c.previous.velocity.x)<3){
+                                        if(this.kill>=2||c.velocity.y>=4){
                                             c.goal.dead=true
                                         }
                                     }
@@ -1473,7 +1473,7 @@ class wall extends physical{
                                     if(c.velocity.y<=0){
                                         this.kill++
                                         c.safe=0
-                                        if(this.kill>=2||c.previous.velocity.y<=-2&&abs(c.previous.velocity.x)<3){
+                                        if(this.kill>=2||c.velocity.y<=-4){
                                             c.goal.dead=true
                                         }
                                     }
@@ -1482,7 +1482,7 @@ class wall extends physical{
                                     if(c.velocity.x>=0){
                                         this.kill++
                                         c.safe=0
-                                        if(this.kill>=2||c.previous.velocity.x>=2&&abs(c.previous.velocity.y)<3){
+                                        if(this.kill>=2||c.velocity.x>=4){
                                             c.goal.dead=true
                                         }
                                     }
@@ -1491,7 +1491,7 @@ class wall extends physical{
                                     if(c.velocity.x<=0){
                                         this.kill++
                                         c.safe=0
-                                        if(this.kill>=2||c.previous.velocity.x<=-2&&abs(c.previous.velocity.y)<3){
+                                        if(this.kill>=2||c.velocity.x<=-4){
                                             c.goal.dead=true
                                         }
                                     }

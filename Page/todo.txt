@@ -1,13 +1,5 @@
 bugs[
 ]
-world 4[
-    levels[
-        22
-        23
-        24
-    ]
-    menu presence
-]
 world 5[
     background
     tileset[
