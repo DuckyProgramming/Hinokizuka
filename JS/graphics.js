@@ -9,7 +9,7 @@ function setupGraphics(){
         setupLayer(graphics.walls[a])
         displayWallGraphic(graphics.walls[a],a)
     }
-    for(let a=0,la=7;a<la;a++){
+    for(let a=0,la=9;a<la;a++){
         graphics.backgrounds.push(createGraphics(1800,900))
         setupLayer(graphics.backgrounds[a])
         displayBack(graphics.backgrounds[a],a)
@@ -235,6 +235,24 @@ function displayBack(layer,type){
                 layer.fill(100,255-a*100,100+a*155,0.05)
                 for(let b=-3,lb=200;b<lb+3;b++){
                     layer.ellipse(b/lb*layer.width+random(-5,5),sin(b/lb*720+a*100)*60+layer.height*0.3+random(-5,5),random(30,60))
+                }
+            }
+        break
+        case 7:
+            layer.background(0)
+            for(let a=0,la=layer.height;a<la;a++){
+                layer.fill(mergeColor([255,225,225],[255,125,150],a/la))
+                layer.rect(layer.width/2,a+0.5,layer.width,2)
+            }
+        break
+        case 8:
+            layer.stroke(240,160-random(0,40),180-random(0,20))
+            for(let a=0,la=20;a<la;a++){
+                for(let b=0,lb=10;b<lb;b++){
+                    layer.strokeWeight(random(1,4))
+                    let c=(a+random(0.1,0.9))/la*layer.width
+                    let d=(b+random(0.1,0.9))/lb*layer.height
+                    layer.line(c,d-random(3,6),c,d+random(3,6))
                 }
             }
         break

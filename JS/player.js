@@ -115,7 +115,7 @@ class player extends partisan{
                     color:[
                         {back:[154,214,225],front:[217,242,246],insideBack:[191,206,249],insideFront:[173,221,231],glow:[235,253,253]},
                         {back:[123,127,171],front:[91,72,117],insideBack:[116,100,141],insideFront:[107,87,128],glow:[216,175,212]},
-                        {back:[188,93,193],front:[235,190,231],insideBack:[192,128,202],insideFront:[212,119,210],glow:[211,182,226]},
+                        {back:[188,193,33],front:[235,231,90],insideBack:[192,202,48],insideFront:[212,210,44],glow:[211,226,102]},
                     ],pieces:{
                         main:[
                             {spin:[-9,-3,-6],height:0.25},
@@ -251,7 +251,7 @@ class player extends partisan{
                     color:[
                         {back:[181,241,242],front:[236,255,251],insideBack:[124,206,230],insideFront:[179,238,242],glow:[240,255,252],bun:[222,251,246],bunGlow:[251,255,254],tie:[115,111,143],pin:[[50,77,168],[74,113,199]]},
                         {back:[66,60,44],front:[63,47,26],insideBack:[44,24,6],insideFront:[59,41,25],glow:[238,231,220],bun:[79,59,40],bunGlow:[226,217,211]},
-                        {back:[118,68,129],front:[145,77,128],insideBack:[64,37,90],insideFront:[134,67,121],glow:[174,150,186],bun:[147,84,131],bunGlow:[160,117,170]},
+                        {back:[118,129,38],front:[145,128,37],insideBack:[64,90,27],insideFront:[134,121,37],glow:[174,186,90],bun:[147,131,44],bunGlow:[160,170,57]},
                     ],pieces:{
                         main:[
                             {spin:[-9,3,-3],height:3},
@@ -2451,6 +2451,10 @@ class player extends partisan{
         this.goal.anim.dash=this.dash.available?this.dash.second.available?2:1:0
         if(abs(this.anim.dash-this.goal.anim.dash*5)<1){
             this.anim.dash=this.goal.anim.dash*5
+        }else if(this.anim.dash<this.goal.anim.dash*5-5){
+            this.anim.dash+=2
+        }else if(this.anim.dash>this.goal.anim.dash*5+5){
+            this.anim.dash-=2
         }else if(this.anim.dash<this.goal.anim.dash*5){
             this.anim.dash++
         }else if(this.anim.dash>this.goal.anim.dash*5){
