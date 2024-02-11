@@ -449,10 +449,10 @@ function displayWallGraphic(layer,type){
             for(a=0,la=7;a<la;a++){
                 layer.fill(240,80,120)
                 layer.rotate(180/la)
-                layer.triangle(0,0,5,6,4,20)
+                layer.triangle(0,0,5,8,4,22)
                 layer.fill(220,80,240)
                 layer.rotate(180/la)
-                layer.triangle(0,0,5,6,4,20)
+                layer.triangle(0,0,5,8,4,22)
             }
         break
     }

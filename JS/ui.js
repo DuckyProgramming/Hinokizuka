@@ -476,7 +476,7 @@ class ui{
                                 for(let b=0,lb=entities.walls.length;b<lb;b++){
                                     for(let c=0,lc=entities.walls[b].length;c<lc;c++){
                                         if(entities.walls[b][c].select){
-                                            entities.walls[b][c].type=a
+                                            entities.walls[b][c].type=types.wallList[this.edit.wall.folder].elements[a]
                                             entities.walls[b][c].set()
                                         }
                                     }

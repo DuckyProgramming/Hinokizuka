@@ -55,7 +55,7 @@ function collideBoxBox(static,mobile){
     }
     for(let a=0,la=static.boundary.length;a<la;a++){
         for(let b=0,lb=static.boundary[a].length;b<lb;b++){
-            if(intersect(mobile.position,{x:mobile.previous.position.x+static.velocity.x,y:mobile.previous.position.y+static.velocity.y},
+            if(intersect(mobile.position,mobile.previous.position,
                 {x:static.boundary[a][b][0].x+mobile.width/2*(a==2?1:-1),y:static.boundary[a][b][0].y+mobile.height/2*(a==0?1:-1)},
                 {x:static.boundary[a][b][1].x+mobile.width/2*(a!=3?1:-1),y:static.boundary[a][b][1].y+mobile.height/2*(a!=1?1:-1)})){
                 return a

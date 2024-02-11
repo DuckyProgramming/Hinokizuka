@@ -2277,7 +2277,7 @@ class player extends partisan{
                                             this.dash.available=false
                                         }
                                     }
-                                    this.dash.golden.time=0
+                                    this.dash.golden.timer=0
                                     this.weakTime=this.physics.weaken.dash
                                     this.dashPhase=true
                                     this.dashPush=true

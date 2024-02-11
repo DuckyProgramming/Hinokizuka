@@ -1083,40 +1083,40 @@ class wall extends physical{
                         this.layer.strokeWeight(6)
                         switch(a){
                             case 0:
-                                this.layer.line(-this.width/2+18,this.height/2-9,-4,this.height/2-9)
-                                this.layer.line(this.width/2-18,this.height/2-9,4,this.height/2-9)
+                                this.layer.line(-this.width/2+18,this.height/2-9,-this.width/15,this.height/2-9)
+                                this.layer.line(this.width/2-18,this.height/2-9,this.width/15,this.height/2-9)
                             break
                             case 1:
-                                this.layer.line(-this.width/2+18,-this.height/2+9,-4,-this.height/2+9)
-                                this.layer.line(this.width/2-18,-this.height/2+9,4,-this.height/2+9)
+                                this.layer.line(-this.width/2+18,-this.height/2+9,-this.width/15,-this.height/2+9)
+                                this.layer.line(this.width/2-18,-this.height/2+9,this.width/15,-this.height/2+9)
                             break
                             case 2:
-                                this.layer.line(this.width/2-9,-this.height/2+18,this.width/2-9,-4)
-                                this.layer.line(this.width/2-9,this.height/2-18,this.width/2-9,4)
+                                this.layer.line(this.width/2-9,-this.height/2+18,this.width/2-9,-this.height/15)
+                                this.layer.line(this.width/2-9,this.height/2-18,this.width/2-9,this.height/15)
                             break
                             case 3:
-                                this.layer.line(-this.width/2+9,-this.height/2+18,-this.width/2+9,-4)
-                                this.layer.line(-this.width/2+9,this.height/2-18,-this.width/2+9,4)
+                                this.layer.line(-this.width/2+9,-this.height/2+18,-this.width/2+9,-this.height/15)
+                                this.layer.line(-this.width/2+9,this.height/2-18,-this.width/2+9,this.height/15)
                             break
                         }
                         this.layer.stroke(255,50+(this.direction==a+1?50:0),100+(this.direction==a+1?50:0))
                         this.layer.strokeWeight(3)
                         switch(a){
                             case 0:
-                                this.layer.line(-this.width/2+18,this.height/2-9,-4,this.height/2-9)
-                                this.layer.line(this.width/2-18,this.height/2-9,4,this.height/2-9)
+                                this.layer.line(-this.width/2+18,this.height/2-9,-this.width/15,this.height/2-9)
+                                this.layer.line(this.width/2-18,this.height/2-9,this.width/15,this.height/2-9)
                             break
                             case 1:
-                                this.layer.line(-this.width/2+18,-this.height/2+9,-4,-this.height/2+9)
-                                this.layer.line(this.width/2-18,-this.height/2+9,4,-this.height/2+9)
+                                this.layer.line(-this.width/2+18,-this.height/2+9,-this.width/15,-this.height/2+9)
+                                this.layer.line(this.width/2-18,-this.height/2+9,this.width/15,-this.height/2+9)
                             break
                             case 2:
-                                this.layer.line(this.width/2-9,-this.height/2+18,this.width/2-9,-4)
-                                this.layer.line(this.width/2-9,this.height/2-18,this.width/2-9,4)
+                                this.layer.line(this.width/2-9,-this.height/2+18,this.width/2-9,-this.height/15)
+                                this.layer.line(this.width/2-9,this.height/2-18,this.width/2-9,this.height/15)
                             break
                             case 3:
-                                this.layer.line(-this.width/2+9,-this.height/2+18,-this.width/2+9,-4)
-                                this.layer.line(-this.width/2+9,this.height/2-18,-this.width/2+9,4)
+                                this.layer.line(-this.width/2+9,-this.height/2+18,-this.width/2+9,-this.height/15)
+                                this.layer.line(-this.width/2+9,this.height/2-18,-this.width/2+9,this.height/15)
                             break
                         }
                     }
@@ -1511,13 +1511,12 @@ class wall extends physical{
                             break
                         }
                         this.history[this.history.length-1][1]+=this.speed/2
-                        if(this.speed<5){
-                            this.speed+=0.1
+                        if(this.speed<6){
+                            this.speed+=0.2
                         }
                         for(let a=0,la=entities.walls.length;a<la;a++){
                             for(let b=0,lb=entities.walls[a].length;b<lb;b++){
                                 if(inBoxBox(this,entities.walls[a][b])&&entities.walls[a][b].standard&&entities.walls[a][b].type!=this.type){
-                                    this.direction=0
                                     switch(this.direction){
                                         case 1:
                                             this.shift(0,entities.walls[a][b].position.y-entities.walls[a][b].height/2-this.height/2-this.position.y)
@@ -1532,6 +1531,7 @@ class wall extends physical{
                                             this.shift(entities.walls[a][b].position.x+entities.walls[a][b].width/2+this.width/2-this.position.x,0)
                                         break
                                     }
+                                    this.direction=0
                                 }
                             }
                         }
@@ -1601,13 +1601,20 @@ class wall extends physical{
                             if(d==1){
                                 c.stamina=c.base.stamina
                             }
-                            if(d==1||c.climb>0){
+                            if(d==1){
+                                if(this.type==67&&this.direction==0){
+                                    c.temp.velocity.x*=0.5
+                                    c.temp.velocity.y*=0.5
+                                }
                                 if(abs(c.temp.velocity.x)<abs(this.velocity.x)){
                                     c.temp.velocity.x=this.velocity.x
                                 }
                                 if(abs(c.temp.velocity.y)<abs(this.velocity.y)){
                                     c.temp.velocity.y=this.velocity.y
                                 }
+                            }else if(c.climb>0){
+                                c.position.x+=this.velocity.x
+                                c.position.y+=this.velocity.y
                             }
                         }
                         if(inBoxBox(this,c)){
@@ -1964,7 +1971,7 @@ class wall extends physical{
                                     switch(this.type){
                                         case 67:
                                             if(c.dash.active>0){
-                                                c.dash.active=false
+                                                c.dash.active=0
                                                 c.dash.available=true
                                                 this.direction=d+1
                                                 this.pause=30
@@ -1975,15 +1982,15 @@ class wall extends physical{
                                                         c.velocity.y=4
                                                     break
                                                     case 1:
-                                                        c.velocity.y=-8
+                                                        c.velocity.y=-10
                                                     break
                                                     case 2:
                                                         c.velocity.x=2
-                                                        c.velocity.y=-8
+                                                        c.velocity.y=-10
                                                     break
                                                     case 3:
                                                         c.velocity.x=-2
-                                                        c.velocity.y=-8
+                                                        c.velocity.y=-10
                                                     break
                                                 }
                                             }
