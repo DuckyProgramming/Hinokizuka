@@ -115,7 +115,7 @@ class player extends partisan{
                     color:[
                         {back:[154,214,225],front:[217,242,246],insideBack:[191,206,249],insideFront:[173,221,231],glow:[235,253,253]},
                         {back:[123,127,171],front:[91,72,117],insideBack:[116,100,141],insideFront:[107,87,128],glow:[216,175,212]},
-                        {back:[188,193,33],front:[235,231,90],insideBack:[192,202,48],insideFront:[212,210,44],glow:[211,226,102]},
+                        {back:[33,208,193],front:[90,235,231],insideBack:[48,192,202],insideFront:[44,212,210],glow:[102,211,226]},
                     ],pieces:{
                         main:[
                             {spin:[-9,-3,-6],height:0.25},
@@ -326,6 +326,8 @@ class player extends partisan{
                 this.dead=false
                 this.goal.dead=false
                 this.dash.available=true
+                this.dash.second.available=false
+                this.anim.dash=5
                 this.dash.timer=0
                 this.bubble.active=false
                 this.width=this.base.base.width
@@ -335,12 +337,14 @@ class player extends partisan{
             break
             case 1:
                 this.dash.available=true
+                this.dash.second.available=false
                 this.dash.timer=0
                 this.setSpawn=true
                 inputs.keys[this.id][5]=false
             break
             case 2:
                 this.dash.available=true
+                this.dash.second.available=false
                 this.dash.timer=0
                 inputs.keys[this.id][5]=false
             break
@@ -2211,9 +2215,12 @@ class player extends partisan{
                                 if(this.crouch){
                                     this.physics.moveCap=6
                                     this.velocity.y=this.physics.jumpPower*0.8
-                                    this.anim.move+=6
                                 }else{
                                     this.velocity.y=this.physics.jumpPower
+                                    if(this.temp.velocity.x!=0||this.temp.velocity.y!=0){
+                                        this.velocity.x+=this.temp.velocity.x
+                                        this.velocity.y+=this.temp.velocity.y
+                                    }
                                 }
                                 if(this.dash.active>0){
                                     this.dashPhase=true

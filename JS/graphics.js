@@ -4,7 +4,7 @@ function setupGraphics(){
     setupLayer(graphics.main)
     graphics.players.push(new player(this.layer,0,0,0,0,true))
     graphics.players.push(new player(this.layer,0,0,1,0,true))
-    for(let a=0,la=12;a<la;a++){
+    for(let a=0,la=16;a<la;a++){
         graphics.walls.push(createGraphics(40,40))
         setupLayer(graphics.walls[a])
         displayWallGraphic(graphics.walls[a],a)
@@ -244,6 +244,71 @@ function displayBack(layer,type){
                 layer.fill(mergeColor([255,225,225],[255,125,150],a/la))
                 layer.rect(layer.width/2,a+0.5,layer.width,2)
             }
+            for(let a=0,la=layer.width/100;a<la;a++){
+                let b=random(40,60)+a*100
+                let c=random(6,8)
+                let d=layer.height*(1.01+a/la*0.06)
+                let e=random(360,480)
+                let f=a/la*20+random(-20,20)
+                let g=random(4,10)
+                layer.fill(200+f,80+f,160+f)
+                layer.triangle(b-c,d,b+c,d,b,d-e)
+                layer.fill(180+f,60+f,140+f)
+                layer.quad(b,d-e-g+5,b-g*0.5,d-e+5,b,d-e+g+5,b+g*0.5,d-e+5)
+                if(b-g*0.5<0||b+g*0.5>layer.width){
+                    b=layer.width-b
+                    layer.fill(200+f,80+f,160+f)
+                    layer.triangle(b-c,d,b+c,d,b,d-e)
+                    layer.fill(180+f,60+f,140+f)
+                    layer.quad(b,d-e-g+5,b-g*0.5,d-e+5,b,d-e+g+5,b+g*0.5,d-e+5)
+                }
+            }
+            for(let a=0,la=50;a<la;a++){
+                let b=-50+a*78%(layer.width+100)+random(-10,10)
+                let c=random(15,20)
+                let d=layer.height*(1.01+a/la*0.06)
+                let e=random(180,360)
+                let f=a/la*20+random(-20,20)
+                let g=random(8,20)
+                layer.fill(200+f,80+f,160+f)
+                layer.triangle(b-c,d,b+c,d,b,d-e)
+                layer.fill(180+f,60+f,140+f)
+                layer.quad(b,d-e-g+5,b-g*0.5,d-e+5,b,d-e+g+5,b+g*0.5,d-e+5)
+                if(b-g*0.5<0||b+g*0.5>layer.width){
+                    b=layer.width-b
+                    layer.fill(200+f,80+f,160+f)
+                    layer.triangle(b-c,d,b+c,d,b,d-e)
+                    layer.fill(180+f,60+f,140+f)
+                    layer.quad(b,d-e-g+5,b-g*0.5,d-e+5,b,d-e+g+5,b+g*0.5,d-e+5)
+                }
+            }
+            layer.fill(210,90,170)
+            layer.triangle(-5,layer.height,5,layer.height,0,layer.height-250)
+            layer.triangle(-5+layer.width,layer.height,5+layer.width,layer.height,layer.width,layer.height-250)
+            layer.quad(0,layer.height-250,5,layer.height-240,0,layer.height-230,-5,layer.height-240)
+            layer.quad(layer.width,layer.height-250,layer.width+5,layer.height-240,layer.width,layer.height-230,layer.width-5,layer.height-240)
+            for(let a=0,la=50;a<la;a++){
+                let b=-50+a*78%(layer.width+100)+random(-10,10)
+                let c=random(5,8)
+                let d=layer.height*(1.01+a/la*0.04)
+                let e=random(120,240)
+                let f=a/la*20+random(-20,20)
+                layer.fill(160+f,40+f,120+f)
+                layer.quad(b-c,d-e*0.95,b,d,b+c,d-e*0.95,b,d-e)
+                if(b-c<0||b+c>layer.width){
+                    b=layer.width-b
+                    layer.quad(b-c,d-e*0.95,b,d,b+c,d-e*0.95,b,d-e)
+                }
+            }
+            for(let a=0,la=29;a<la;a++){
+                let b=random(0,60)
+                layer.fill(180-b,100-b,140-b)
+                layer.ellipse(layer.width*((a*9)%29+random(0.9,1.1))/(la+1),layer.height*random(0.92,0.96),random(125,175))
+            }
+            let a=random(0,60)
+            layer.fill(180-a,100-a,140-a)
+            layer.ellipse(0,layer.height*0.918,180)
+            layer.ellipse(layer.width,layer.height*0.918,180)
         break
         case 8:
             layer.stroke(240,160-random(0,40),180-random(0,20))
@@ -376,6 +441,18 @@ function displayWallGraphic(layer,type){
                 layer.fill(120,200,240)
                 layer.rotate(180/la)
                 layer.triangle(0,0,4,4,5,20)
+            }
+        break
+        case 12: case 13: case 14: case 15:
+            layer.noStroke()
+            layer.rotate(45*type)
+            for(a=0,la=7;a<la;a++){
+                layer.fill(240,80,120)
+                layer.rotate(180/la)
+                layer.triangle(0,0,5,6,4,20)
+                layer.fill(220,80,240)
+                layer.rotate(180/la)
+                layer.triangle(0,0,5,6,4,20)
             }
         break
     }

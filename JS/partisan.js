@@ -17,6 +17,7 @@ class partisan extends physical{
         vectorSet(this.previous.velocity,this.velocity)
         vectorAdd(this.position,this.velocity)
         vectorAdd(this.position,this.temp.velocity)
-        this.temp.velocity={x:0,y:0}
+        this.temp.velocity.x*=0.8
+        this.temp.velocity.y*=0.8
     }
 }

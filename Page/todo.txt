@@ -1,15 +1,13 @@
 bugs[
 ]
 world 5[
-    background
     gimmicks[
-        (double dash crystal)
-        (golden crystal)
+        bumper 5
+        collapsing 5
+
         cloud?
     ]
     flowers[
-        1
-        2
         3
         4
         5
@@ -22,9 +20,6 @@ world 5[
         12
     ]
     levels[
-        2
-        3
-        4
         5
         6
         7

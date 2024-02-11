@@ -13,11 +13,11 @@ types={
         {name:'Semisolid',elements:[15,18,19]},
         {name:'Flower',elements:[7,14,28]},
         {name:'Dash Crystal',elements:[9,24,48]},
-        {name:'Deadly Crystal',elements:[16,45]},
-        {name:'Collapsing',elements:[8]},
+        {name:'Deadly Crystal',elements:[16,45,65]},
+        {name:'Collapsing',elements:[8.66]},
         {name:'Spring',elements:[10,11,12,13]},
         {name:'Bumper',elements:[20,41]},
-        {name:'Bubble',elements:[23]},
+        {name:'Boost',elements:[23,67]},
         {name:'Mobile Block',elements:[29,30,31]},
         {name:'Ice Crystal',elements:[32,49,33,50]},
         {name:'Lock',elements:[25,26]},
@@ -46,7 +46,7 @@ types={
         {name:'Semisolid - L',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
         {name:'Semisolid - R',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
 
-        {name:'Bumper',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},//20
+        {name:'Bumper - 1',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},//20
         {name:'Stone - 2',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
         {name:'Stone - 2 - Snow',interval:{x:[10,0],y:[10,0]},slice:1,clump:1},
         {name:'Green Bubble',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
@@ -69,7 +69,7 @@ types={
         {name:'Spikes - Left - 2',interval:{x:[10,-2],y:[10,0]},slice:1,clump:0},
 
         {name:'Spikes - Right - 2',interval:{x:[10,2],y:[10,0]},slice:1,clump:0},//40
-        {name:'Red Bumper',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
+        {name:'Bumper - 3',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
         {name:'Stone - 4',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
         {name:'Stone - 4 - Snow',interval:{x:[10,0],y:[10,0]},slice:1,clump:1},
         {name:'Stone - 4 - Back',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
@@ -95,11 +95,15 @@ types={
         {name:'Spikes - Down - 4',interval:{x:[10,0],y:[10,2]},slice:1,clump:0},
         {name:'Spikes - Left - 4',interval:{x:[10,-2],y:[10,0]},slice:1,clump:0},
         {name:'Spikes - Right - 4',interval:{x:[10,2],y:[10,0]},slice:1,clump:0},
+        {name:'Crystal - 5',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
+        {name:'Collapsing - 5',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
+        {name:'Bonker',interval:{x:[10,0],y:[10,0]},slice:1,clump:0},
+
     ]
 }
 stage={scene:'menu',scale:0}
 menu={scene:0,transition:0,sceneAnim:[0,0],select:-1,selectAnim:[0,0,0,0,0],levelPos:[[600,540],[300,450],[810,360],[480,270],[660,180]],playerAnim:[0,0]}
-game={level:5,zone:1,progress:{zone:0},time:0,player:{size:1},
+game={level:5,zone:4,progress:{zone:0},time:0,player:{size:1},
 edge:{x:0,y:0},spawn:{x:0,y:0},scroll:{x:0,y:0},wind:{x:0,y:0},iceSwitch:0,
 connections:[],previous:{zone:0},players:[0],flowers:0,deaths:0,running:{flowers:0,deaths:0},loadPlan:0,levelData:[]}
 physics={gravity:0.5,friction:{x:0.96,y:0.995},resistance:{x:0.84,y:0.99}}
