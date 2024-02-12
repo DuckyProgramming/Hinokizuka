@@ -28,21 +28,25 @@ class wall extends physical{
                 this.base.height=4
                 this.height=4
                 this.width=this.base.width-4
+                this.deadly=true
             break
             case 3: case 38: case 53: case 62:
                 this.base.height=4
                 this.height=4
                 this.width=this.base.width-4
+                this.deadly=true
             break
             case 4: case 39: case 54: case 63:
                 this.base.width=4
                 this.width=4
                 this.height=this.base.height-4
+                this.deadly=true
             break
             case 5: case 40: case 55: case 64:
                 this.base.width=4
                 this.width=4
                 this.height=this.base.height-4
+                this.deadly=true
             break
             case 7: case 14: case 28:
                 this.base.width=30
@@ -107,6 +111,7 @@ class wall extends physical{
             case 16: case 45: case 65:
                 this.width=this.base.width-10
                 this.height=this.base.height-10
+                this.deadly=true
             break
             case 20: case 41:
                 this.base.width=40
@@ -257,6 +262,7 @@ class wall extends physical{
                 this.move=0
             break
             case 67:
+                this.deadly=true
                 this.timer=0
                 this.pause=0
                 this.history=[]
@@ -1122,7 +1128,26 @@ class wall extends physical{
                     }
                 }
             break
-
+            case 68:
+                this.layer.fill(0,this.fade)
+                this.layer.stroke(255,this.fade)
+                this.layer.strokeWeight(1)
+                this.layer.beginShape()
+                for(let a=0,la=this.width*3/10;a<la;a++){
+                    this.layer.vertex(-this.width/2+a*10/3,-this.height/2-a%2*6)
+                }
+                for(let a=0,la=this.height*3/10;a<la;a++){
+                    this.layer.vertex(this.width/2+a%2*6,-this.height/2+a*10/3)
+                }
+                for(let a=0,la=this.width*3/10;a<la;a++){
+                    this.layer.vertex(this.width/2-a*10/3,this.height/2+a%2*6)
+                }
+                for(let a=0,la=this.height*3/10;a<la;a++){
+                    this.layer.vertex(-this.width/2-a%2*6,this.height/2-a*10/3)
+                }
+                this.layer.endShape(CLOSE)
+                this.layer.image(graphics.walls[16],0,0,this.width,this.height,this.position.x%(graphics.walls[16].width-this.width),this.position.y%(graphics.walls[16].width-this.height),this.width,this.height)
+            break
         }
         this.layer.pop()
         if(dev.hitbox){
@@ -1915,6 +1940,16 @@ class wall extends physical{
                                             c.stamina=c.base.stamina
                                             c.dashCut()
                                         }
+                                    }
+                                break
+                                case 68:
+                                    if(c.dash.active>0){
+                                        c.dash.active=9
+                                        c.dreamTime=2
+                                        c.dash.available=true
+                                        c.jumpTime=c.base.jumpTime*2
+                                    }else{
+                                        c.goal.dead=true
                                     }
                                 break
                                 default:

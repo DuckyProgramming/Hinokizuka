@@ -29,11 +29,25 @@ function mainloop(layer){
                     ){
                         run.fore[a][b].display()
                     }
-                    run.fore[a][b].update()
-                    if(run.fore[a][b].remove){
-                        run.fore[a].splice(b,1)
-                        b--
-                        lb--
+                    if(!run.fore[a][b].deadly){
+                        run.fore[a][b].update()
+                        if(run.fore[a][b].remove){
+                            run.fore[a].splice(b,1)
+                            b--
+                            lb--
+                        }
+                    }
+                }
+            }
+            for(let a=0,la=run.fore.length;a<la;a++){
+                for(let b=0,lb=run.fore[a].length;b<lb;b++){
+                    if(run.fore[a][b].deadly){
+                        run.fore[a][b].update()
+                        if(run.fore[a][b].remove){
+                            run.fore[a].splice(b,1)
+                            b--
+                            lb--
+                        }
                     }
                 }
             }

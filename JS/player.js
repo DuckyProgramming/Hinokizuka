@@ -12,6 +12,7 @@ class player extends partisan{
         this.weakTime=0
         this.safeTime=0
         this.staySafeTime=0
+        this.dreamTime=0
         this.stamina=360
         this.crush=[false,false,false,false]
         this.contact=[false,false,false,false]
@@ -25,7 +26,7 @@ class player extends partisan{
         this.bonk=0
         this.safe=0
         this.offset={position:{x:0,y:0}}
-        this.anim={dash:5,golden:0,goldenStop:0,stamina:0,staminaActive:0,climb:0,crouch:0,move:0,jump:0,orb:0}
+        this.anim={dash:5,golden:0,goldenStop:0,stamina:0,staminaActive:0,climb:0,crouch:0,move:0,jump:0,orb:0,dream:0}
         this.dash={active:0,timer:0,available:true,direction:0,second:{available:false},golden:{timer:0,direction:{x:0,y:0}}}
         this.physics={moveSpeed:0.6,moveCap:4,jumpPower:-8.75,wallJumpPower:{x:5,y:-6},dashPower:{x:12,y:10},orbSpeed:0.1,weaken:{dash:18,wallJump:12}}
         this.orb={active:false,speed:0,safe:false}
@@ -327,7 +328,10 @@ class player extends partisan{
                 this.goal.dead=false
                 this.dash.available=true
                 this.dash.second.available=false
+                this.dash.golden.timer=0
                 this.anim.dash=5
+                this.anim.golden=0
+                this.anim.goldenStop=0
                 this.dash.timer=0
                 this.bubble.active=false
                 this.width=this.base.base.width
@@ -1994,6 +1998,12 @@ class player extends partisan{
                 regStar(this.layer,0,0,6,50*(1-a/la),50*(1-a/la),20*(1-a/la),20*(1-a/la),a*6+this.time)
             }
         }
+        if(this.anim.dream>0){
+            for(let a=0,la=15;a<la;a++){
+                this.layer.fill(this.type*100,100-this.type*100,200,this.anim.dream*0.2)
+                regStar(this.layer,0,0,5,50*(1-a/la),50*(1-a/la),22*(1-a/la),22*(1-a/la),a*6+this.time)
+            }
+        }
         this.layer.pop()
         if(dev.hitbox&&!this.graphical){
             super.display()
@@ -2103,6 +2113,9 @@ class player extends partisan{
             if(this.weakTime>0){
                 this.weakTime--
             }
+            if(this.dreamTime>0){
+                this.dreamTime--
+            }
             if(this.safeTime>0){
                 this.safeTime--
                 this.staySafeTime++
@@ -2173,6 +2186,11 @@ class player extends partisan{
                         case 4:
                             if((this.contact[2]||this.contact[3])&&(this.jumpTime<=0||this.dash.active)||this.climb>0){
                                 let a=this.velocity.y
+                                if(this.contact[2]){
+                                    this.goal.direction.main=-54
+                                }else if(this.contact[3]){
+                                    this.goal.direction.main=54
+                                }
                                 inputs.keys[this.id][4]=false
                                 if(this.climb>0){
                                     inputs.keys[this.id][6]=false
@@ -2473,6 +2491,7 @@ class player extends partisan{
         this.anim.orb=smoothAnim(this.anim.orb,this.orb.active,0,1,15)
         this.anim.golden=smoothAnim(this.anim.golden,this.dash.golden.timer>0,0,1,5)
         this.anim.goldenStop=smoothAnim(this.anim.goldenStop,this.dash.golden.timer>0&&this.dash.golden.timer<30,0,1,5)
+        this.anim.dream=smoothAnim(this.anim.dream,this.dreamTime>0,0,1,5)
         this.width=map(this.anim.golden,0,1,this.base.width,24)
         this.height=map(this.anim.golden,0,1,(this.base.height-this.anim.crouch*6)*game.player.size,24)
         this.offset.position.y=this.anim.crouch*game.player.size
@@ -2530,7 +2549,7 @@ class player extends partisan{
                 }
             }
             this.safe++
-            this.fade=smoothAnim(this.fade,this.dash.golden.timer<=0&&!this.orb.active&&!this.bubble.active,0,1,5)
+            this.fade=smoothAnim(this.fade,this.dash.golden.timer<=0&&this.dreamTime<=0&&!this.orb.active&&!this.bubble.active,0,1,5)
         }
     }
 }

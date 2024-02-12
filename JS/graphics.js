@@ -4,8 +4,8 @@ function setupGraphics(){
     setupLayer(graphics.main)
     graphics.players.push(new player(this.layer,0,0,0,0,true))
     graphics.players.push(new player(this.layer,0,0,1,0,true))
-    for(let a=0,la=16;a<la;a++){
-        graphics.walls.push(createGraphics(40,40))
+    for(let a=0,la=17;a<la;a++){
+        graphics.walls.push(a==16?createGraphics(400,400):createGraphics(40,40))
         setupLayer(graphics.walls[a])
         displayWallGraphic(graphics.walls[a],a)
     }
@@ -453,6 +453,14 @@ function displayWallGraphic(layer,type){
                 layer.fill(220,80,240)
                 layer.rotate(180/la)
                 layer.triangle(0,0,5,8,4,22)
+            }
+        break
+        case 16:
+            for(let a=0,la=layer.width/20;a<la;a++){
+                for(let b=0,lb=layer.height/20;b<lb;b++){
+                    layer.fill(random(150,255),255,random(150,255))
+                    layer.ellipse(-layer.width/2+a*20+random(-4,24),-layer.height/2+b*20+random(-4,24),random(2,3))
+                }
             }
         break
     }
