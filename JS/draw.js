@@ -8,12 +8,12 @@ function mainloop(layer){
             operateMenu(layer)
         break
         case 'ending':
-            layer.image(graphics.backgrounds[[0,1,2,4,6,7][game.level]],600,300,1200,600)
+            layer.image(graphics.backgrounds[[0,1,2,4,6,7,9][game.level]],600,300,1200,600)
             operateEnding(layer)
         break
         case 'main':
-            layer.image(graphics.backgrounds[[0,1,2,4,6,7][game.level]],900-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
-            layer.image(graphics.backgrounds[[0,1,2,4,6,7][game.level]],2700-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
+            layer.image(graphics.backgrounds[[0,1,2,4,6,7,9][game.level]],900-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
+            layer.image(graphics.backgrounds[[0,1,2,4,6,7,9][game.level]],2700-(view.scroll.x+game.scroll.x+99999)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2),1800,900)
             layer.push()
             layer.translate(-view.scroll.x,-view.scroll.y)
             layer.scale(view.zoom)

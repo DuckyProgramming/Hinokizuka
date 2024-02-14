@@ -270,8 +270,8 @@ class wall extends physical{
                 this.speed=0
             break
         }
-        this.standard=this.type==0||this.type==1||this.type==6||this.type==15||this.type==18||this.type==19||this.type==21||this.type==22||this.type==26||this.type==29||this.type==30||this.type==31||this.type==34||this.type==35||this.type==42||this.type==43||this.type==46||this.type==51||this.type==56||this.type==57||this.type==66||this.type==67
-        this.safe=this.type==1||this.type==6||this.type==21||this.type==22||this.type==34||this.type==35||this.type==42||this.type==43||this.type==56||this.type==57
+        this.standard=this.type==0||this.type==1||this.type==6||this.type==15||this.type==18||this.type==19||this.type==21||this.type==22||this.type==26||this.type==29||this.type==30||this.type==31||this.type==34||this.type==35||this.type==42||this.type==43||this.type==46||this.type==51||this.type==56||this.type==57||this.type==66||this.type==67||this.type==69
+        this.safe=this.type==1||this.type==6||this.type==21||this.type==22||this.type==34||this.type==35||this.type==42||this.type==43||this.type==56||this.type==57||this.type==69
     }
     onDash(){
         switch(this.type){
@@ -1147,6 +1147,27 @@ class wall extends physical{
                 }
                 this.layer.endShape(CLOSE)
                 this.layer.image(graphics.walls[16],0,0,this.width,this.height,this.position.x%(graphics.walls[16].width-this.width),this.position.y%(graphics.walls[16].width-this.height),this.width,this.height)
+            break
+            case 69:
+                this.layer.fill(0,this.fade)
+                this.layer.rect(0,0,this.width-2,this.height-2)
+                this.layer.noFill()
+                this.layer.stroke(150,this.fade)
+                this.layer.strokeWeight(2)
+                for(let a=0,la=this.width/10-1;a<la;a++){
+                    this.layer.line(-this.width/2+10+a*10,-this.height/2+1,-this.width/2+10+a*10,this.height/2-1)
+                }
+                for(let a=0,la=this.height/10-1;a<la;a++){
+                    this.layer.line(-this.width/2+1,-this.height/2+10+a*10,this.width/2-1,-this.height/2+10+a*10)
+                }
+                this.layer.stroke(255,this.fade)
+                this.layer.rect(0,0,this.width-2,this.height-2)
+                this.layer.line(-this.width/2+1,-this.height/2+1,-this.width/2-4,-this.height/2+1)
+                this.layer.arc(-this.width/2-4,-this.height/2+5,8,8,90,270)
+                this.layer.arc(-this.width/2-4,-this.height/2+7,4,4,-90,90)
+                this.layer.line(this.width/2-1,-this.height/2+1,this.width/2+4,-this.height/2+1)
+                this.layer.arc(this.width/2+4,-this.height/2+5,8,8,-90,90)
+                this.layer.arc(this.width/2+4,-this.height/2+7,4,4,90,270)
             break
         }
         this.layer.pop()

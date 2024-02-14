@@ -2,17 +2,20 @@ bugs[
 ]
 world 5[
     levels[
-        19
-        20
-        21
         22
         23
         24
     ]
-    menu presence
 ]
 bonus world[
-    tech room
+    tech room[
+        1
+        2
+        3
+    ]
+]
+extraneous[
+    speedrun timer
 ]
 
 life of a doublo?

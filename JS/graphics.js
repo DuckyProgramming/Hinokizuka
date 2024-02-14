@@ -9,7 +9,7 @@ function setupGraphics(){
         setupLayer(graphics.walls[a])
         displayWallGraphic(graphics.walls[a],a)
     }
-    for(let a=0,la=9;a<la;a++){
+    for(let a=0,la=10;a<la;a++){
         graphics.backgrounds.push(createGraphics(1800,900))
         setupLayer(graphics.backgrounds[a])
         displayBack(graphics.backgrounds[a],a)
@@ -320,6 +320,9 @@ function displayBack(layer,type){
                     layer.line(c,d-random(3,6),c,d+random(3,6))
                 }
             }
+        break
+        case 9:
+            layer.background(0)
         break
     }
 }
