@@ -264,7 +264,7 @@ function displayBack(layer,type){
                 }
             }
             for(let a=0,la=50;a<la;a++){
-                let b=-50+a*78%(layer.width+100)+random(-10,10)
+                let b=a*73%layer.width+random(-10,10)
                 let c=random(15,20)
                 let d=layer.height*(1.01+a/la*0.06)
                 let e=random(180,360)
@@ -449,10 +449,10 @@ function displayWallGraphic(layer,type){
             for(a=0,la=7;a<la;a++){
                 layer.fill(240,80,120)
                 layer.rotate(180/la)
-                layer.triangle(0,0,5,8,4,22)
+                layer.triangle(0,0,5,8,4,23)
                 layer.fill(220,80,240)
                 layer.rotate(180/la)
-                layer.triangle(0,0,5,8,4,22)
+                layer.triangle(0,0,5,8,4,23)
             }
         break
         case 16:
