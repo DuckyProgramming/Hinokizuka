@@ -653,17 +653,11 @@ function generateLevel(level,layer,context){
                 case 0:
                     for(let a=0,la=entities.walls.length;a<la;a++){
                         for(let b=0,lb=entities.walls[a].length;b<lb;b++){
-                            if(entities.walls[a][b].deprecate&&entities.walls[a][b].position.y+entities.walls[a][b].base.height/2+nudge.y>=old.edge.y){
+                            if(entities.walls[a][b].deprecate&&entities.walls[a][b].position.y+entities.walls[a][b].base.height/2+nudge.y>=old.edge.y&&entities.walls[a][b].expandable){
                                 entities.walls[a][b].position.y+=level.edge.y/2
                                 entities.walls[a][b].height+=level.edge.y
                                 entities.walls[a][b].base.height+=level.edge.y
                                 entities.walls[a][b].downsize.trigger[0]=true
-                                entities.walls[a][b].downsize.value=level.edge.y
-                            }else if(!entities.walls[a][b].deprecate&&entities.walls[a][b].position.y-entities.walls[a][b].base.height/2<=0){
-                                entities.walls[a][b].position.y-=level.edge.y/2
-                                entities.walls[a][b].height+=level.edge.y
-                                entities.walls[a][b].base.height+=level.edge.y
-                                entities.walls[a][b].downsize.trigger[1]=true
                                 entities.walls[a][b].downsize.value=level.edge.y
                             }
                         }
@@ -672,17 +666,11 @@ function generateLevel(level,layer,context){
                 case 1:
                     for(let a=0,la=entities.walls.length;a<la;a++){
                         for(let b=0,lb=entities.walls[a].length;b<lb;b++){
-                            if(!entities.walls[a][b].deprecate&&entities.walls[a][b].position.y+entities.walls[a][b].base.height/2>=level.edge.y){
+                            if(!entities.walls[a][b].deprecate&&entities.walls[a][b].position.y+entities.walls[a][b].base.height/2>=level.edge.y&&entities.walls[a][b].expandable){
                                 entities.walls[a][b].position.y+=old.edge.y/2
                                 entities.walls[a][b].height+=old.edge.y
                                 entities.walls[a][b].base.height+=old.edge.y
                                 entities.walls[a][b].downsize.trigger[0]=true
-                                entities.walls[a][b].downsize.value=old.edge.y
-                            }else if(entities.walls[a][b].deprecate&&entities.walls[a][b].position.y-entities.walls[a][b].base.height/2-nudge.y<=0){
-                                entities.walls[a][b].position.y-=old.edge.y/2
-                                entities.walls[a][b].height+=old.edge.y
-                                entities.walls[a][b].base.height+=old.edge.y
-                                entities.walls[a][b].downsize.trigger[1]=true
                                 entities.walls[a][b].downsize.value=old.edge.y
                             }
                         }
@@ -752,6 +740,14 @@ function operateBack(layer){
     if(game.level==0){
         displayComponent(layer,0)
     }
+    if(game.level==5&&game.zone==23){
+        for(let a=0,la=entities.players.length;a<la;a++){
+            if(entities.players[a].position.x>2160&&entities.players[a].position.y<1200){
+                transition.trigger=true
+                transition.scene='ending'
+            }
+        }
+    }
 }
 function operateInner(layer){
     for(let a=0,la=3;a<la;a++){
@@ -800,10 +796,10 @@ function operateOuter(layer){
             layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
             layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
             layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
-            layer.image(graphics.backgrounds[5],900-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
-            layer.image(graphics.backgrounds[5],2700-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
-            layer.image(graphics.backgrounds[5],900-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
-            layer.image(graphics.backgrounds[5],2700-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
+            layer.image(graphics.backgrounds[5],900-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(900+game.time*(1+game.wind.y)/10%900)%900,1800,900)
+            layer.image(graphics.backgrounds[5],2700-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(900+game.time*(1+game.wind.y)/10%900)%900,1800,900)
+            layer.image(graphics.backgrounds[5],900-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(900+game.time*(1+game.wind.y)/10%900)%900,1800,900)
+            layer.image(graphics.backgrounds[5],2700-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(900+game.time*(1+game.wind.y)/10%900)%900,1800,900)
         break
         case 4:
             layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
@@ -812,14 +808,14 @@ function operateOuter(layer){
             layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
         break
         case 5:
-            layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
-            layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
-            layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
-            layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+game.time*3%900,1800,900)
-            layer.image(graphics.backgrounds[8],900-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
-            layer.image(graphics.backgrounds[8],2700-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
-            layer.image(graphics.backgrounds[8],900-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
-            layer.image(graphics.backgrounds[8],2700-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(game.time*(1+game.wind.y)/10)%900,1800,900)
+            layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(300+game.time*(1+game.wind.y/40)%900)*3%900,1800,900)
+            layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(300+game.time*(1+game.wind.y/40)%900)*3%900,1800,900)
+            layer.image(graphics.backgrounds[3],900-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(300+game.time*(1+game.wind.y/40)%900)*3%900,1800,900)
+            layer.image(graphics.backgrounds[3],2700-(view.scroll.x+game.scroll.x+game.time)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(300+game.time*(1+game.wind.y/40)%900)*3%900,1800,900)
+            layer.image(graphics.backgrounds[8],900-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(900+game.time*(1+game.wind.y)/10%900)%900,1800,900)
+            layer.image(graphics.backgrounds[8],2700-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,-450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(900+game.time*(1+game.wind.y)/10%900)%900,1800,900)
+            layer.image(graphics.backgrounds[8],900-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(900+game.time*(1+game.wind.y)/10%900)%900,1800,900)
+            layer.image(graphics.backgrounds[8],2700-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(900+game.time*(1+game.wind.y)/10%900)%900,1800,900)
         break
     }
 }

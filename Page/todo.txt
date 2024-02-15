@@ -1,12 +1,5 @@
 bugs[
 ]
-world 5[
-    levels[
-        22
-        23
-        24
-    ]
-]
 bonus world[
     tech room[
         1

@@ -309,6 +309,15 @@ function displayBack(layer,type){
             layer.fill(180-a,100-a,140-a)
             layer.ellipse(0,layer.height*0.918,180)
             layer.ellipse(layer.width,layer.height*0.918,180)
+            for(let a=0,la=21;a<la;a++){
+                let b=random(0,60)
+                layer.fill(140-b,60-b,100-b)
+                layer.ellipse(layer.width*((a*8)%21+random(0.9,1.1))/(la+1),layer.height*random(0.99,1.03),random(175,225))
+            }
+            a=random(0,60)
+            layer.fill(140-a,60-a,100-a)
+            layer.ellipse(0,layer.height*0.988,230)
+            layer.ellipse(layer.width,layer.height*0.988,230)
         break
         case 8:
             layer.stroke(240,160-random(0,40),180-random(0,20))

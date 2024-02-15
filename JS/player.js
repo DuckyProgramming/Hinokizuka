@@ -2156,7 +2156,7 @@ class player extends partisan{
             this.velocity.x-=game.wind.x/400
         }
         if(this.climb==0&&!dev.nograv&&game.wind.y!=0&&abs(this.velocity.y)<10){
-            this.velocity.y-=game.wind.y/400
+            this.velocity.y+=game.wind.y/400
         }
         super.update()
         if(!this.orb.active){
@@ -2421,6 +2421,7 @@ class player extends partisan{
                     let trigger=false
                     for(let a=0,la=game.connections.length;a<la;a++){
                         if(game.connections[a].side==2&&this.position.x>=game.connections[a].region[0]&&this.position.x<=game.connections[a].region[1]){
+                            trigger=true
                             if(game.connections[a].id==-1){
                                 this.position.y=game.edge.y
                             }else if(game.connections[a].id==-2){
@@ -2436,7 +2437,6 @@ class player extends partisan{
                                 game.loadPlan=4
                                 break
                             }
-                            trigger=true
                         }
                     }
                     if(!this.goal.dead&&!trigger&&view.scroll.anim>=10){

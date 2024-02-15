@@ -270,8 +270,9 @@ class wall extends physical{
                 this.speed=0
             break
         }
-        this.standard=this.type==0||this.type==1||this.type==6||this.type==15||this.type==18||this.type==19||this.type==21||this.type==22||this.type==26||this.type==29||this.type==30||this.type==31||this.type==34||this.type==35||this.type==42||this.type==43||this.type==46||this.type==51||this.type==56||this.type==57||this.type==66||this.type==67||this.type==69
-        this.safe=this.type==1||this.type==6||this.type==21||this.type==22||this.type==34||this.type==35||this.type==42||this.type==43||this.type==56||this.type==57||this.type==69
+        this.standard=[0,1,6,15,18,19,21,22,26,29,30,31,34,35,42,43,46,51,56,57,66,67,69].includes(this.type)
+        this.safe=[1,6,21,22,34,35,42,43,56,57,69].includes(this.type)
+        this.expandable=[1,2,3,4,5,6,16,17,21,22,27,34,35,36,37,38,39,40,42,43,44,45,52,53,54,55,56,57,58,61,62,63,64,65].includes(this.type)
     }
     onDash(){
         switch(this.type){
@@ -1169,6 +1170,44 @@ class wall extends physical{
                 this.layer.arc(this.width/2+4,-this.height/2+5,8,8,-90,90)
                 this.layer.arc(this.width/2+4,-this.height/2+7,4,4,90,270)
             break
+            case 70:
+                this.layer.fill(200,150,100)
+                this.layer.rect(0,0,this.width,this.height)
+                this.layer.fill(150,100,200)
+                this.layer.beginShape()
+                this.layer.vertex(this.width/2,-this.height/2+3)
+                this.layer.vertex(this.width/2,-this.height*0.2+3)
+                this.layer.bezierVertex(this.width*(3*(1+cos(this.time*8)*0.01)+0.5),-this.height*0.2+3+sin(this.time*4)*20,this.width*(6*(1+cos(this.time*8)*0.01)+0.5),-this.height*0.2+3-sin(this.time*4)*20,this.width*(9*(1+cos(this.time*8)*0.01)+0.5),-this.height*0.2+3)
+                this.layer.vertex(this.width*(9*(1+cos(this.time*8)*0.01)+0.5),-this.height/2+3)
+                this.layer.bezierVertex(this.width*(6*(1+cos(this.time*8)*0.01)+0.5),-this.height/2+3-sin(this.time*4)*20,this.width*(3*(1+cos(this.time*8)*0.01)+0.5),-this.height/2+3+sin(this.time*4)*20,this.width/2,-this.height/2+3)
+                this.layer.endShape()
+                this.layer.fill(50,100,200)
+                this.layer.beginShape()
+                this.layer.vertex(this.width/2,-this.height*0.4+3)
+                this.layer.vertex(this.width/2,-this.height*0.3+3)
+                this.layer.bezierVertex(this.width*(3*(1+cos(this.time*8)*0.01)+0.5),-this.height*0.3+3+sin(this.time*4)*20,this.width*(6*(1+cos(this.time*8)*0.01)+0.5),-this.height*0.3+3-sin(this.time*4)*20,this.width*(9*(1+cos(this.time*8)*0.01)+0.5),-this.height*0.3+3)
+                this.layer.vertex(this.width*(9*(1+cos(this.time*8)*0.01)+0.5),-this.height*0.4+3)
+                this.layer.bezierVertex(this.width*(6*(1+cos(this.time*8)*0.01)+0.5),-this.height*0.4+3-sin(this.time*4)*20,this.width*(3*(1+cos(this.time*8)*0.01)+0.5),-this.height*0.4+3+sin(this.time*4)*20,this.width/2,-this.height*0.4+3)
+                this.layer.endShape()
+            break
+            case 71:
+                this.layer.fill(180,80,100,this.fade)
+                this.layer.rect(0,0,this.width+8,this.height+1)
+                this.layer.stroke(250,this.fade)
+                this.layer.strokeWeight(5)
+                this.layer.line(-this.width/2-3,-this.height/2+1,this.width/2+3,-this.height/2+1)
+            break
+            case 72:
+                this.layer.fill(160,60,80,this.fade)
+                this.layer.rect(0,0,this.width,this.height,5)
+                this.layer.fill(80,40,50,this.fade)
+                this.layer.rect(0,-this.height*0.05,this.width*0.675,this.height*0.36,3)
+                this.layer.triangle(-this.width*0.2,-this.height*0.3,this.width*0.2,-this.height*0.3,0,-this.height*0.4)
+                this.layer.fill(50,25,30,this.fade)
+                this.layer.rect(0,-this.height*0.05,this.width*0.675,this.height*0.12)
+                this.layer.textSize(10)
+                this.layer.text('200m',0,this.height*0.3)
+            break
         }
         this.layer.pop()
         if(dev.hitbox){
@@ -1633,7 +1672,7 @@ class wall extends physical{
             break
         }
         if(this.fade>0.2&&!this.deprecate&&
-            this.type!=17&&this.type!=27&&this.type!=33&&this.type!=36&&this.type!=44&&this.type!=50&&this.type!=58
+            this.type!=17&&this.type!=27&&this.type!=33&&this.type!=36&&this.type!=44&&this.type!=50&&this.type!=58&&this.type!=70&&this.type!=71&&this.type!=72
         ){
             for(let a=0,la=this.collide.box.length;a<la;a++){
                 for(let b=0,lb=this.collide.box[a].length;b<lb;b++){
@@ -1941,12 +1980,14 @@ class wall extends physical{
                                     }
                                 break
                                 case 48:
-                                    if(this.timer==0&&c.dash.golden.timer<=0){
+                                    if(this.timer==0){
+                                        if(c.dash.golden.timer<=0){
+                                            c.dash.golden.direction=c.velocity.x>0?{x:1,y:0}:(c.velocity.x<0?{x:-1,y:0}:{x:0,y:-1})
+                                            c.stamina=c.base.stamina
+                                            c.velocity.x=0
+                                            c.velocity.y=0
+                                        }
                                         c.dash.golden.timer=120
-                                        c.dash.golden.direction=c.velocity.x>0?{x:1,y:0}:c.velocity.x<0?{x:-1,y:0}:{x:0,y:-1}
-                                        c.stamina=c.base.stamina
-                                        c.velocity.x=0
-                                        c.velocity.y=0
                                         this.timer=180
                                     }
                                 break
