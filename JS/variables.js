@@ -6,7 +6,7 @@ types={
         {name:'Stone - 3',elements:[34,35,36]},
         {name:'Stone - 4',elements:[42,43,44]},
         {name:'Stone - 5',elements:[56,57,58,71]},
-        {name:'Spacial',elements:[69]},
+        {name:'Spacial',elements:[69,73,74]},
         {name:'Spikes - 1',elements:[2,3,4,5]},
         {name:'Spikes - 2',elements:[37,38,39,40]},
         {name:'Spikes - 3',elements:[52,53,54,55]},
@@ -105,14 +105,16 @@ types={
         {name:'Flag',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},//70
         {name:'Stone - 5 - Back - Snow',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
         {name:'Finality Marker',interval:{x:[10,0],y:[10,0]},slice:1,clump:2},
-
+        {name:'Crystal - Spacial',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
+        {name:'Collapsing - Spacial',interval:{x:[10,0],y:[10,0]},slice:0,clump:0},
+        
     ]
 }
 stage={scene:'menu',scale:0}
-menu={scene:0,transition:0,sceneAnim:[0,0],select:-1,selectAnim:[0,0,0,0,0,0],levelPos:[[600,540],[300,450],[810,360],[480,270],[660,180],[600,90]],playerAnim:[0,0]}
-game={level:5,zone:23,progress:{zone:0},time:0,player:{size:1},
+menu={scene:0,transition:0,sceneAnim:[0,0],select:-1,available:[true,true,true,true,true,true,false],complete:[false,false,false,false,false,false,false],selectAnim:[0,0,0,0,0,0,0],levelPos:[[600,540],[300,450],[810,360],[480,270],[660,180],[600,90],[840,90]],playerAnim:[0,0]}
+game={level:6,zone:2,progress:{zone:0},time:0,player:{size:1},runTime:0,timeActive:false,
 edge:{x:0,y:0},spawn:{x:0,y:0},scroll:{x:0,y:0},wind:{x:0,y:0},iceSwitch:0,
-connections:[],previous:{zone:0},players:[0],flowers:0,deaths:0,running:{flowers:0,deaths:0},loadPlan:0,levelData:[]}
+connections:[],previous:{zone:0},players:[0],flowers:0,deaths:0,running:{flowers:0,deaths:0,runTime:0},loadPlan:0,levelData:[]}
 physics={gravity:0.5,friction:{x:0.96,y:0.995},resistance:{x:0.84,y:0.99}}
 view={scroll:{x:0,y:0,anim:0},zoom:1,goal:{scroll:{x:0,y:0}},previous:{scroll:{x:0,y:0}}}
 elements={flower:{anim:0,timer:0}}

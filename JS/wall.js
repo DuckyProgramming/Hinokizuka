@@ -70,7 +70,7 @@ class wall extends physical{
                     this.subVelocity={y:0}
                 }
             break
-            case 8: case 66:
+            case 8: case 66: case 74:
                 this.timer=0
             break
             case 9:
@@ -108,7 +108,7 @@ class wall extends physical{
                 this.base.height=4
                 this.height=4
             break
-            case 16: case 45: case 65:
+            case 16: case 45: case 65: case 73:
                 this.width=this.base.width-10
                 this.height=this.base.height-10
                 this.deadly=true
@@ -270,9 +270,9 @@ class wall extends physical{
                 this.speed=0
             break
         }
-        this.standard=[0,1,6,15,18,19,21,22,26,29,30,31,34,35,42,43,46,51,56,57,66,67,69].includes(this.type)
+        this.standard=[0,1,6,15,18,19,21,22,26,29,30,31,34,35,42,43,46,51,56,57,66,67,69,74].includes(this.type)
         this.safe=[1,6,21,22,34,35,42,43,56,57,69].includes(this.type)
-        this.expandable=[1,2,3,4,5,6,16,17,21,22,27,34,35,36,37,38,39,40,42,43,44,45,52,53,54,55,56,57,58,61,62,63,64,65].includes(this.type)
+        this.expandable=[1,2,3,4,5,6,16,17,21,22,27,34,35,36,37,38,39,40,42,43,44,45,52,53,54,55,56,57,58,61,62,63,64,65,73].includes(this.type)
     }
     onDash(){
         switch(this.type){
@@ -1208,6 +1208,21 @@ class wall extends physical{
                 this.layer.textSize(10)
                 this.layer.text('200m',0,this.height*0.3)
             break
+            case 73:
+                this.layer.fill(160,160,160,this.fade)
+                this.layer.rect(0,0,this.width-10,this.height-10)
+                for(let a=0,la=this.base.width/20;a<la;a++){
+                    for(let b=0,lb=this.base.height/20;b<lb;b++){
+                        this.layer.image(graphics.walls[(a+b)%4+17],-this.base.width/2+10+a*20,-this.base.height/2+10+b*20,40,40)
+                    }
+                }
+            break
+            case 74:
+                this.layer.fill(200,200,200,this.fade)
+                for(let a=0,la=this.width/10;a<la;a++){
+                    this.layer.rect(-this.width/2+5+a*10,0,9,this.height,2)
+                }
+            break
         }
         this.layer.pop()
         if(dev.hitbox){
@@ -1293,7 +1308,7 @@ class wall extends physical{
                     this.position.y+=this.subVelocity.y
                 }
             break
-            case 8: case 66:
+            case 8: case 66: case 74:
                 if(this.timer>0){
                     this.timer--
                 }
@@ -1708,7 +1723,7 @@ class wall extends physical{
                                 c.crush[d]=true
                             }
                             switch(this.type){
-                                case 8: case 66:
+                                case 8: case 66: case 74:
                                     if(this.timer==1){
                                         c.goal.dead=true
                                     }
@@ -1885,7 +1900,7 @@ class wall extends physical{
                                         c.dashCut()
                                     }
                                 break
-                                case 16: case 45: case 65:
+                                case 16: case 45: case 65: case 73:
                                     c.goal.dead=true
                                 break
                                 case 20: case 41:

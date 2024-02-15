@@ -5,7 +5,7 @@ function mouseClicked(){
             let anyClicked=false
             if(menu.scene==0){
                 for(let a=0,la=menu.playerAnim.length;a<la;a++){
-                    if(dist(220+a*330-600*(0.5-cos(menu.transition*180)*0.5),400,inputs.rel.x,inputs.rel.y)<25){
+                    if(menu.available[a]&&dist(220+a*330-600*(0.5-cos(menu.transition*180)*0.5),400,inputs.rel.x,inputs.rel.y)<25){
                         if(game.players.includes(a)){
                             game.players.splice(game.players.indexOf(a),1)
                             if(game.players.length==0){
@@ -34,6 +34,7 @@ function mouseClicked(){
                             game.scroll.y=0
                             game.running.flowers=0
                             game.running.deaths=0
+                            game.running.runTime=0
                             reformLevels()
                             reformElements()
                             inputs.validKey=a==0?[true,true,true,true,false,false,false,false]:[true,true,true,true,true,true,true,true]
@@ -47,6 +48,8 @@ function mouseClicked(){
                     menu.select=-1
                     if(inPointBox({position:inputs.rel},{position:{x:30,y:graphics.main.height-30},width:40,height:40})){
                         menu.scene=0
+                    }else if(inPointBox({position:inputs.rel},{position:{x:graphics.main.width-30,y:graphics.main.height-30},width:40,height:40})){
+                        game.timeActive=!game.timeActive
                     }
                 }
             }
@@ -54,6 +57,7 @@ function mouseClicked(){
         case 'ending':
             transition.trigger=true
             transition.scene='menu'
+            menu.complete[game.level]=true
         break
         case 'main':
             if(dev.editor){

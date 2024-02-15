@@ -11,6 +11,7 @@ function keyPressed(){
         case 'ending':
             transition.trigger=true
             transition.scene='menu'
+            menu.complete[game.level]=true
         break
     }
     if(game.players.length==1){

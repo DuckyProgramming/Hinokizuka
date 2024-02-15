@@ -175,6 +175,9 @@ function deNumericalDirection(x,y){
             }
     }
 }
+function formatTime(frames){
+    return `${floor(frames/216000)}:${floor(frames/3600)%60<10?`0`:``}${floor(frames/3600)%60}:${floor(frames/60)%60<10?`0`:``}${floor(frames/60)%60}.${floor(frames%60/6*100)<10?`0`:``}${floor(frames%60/6*100)<100?`0`:``}${floor(frames%60/6*100)}`
+}
 //graphical
 function setupBase(){
     colorMode(RGB,255,255,255,1)
@@ -739,12 +742,15 @@ function updateView(){
 function operateBack(layer){
     if(game.level==0){
         displayComponent(layer,0)
+    }else if(game.level==6){
+        displayComponent(layer,5)
     }
     if(game.level==5&&game.zone==23){
         for(let a=0,la=entities.players.length;a<la;a++){
             if(entities.players[a].position.x>2160&&entities.players[a].position.y<1200){
                 transition.trigger=true
                 transition.scene='ending'
+                menu.available[6]=true
             }
         }
     }
@@ -782,6 +788,8 @@ function operateOuter(layer){
         mid.y=constrain(mid.y/total,layer.height/2,game.edge.y-layer.height/2)
         view.goal.scroll.x=game.edge.x<layer.width?game.edge.x/2:mid.x
         view.goal.scroll.y=game.edge.y<layer.height?game.edge.y/2:mid.y
+        game.runTime++
+        game.running.runTime++
     }
     displayComponent(layer,4)
     switch(game.level){
@@ -818,6 +826,10 @@ function operateOuter(layer){
             layer.image(graphics.backgrounds[8],2700-(view.scroll.x+game.scroll.x+(36000+game.time*game.wind.x/2%36000)+sin(game.time*3)*20)/10%1800,450-300*stanh((view.scroll.y+game.scroll.y)/1800+0.2)+(900+game.time*(1+game.wind.y)/10%900)%900,1800,900)
         break
     }
+    if(game.timeActive){
+        displayComponent(layer,6)
+        displayComponent(layer,7)
+    }
 }
 function operateMenu(layer){
     menu.transition=smoothAnim(menu.transition,menu.scene==1,0,1,60)
@@ -832,43 +844,58 @@ function operateMenu(layer){
     }
     layer.noStroke()
     for(let a=0,la=menu.levelPos.length;a<la;a++){
-        layer.fill(220,menu.sceneAnim[1]*menu.selectAnim[a])
-        layer.rect(menu.levelPos[a][0]+80,menu.levelPos[a][1],100,a==0?40:60,4)
-        layer.fill(180,menu.sceneAnim[1]*menu.selectAnim[a])
-        layer.rect(menu.levelPos[a][0]+80,menu.levelPos[a][1],95,a==0?35:55,4)
-        layer.fill(0,menu.sceneAnim[1]*menu.selectAnim[a])
-        layer.textSize(12)
-        layer.text(`${a==0?'Tutorial':`Chapter ${a}\n${game.levelData[a].flowers}/12 Flowers`}\n${game.levelData[a].deaths} Death${game.levelData[a].deaths!=1?`s`:``}`,menu.levelPos[a][0]+80,menu.levelPos[a][1])
-        layer.fill(180,255,255,menu.sceneAnim[1])
-        diamond(layer,menu.levelPos[a][0],menu.levelPos[a][1],50,50)
-        layer.fill(220,255,255,menu.sceneAnim[1])
-        diamond(layer,menu.levelPos[a][0],menu.levelPos[a][1],40,40)
-        layer.fill(0,0,40,menu.sceneAnim[1])
-        layer.textSize(20)
-        layer.text(a==0?'T':a,menu.levelPos[a][0],menu.levelPos[a][1]+1)
+        if(menu.available[a]){
+            layer.fill(220,menu.sceneAnim[1]*menu.selectAnim[a])
+            layer.rect(menu.levelPos[a][0]+80,menu.levelPos[a][1],100,a==0||a==6?40:60,4)
+            layer.fill(180,menu.sceneAnim[1]*menu.selectAnim[a])
+            layer.rect(menu.levelPos[a][0]+80,menu.levelPos[a][1],95,a==0||a==6?35:55,4)
+            layer.fill(0,menu.sceneAnim[1]*menu.selectAnim[a])
+            layer.textSize(12)
+            layer.text(`${a==0?'Tutorial':a==6?`Tech`:`Chapter ${a}\n${game.levelData[a].flowers}/12 Flowers`}\n${game.levelData[a].deaths} Death${game.levelData[a].deaths!=1?`s`:``}`,menu.levelPos[a][0]+80,menu.levelPos[a][1])
+            layer.fill(180,255,255-(menu.complete[a]?75:0),menu.sceneAnim[1])
+            diamond(layer,menu.levelPos[a][0],menu.levelPos[a][1],50,50)
+            layer.fill(220,255,255-(menu.complete[a]?35:0),menu.sceneAnim[1])
+            diamond(layer,menu.levelPos[a][0],menu.levelPos[a][1],40,40)
+            layer.fill(0,0,40,menu.sceneAnim[1])
+            layer.textSize(20)
+            layer.text(a==0?'T':a==6?`I`:a,menu.levelPos[a][0],menu.levelPos[a][1]+1)
+        }
     }
     layer.noFill()
     for(let a=0,la=menu.playerAnim.length;a<la;a++){
-        layer.stroke(500-menu.playerAnim[a]*500,menu.playerAnim[a]*500,0,menu.sceneAnim[0]*0.8)
-        layer.strokeWeight(3)
-        let center=220+a*330-600*(0.5-cos(menu.transition*180)*0.5)
-        layer.ellipse(center,400,50)
-        layer.line(center+12*(1-menu.playerAnim[a]),388-3*menu.playerAnim[a],center+15*menu.playerAnim[a],400)
-        layer.line(center-12*(1-menu.playerAnim[a]),388-3*menu.playerAnim[a],center-15*menu.playerAnim[a],400)
-        layer.line(center+12*(1-menu.playerAnim[a]),412+3*menu.playerAnim[a],center+15*menu.playerAnim[a],400)
-        layer.line(center-12*(1-menu.playerAnim[a]),412+3*menu.playerAnim[a],center-15*menu.playerAnim[a],400)
+        if(menu.available[a]){
+            layer.stroke(500-menu.playerAnim[a]*500,menu.playerAnim[a]*500,0,menu.sceneAnim[0]*0.8)
+            layer.strokeWeight(3)
+            let center=220+a*330-600*(0.5-cos(menu.transition*180)*0.5)
+            layer.ellipse(center,400,50)
+            layer.line(center+12*(1-menu.playerAnim[a]),388-3*menu.playerAnim[a],center+15*menu.playerAnim[a],400)
+            layer.line(center-12*(1-menu.playerAnim[a]),388-3*menu.playerAnim[a],center-15*menu.playerAnim[a],400)
+            layer.line(center+12*(1-menu.playerAnim[a]),412+3*menu.playerAnim[a],center+15*menu.playerAnim[a],400)
+            layer.line(center-12*(1-menu.playerAnim[a]),412+3*menu.playerAnim[a],center-15*menu.playerAnim[a],400)
+        }
     }
     layer.noStroke()
     layer.fill(100,menu.sceneAnim[1])
     layer.rect(30,layer.height-30,40,40,4)
+    layer.rect(layer.width-30,layer.height-30,40,40,4)
     layer.fill(120,menu.sceneAnim[1])
     layer.rect(30,layer.height-30,32,32,4)
+    layer.rect(layer.width-30,layer.height-30,32,32,4)
     layer.fill(40,menu.sceneAnim[1])
     regTriangle(layer,32,layer.height-30,12,12,30)
+    layer.noFill()
+    layer.stroke(40,menu.sceneAnim[1])
+    layer.strokeWeight(2)
+    layer.ellipse(layer.width-30,layer.height-30,24,24)
+    layer.line(layer.width-30,layer.height-30,layer.width-30,layer.height-38)
+    layer.line(layer.width-30,layer.height-30,layer.width-26,layer.height-26)
     if(menu.scene==1){
         elements.flower.timer=1
     }
     displayComponent(layer,4)
+    if(game.timeActive){
+        displayComponent(layer,6)
+    }
 }
 function operateEnding(layer){
     layer.noStroke()
@@ -876,11 +903,14 @@ function operateEnding(layer){
     layer.rect(layer.width/2,layer.height/2,layer.width,layer.height)
     layer.fill(0,0,20)
     layer.textSize(30)
-    layer.text(`${game.level==0?``:`${game.running.flowers}/12 Flowers\n`}${game.running.deaths} Death${game.running.deaths!=1?`s`:``}`,layer.width/2,300)
+    layer.text(`${game.level==0||game.level==6?``:`${game.running.flowers}/12 Flowers\n`}${game.running.deaths} Death${game.running.deaths!=1?`s`:``}`,layer.width/2,300)
     layer.textSize(50)
     layer.text('End of Chapter',layer.width/2,520)
     layer.textSize(25)
     layer.text('Any Key to Continue',layer.width/2,560)
+    if(game.timeActive){
+        displayComponent(layer,8)
+    }
 }
 function displayComponent(layer,type){
     switch(type){
@@ -1029,6 +1059,61 @@ function displayComponent(layer,type){
                 }
                 layer.pop()
             }
+        break
+        case 5:
+            layer.noStroke()
+            layer.fill(240,245,250)
+            layer.textSize(15)
+            switch(game.zone){
+                case 0:
+                    layer.push()
+                    layer.translate(290,460)
+                    layer.rotate(5)
+                    layer.text('Hyperdash:\nDash Diagonally Downward, then\nJump in Quick Succession',0,0)
+                    layer.pop()
+                break
+                case 1:
+                    layer.push()
+                    layer.translate(290,460)
+                    layer.rotate(5)
+                    layer.text('Wavedash:\nHyperdash Starting from the Air\n(Dash Diagonally Downward,\nJump When Touching the Ground)',0,0)
+                    layer.pop()
+                break
+                case 2:
+                    layer.push()
+                    layer.translate(600,300)
+                    layer.rotate(5)
+                    layer.text('Wallbounce:\nDash Diagonally or Straight\nUp into a Wall and\nJump During the Dash',0,0)
+                    layer.pop()
+                break
+            }
+        break
+        case 6:
+            layer.textAlign(RIGHT,CENTER)
+            layer.fill(250)
+            layer.stroke(0)
+            layer.strokeWeight(1)
+            layer.textSize(20)
+            layer.text(formatTime(game.runTime),1190,20)
+            layer.textAlign(CENTER,CENTER)
+        break
+        case 7:
+            layer.textAlign(RIGHT,CENTER)
+            layer.fill(240)
+            layer.stroke(0)
+            layer.strokeWeight(1)
+            layer.textSize(15)
+            layer.text(formatTime(game.running.runTime),1190,40)
+            layer.textAlign(CENTER,CENTER)
+        break
+        case 8:
+            layer.textAlign(RIGHT,CENTER)
+            layer.fill(240)
+            layer.stroke(0)
+            layer.strokeWeight(1)
+            layer.textSize(15)
+            layer.text(formatTime(game.running.runTime),1190,20)
+            layer.textAlign(CENTER,CENTER)
         break
     }
 }
