@@ -2324,6 +2324,11 @@ class player extends partisan{
                                         this.anim.move+=12
                                     }
                                 }
+                                if(this.contact[2]&&!this.contact[3]){
+                                    this.goal.direction.main=-54
+                                }else if(!this.contact[2]&&this.contact[3]){
+                                    this.goal.direction.main=54
+                                }
                             }
                         break
                         case 7:

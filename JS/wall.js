@@ -949,6 +949,10 @@ class wall extends physical{
                 this.layer.rect(0,0,4)
             break
             case 48:
+                this.layer.fill(255,255,180,this.fade*0.3)
+                regStar(this.layer,0,0,6,24,24,8,8,this.time*3)
+                this.layer.fill(255,255,200,this.fade*0.3)
+                regStar(this.layer,0,0,6,18,18,6,6,this.time*3)
                 this.layer.fill(255,255,180,this.fade)
                 this.layer.quad(0,-12,-12,0,0,12,12,0)
                 this.layer.fill(255,255,150,this.fade)
@@ -1693,7 +1697,7 @@ class wall extends physical{
                 for(let b=0,lb=this.collide.box[a].length;b<lb;b++){
                     let c=this.collide.box[a][b]
                     if(!c.orb.active&&!c.goal.dead&&
-                        !((this.type==15||this.type==18||this.type==19)&&(c.velocity.y<=0||c.previous.position.y>this.position.y-this.height/2-c.height/2+6))
+                        !((this.type==15||this.type==18||this.type==19)&&(c.velocity.y<=0||c.previous.position.y>this.position.y-this.height/2-c.height/2+10))
                     ){
                         if(inBoxBox({position:this.previous.position,width:this.width+2,height:this.height+2},c)&&this.standard){
                             let d=collideBoxBox(this,c)
@@ -2082,7 +2086,7 @@ class wall extends physical{
                                     }
                                     switch(this.type){
                                         case 67:
-                                            if(c.dash.active>0){
+                                            if(c.dash.active>0&&this.args[d]==1){
                                                 c.dash.active=0
                                                 c.dash.available=true
                                                 this.direction=d+1
