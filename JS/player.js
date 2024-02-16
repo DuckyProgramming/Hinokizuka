@@ -2171,15 +2171,15 @@ class player extends partisan{
                         break
                         case 2:
                             this.velocity.x=max(this.velocity.x-this.physics.moveSpeed*(this.weakTime>0?0.5:1),min(this.velocity.x,-this.physics.moveCap))
-                            this.goal.direction.main=-54
                             if(this.climb==0){
+                                this.goal.direction.main=-54
                                 this.anim.move+=6
                             }
                         break
                         case 3:
                             this.velocity.x=min(this.velocity.x+this.physics.moveSpeed*(this.weakTime>0?0.5:1),max(this.velocity.x,this.physics.moveCap))
-                            this.goal.direction.main=54
                             if(this.climb==0){
+                                this.goal.direction.main=54
                                 this.anim.move+=6
                             }
                         break
@@ -2224,6 +2224,10 @@ class player extends partisan{
                                     this.dashPhase=false
                                     this.weakTime=this.physics.weaken.wallJump
                                 }
+                                if(this.internal.velocity.x!=0||this.internal.velocity.y!=0){
+                                    this.velocity.x+=this.internal.velocity.x
+                                    this.velocity.y+=this.internal.velocity.y
+                                }
                             }else if(this.jumpTime>0){
                                 inputs.keys[this.id][4]=false
                                 this.jumpTime=0
@@ -2235,9 +2239,9 @@ class player extends partisan{
                                     this.velocity.y=this.physics.jumpPower*0.8
                                 }else{
                                     this.velocity.y=this.physics.jumpPower
-                                    if(this.temp.velocity.x!=0||this.temp.velocity.y!=0){
-                                        this.velocity.x+=this.temp.velocity.x
-                                        this.velocity.y+=this.temp.velocity.y
+                                    if(this.internal.velocity.x!=0||this.internal.velocity.y!=0){
+                                        this.velocity.x+=this.internal.velocity.x
+                                        this.velocity.y+=this.internal.velocity.y
                                     }
                                 }
                                 if(this.dash.active>0){
@@ -2556,5 +2560,9 @@ class player extends partisan{
             this.safe++
             this.fade=smoothAnim(this.fade,this.dash.golden.timer<=0&&this.dreamTime<=0&&!this.orb.active&&!this.bubble.active,0,1,5)
         }
+        this.temp.velocity.x*=0.8
+        this.temp.velocity.y*=0.8
+        this.internal.velocity.x=0
+        this.internal.velocity.y=0
     }
 }

@@ -1720,6 +1720,12 @@ class wall extends physical{
                                 c.position.x+=this.velocity.x
                                 c.position.y+=this.velocity.y
                             }
+                            if(abs(c.internal.velocity.x)<abs(this.velocity.x)){
+                                c.internal.velocity.x=this.velocity.x
+                            }
+                            if(abs(c.internal.velocity.y)<abs(this.velocity.y)){
+                                c.internal.velocity.y=this.velocity.y
+                            }
                         }
                         if(inBoxBox(this,c)){
                             let d=collideBoxBox(this,c)

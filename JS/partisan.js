@@ -3,6 +3,7 @@ class partisan extends physical{
         super(layer,x,y,width,height)
         this.velocity={x:0,y:0}
         this.temp={velocity:{x:0,y:0}}
+        this.internal={velocity:{x:0,y:0}}
         this.previous={position:{x:0,y:0},velocity:{x:0,y:0}}
     }
     resetPhysics(){
@@ -17,7 +18,5 @@ class partisan extends physical{
         vectorSet(this.previous.velocity,this.velocity)
         vectorAdd(this.position,this.velocity)
         vectorAdd(this.position,this.temp.velocity)
-        this.temp.velocity.x*=0.8
-        this.temp.velocity.y*=0.8
     }
 }
