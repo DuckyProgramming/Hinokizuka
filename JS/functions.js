@@ -713,7 +713,7 @@ function updateView(){
             }
         }
     }else if(view.scroll.anim<10){
-        view.scroll.anim+=0.1
+        view.scroll.anim++
         if(view.scroll.anim>=10){
             view.scroll.anim=10
             for(let a=0,la=entities.walls.length;a<la;a++){
