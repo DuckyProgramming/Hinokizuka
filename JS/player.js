@@ -252,7 +252,7 @@ class player extends partisan{
                     color:[
                         {back:[181,241,242],front:[236,255,251],insideBack:[124,206,230],insideFront:[179,238,242],glow:[240,255,252],bun:[222,251,246],bunGlow:[251,255,254],tie:[115,111,143],pin:[[50,77,168],[74,113,199]]},
                         {back:[66,60,44],front:[63,47,26],insideBack:[44,24,6],insideFront:[59,41,25],glow:[238,231,220],bun:[79,59,40],bunGlow:[226,217,211]},
-                        {back:[118,129,38],front:[145,128,37],insideBack:[64,90,27],insideFront:[134,121,37],glow:[174,186,90],bun:[147,131,44],bunGlow:[160,170,57]},
+                        {back:[38,209,198],front:[77,208,225],insideBack:[37,170,144],insideFront:[47,201,214],glow:[90,186,174],bun:[64,191,307],bunGlow:[77,230,220]},
                     ],pieces:{
                         main:[
                             {spin:[-9,3,-3],height:3},

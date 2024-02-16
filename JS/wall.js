@@ -59,7 +59,7 @@ class wall extends physical{
                 let total7=0
                 for(let a=0,la=entities.walls.length;a<la;a++){
                     for(let b=0,lb=entities.walls[a].length;b<lb;b++){
-                        if(!entities.walls[a][b].deprecated&&(entities.walls[a][b].type==7||entities.walls[a][b].type==14||entities.walls[a][b].type==28)&&entities.walls[a][b].index>this.index){
+                        if(!entities.walls[a][b].deprecated&&(entities.walls[a][b].type==7||entities.walls[a][b].type==14||entities.walls[a][b].type==28)&&entities.walls[a][b].index<this.index){
                             total7++
                         }
                     }
@@ -1277,8 +1277,8 @@ class wall extends physical{
         switch(this.type){
             case 7: case 14: case 28:
                 if(this.grabbed[0]>=0&&!this.active){
-                    this.position.x=map(0.05-this.speedMark*0.015,0,1,this.position.x,this.collide.box[this.grabbed[0]][this.grabbed[1]].position.x)
-                    this.position.y=map(0.05-this.speedMark*0.015,0,1,this.position.y,this.collide.box[this.grabbed[0]][this.grabbed[1]].position.y)
+                    this.position.x=map(0.05-this.speedMark*0.01,0,1,this.position.x,this.collide.box[this.grabbed[0]][this.grabbed[1]].position.x)
+                    this.position.y=map(0.05-this.speedMark*0.01,0,1,this.position.y,this.collide.box[this.grabbed[0]][this.grabbed[1]].position.y)
                     if(this.collide.box[this.grabbed[0]][this.grabbed[1]].staySafeTime>5){
                         this.active=true
                         this.trigger.fade=false

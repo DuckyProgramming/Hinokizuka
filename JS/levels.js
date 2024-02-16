@@ -6470,7 +6470,7 @@ levels=[
                 {x:1078,y:980,width:4,height:320,type:63},
                 {x:40,y:1140,width:80,height:120,type:57},
                 {x:90,y:1140,width:20,height:80,type:57},
-                {x:1160,y:860,width:80,height:680,type:57},
+                {x:1160,y:870,width:80,height:660,type:57},
                 {x:1110,y:910,width:20,height:580,type:57},
                 {x:1090,y:980,width:20,height:320,type:57},
                 {x:480,y:1170,width:40,height:60,type:57},
