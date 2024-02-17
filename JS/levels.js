@@ -5464,7 +5464,7 @@ levels=[
             spawn:{x:50,y:455},
             edge:{x:1200,y:600},
             connections:[
-                {id:19,side:1,region:[0,300]},
+                {id:19,side:1,region:[0,360]},
                 {id:17,side:3,region:[0,600]},
             ],walls:[
                 {x:860,y:490,width:20,height:220,type:44},
@@ -5550,7 +5550,7 @@ levels=[
             edge:{x:1200,y:600},
             connections:[
                 {id:20,side:1,region:[0,600]},
-                {id:18,side:3,region:[0,600]},
+                {id:18,side:3,region:[240,600]},
             ],walls:[
                 {x:770,y:760,width:10,height:10,type:50,args:[5,2,60,90,1,0]},
                 {x:750,y:350,width:20,height:500,type:44},

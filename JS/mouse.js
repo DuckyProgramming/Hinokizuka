@@ -35,6 +35,7 @@ function mouseClicked(){
                             game.running.flowers=0
                             game.running.deaths=0
                             game.running.runTime=0
+                            game.progress.zone=0
                             reformLevels()
                             reformElements()
                             inputs.validKey=a==0?[true,true,true,true,false,false,false,false]:[true,true,true,true,true,true,true,true]

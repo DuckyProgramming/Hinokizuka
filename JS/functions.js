@@ -658,7 +658,7 @@ function generateLevel(level,layer,context){
                 case 0:
                     for(let a=0,la=entities.walls.length;a<la;a++){
                         for(let b=0,lb=entities.walls[a].length;b<lb;b++){
-                            if(entities.walls[a][b].deprecate&&entities.walls[a][b].position.y+entities.walls[a][b].base.height/2+nudge.y+(context==4?-level.edge.y/2+old.edge.y/2:0)>=old.edge.y&&entities.walls[a][b].expandable){
+                            if(entities.walls[a][b].deprecate&&entities.walls[a][b].position.y+entities.walls[a][b].base.height/2+nudge.y-level.edge.y/2+old.edge.y/2>=old.edge.y&&entities.walls[a][b].expandable){
                                 entities.walls[a][b].position.y+=level.edge.y/2
                                 entities.walls[a][b].height+=level.edge.y
                                 entities.walls[a][b].base.height+=level.edge.y
