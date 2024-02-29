@@ -2346,8 +2346,10 @@ class player extends partisan{
             }
             if(this.dash.active>0){
                 this.dash.active--
-                this.velocity.x=this.physics.dashPower.x*cos(this.dash.direction)
-                this.velocity.y=(abs(cos(this.dash.direction))>0.1?this.physics.dashPower.x:this.physics.dashPower.y)*sin(this.dash.direction)
+                if(!this.bubble.active){
+                    this.velocity.x=this.physics.dashPower.x*cos(this.dash.direction)
+                    this.velocity.y=(abs(cos(this.dash.direction))>0.1?this.physics.dashPower.x:this.physics.dashPower.y)*sin(this.dash.direction)
+                }
                 if(entities.players.length>1&&this.dashPush){
                     for(let a=0,la=entities.players.length;a<la;a++){
                         if(entities.players[a].id!=this.id&&inBoxBox(this,entities.players[a])){
