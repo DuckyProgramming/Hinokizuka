@@ -2184,7 +2184,7 @@ class player extends partisan{
                             }
                         break
                         case 4:
-                            if((this.contact[2]||this.contact[3])&&(this.jumpTime<=0||this.dash.active)||this.climb>0){
+                            if(((this.contact[2]||this.contact[3])&&(this.jumpTime<=0||this.dash.active)||this.climb>0)&&this.dreamTime==0){
                                 let a=this.velocity.y
                                 if(this.contact[2]){
                                     this.goal.direction.main=-54
@@ -2228,7 +2228,7 @@ class player extends partisan{
                                     this.velocity.x+=this.internal.velocity.x
                                     this.velocity.y+=this.internal.velocity.y
                                 }
-                            }else if(this.jumpTime>0){
+                            }else if(this.jumpTime>0&&this.dreamTime==0){
                                 inputs.keys[this.id][4]=false
                                 this.jumpTime=0
                                 if(this.anim.jump==0){
